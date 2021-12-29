@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.2"
+    version: "2.5.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -28,7 +28,7 @@ packages:
       name: charcode
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.1"
+    version: "1.2.0"
   clock:
     dependency: transitive
     description:
@@ -67,39 +67,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_plugins:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  gallery:
-    dependency: "direct main"
-    description:
-      path: "modules/gallery"
-      relative: true
-    source: path
-    version: "1.0.0+1"
-  js:
-    dependency: transitive
-    description:
-      name: js
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.6.3"
   matcher:
     dependency: transitive
     description:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.11"
+    version: "0.12.10"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.3.0"
   path:
     dependency: transitive
     description:
@@ -107,20 +88,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  plugin_demo:
-    dependency: "direct main"
-    description:
-      path: "plugins/plugin_demo"
-      relative: true
-    source: path
-    version: "0.0.1"
-  providers:
-    dependency: "direct main"
-    description:
-      path: "modules/providers"
-      relative: true
-    source: path
-    version: "1.0.0+1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -132,7 +99,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.0"
   stack_trace:
     dependency: transitive
     description:
@@ -167,7 +134,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.2.19"
   typed_data:
     dependency: transitive
     description:
@@ -184,4 +151,3 @@ packages:
     version: "2.1.0"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=1.20.0"
