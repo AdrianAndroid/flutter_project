@@ -600,8 +600,8 @@ class MyApp extends StatelessWidget {
 在app的 lib/目录下添加routs.dart:
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutterame/about.dart';
-import 'package:flutterame/home.dart';
+import 'package:flutter_project/about.dart';
+import 'package:flutter_project/home.dart';
 
 class RouteGenerator {
   //配置路由

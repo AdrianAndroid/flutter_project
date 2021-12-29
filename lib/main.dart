@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterame/home.dart';
-import 'package:flutterame/routes.dart';
+import 'package:flutter_project/home.dart';
+import 'package:flutter_project/routes.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutterame'),
+      home: MyHomePage(title: 'flutter_project'),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gallery/galleria.dart';
 import 'package:plugin_demo/plugin_demo_view.dart';
-import 'package:flutterame/mine.dart';
+import 'package:flutter_project/mine.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);

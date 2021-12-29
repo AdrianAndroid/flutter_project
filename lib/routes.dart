@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterame/about.dart';
-import 'package:flutterame/home.dart';
+import 'package:flutter_project/about.dart';
+import 'package:flutter_project/home.dart';
 import 'package:gallery/routes.dart';
 
 class RouteGenerator {
