@@ -11,6 +11,10 @@ class RouteGenerator {
     "/about": (context, {arguments}) => About(),
   };
 
+  // flutter onGenerateRoute原生路由简单封装及页面传参
+  // https://www.jianshu.com/p/4f5019150036
+  // Flutter注册静态路由跳转和动态路由跳转及传参
+  // https://www.jianshu.com/p/8eaf499154ec
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final String? name = settings.name;
     final Function? pageContentBuilder = routes[name!];
