@@ -40,6 +40,8 @@ class _MineState extends State<Mine> {
         TextField(
           decoration: InputDecoration(
             icon: Icon(Icons.person),
+            prefixIcon: Icon(Icons.perm_identity),
+            prefixText: "prefixText",
             labelText: "labelText",
             labelStyle: TextStyle(
               color: Colors.redAccent,
