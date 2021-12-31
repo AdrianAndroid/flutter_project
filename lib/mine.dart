@@ -39,17 +39,26 @@ class _MineState extends State<Mine> {
       children: [
         TextField(
           decoration: InputDecoration(
-            icon: Icon(Icons.person),
+            enabledBorder: OutlineInputBorder(
+              /*边角*/
+              borderRadius: BorderRadius.all(
+                Radius.circular(30), //边角为30
+              ),
+              borderSide: BorderSide(
+                color: Colors.amber, //边线颜色为黄色
+                width: 2, //边线宽度为2
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+              color: Colors.green, //边框颜色为绿色
+              width: 5, //宽度为5
+            )),
             labelText: "labelText",
             helperText: "helperText",
-            errorText: "errorText",
+            // errorText: "errorText",
             hintText: "hintText",
             prefixIcon: Icon(Icons.perm_identity),
-            prefixText: "prefixText",
-            suffixIcon: Icon(Icons.remove_red_eye),
-            suffixText: "suffixText",
-            counterText: "counterText",
-            filled: true,
           ),
         ),
         TextField(
