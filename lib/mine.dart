@@ -56,6 +56,11 @@ class _MineState extends State<Mine> {
           decoration: InputDecoration(
             icon: Icon(Icons.person),
             labelText: "password",
+            errorText: "erroText",
+            errorStyle: TextStyle(
+              color: Colors.red,
+              fontSize: 20,
+            ),
           ),
         ),
       ],
