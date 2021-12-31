@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_project/smscode.dart';
 
 class Mine extends StatefulWidget {
@@ -69,7 +70,7 @@ class _MineState extends State<Mine> {
           onSubmitted: (_val) {
             print("点击了键盘上的动作按钮，当前输入框的值为${_val}");
           },
-          keyboardType: TextInputType.visiblePassword,
+          inputFormatters: [WhitelistingTextInputFormatter(RegExp("[a-z]"))],
           textInputAction: TextInputAction.search,
         ),
         TextField(
