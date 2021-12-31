@@ -45,6 +45,11 @@ class _MineState extends State<Mine> {
               color: Colors.redAccent,
               fontSize: 20,
             ),
+            helperText: "helperText",
+            helperStyle: TextStyle(
+              color: Colors.green,
+              fontSize: 11, //字体变大
+            ),
           ),
         ),
         TextField(
