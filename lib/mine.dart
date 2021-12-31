@@ -60,6 +60,7 @@ class _MineState extends State<Mine> {
             hintText: "hintText",
             prefixIcon: Icon(Icons.perm_identity),
           ),
+          keyboardType: TextInputType.visiblePassword,
         ),
         TextField(
           decoration: InputDecoration(
@@ -76,6 +77,7 @@ class _MineState extends State<Mine> {
             hintText: "hintText",
             prefixIcon: Icon(Icons.perm_identity),
           ),
+          keyboardType: TextInputType.emailAddress,
         ),
       ],
     );
