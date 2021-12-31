@@ -41,12 +41,16 @@ class _MineState extends State<Mine> {
           decoration: InputDecoration(
             icon: Icon(Icons.person),
             labelText: "labelText",
+            labelStyle: TextStyle(
+              color: Colors.redAccent,
+              fontSize: 20,
+            ),
           ),
         ),
         TextField(
           decoration: InputDecoration(
             icon: Icon(Icons.person),
-            labelText: "labelText",
+            labelText: "password",
           ),
         ),
       ],
