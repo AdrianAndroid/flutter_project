@@ -45,6 +45,8 @@ class _MineState extends State<Mine> {
               color: Colors.redAccent,
               fontSize: 20,
             ),
+            hintText: "hintText",
+            hintStyle: TextStyle(color: Colors.yellow, fontSize: 13),
             helperText: "helperText",
             helperStyle: TextStyle(
               color: Colors.green,
