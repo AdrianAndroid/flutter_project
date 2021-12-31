@@ -41,7 +41,7 @@ class _MineState extends State<Mine> {
           decoration: InputDecoration(
             icon: Icon(Icons.person),
             prefixIcon: Icon(Icons.perm_identity),
-            prefixText: "prefixText",
+            prefixText: "+86 ",
             labelText: "labelText",
             labelStyle: TextStyle(
               color: Colors.redAccent,
@@ -54,6 +54,8 @@ class _MineState extends State<Mine> {
               color: Colors.green,
               fontSize: 11, //字体变大
             ),
+            suffixIcon: Icon(Icons.remove_red_eye),
+            counterText: "counterText",
           ),
         ),
         TextField(
