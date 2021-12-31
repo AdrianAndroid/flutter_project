@@ -39,21 +39,16 @@ class _MineState extends State<Mine> {
       children: [
         TextField(
           decoration: InputDecoration(
-            icon: Icon(Icons.person),
+            border: InputBorder.none,
             labelText: "labelText",
-            labelStyle: TextStyle(
-              color: Colors.redAccent,
-              fontSize: 20,
-            ),
             helperText: "helperText",
-            helperStyle: TextStyle(
-              color: Colors.green,
-              fontSize: 11, //字体变大
-            ),
+            hintText: "hintText",
+            prefixIcon: Icon(Icons.perm_identity),
           ),
         ),
         TextField(
           decoration: InputDecoration(
+            border: InputBorder.none,
             icon: Icon(Icons.person),
             labelText: "password",
             errorText: "erroText",
