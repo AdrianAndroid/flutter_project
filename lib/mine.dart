@@ -13,7 +13,7 @@ class _MineState extends State<Mine> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Expanded(flex: 1, child: Expanded(child: _buildTextField())),
+      Expanded(flex: 1, child: Expanded(child: TextFieldWidget())),
       SizedBox(
           height: 100,
           child: Row(
@@ -132,6 +132,45 @@ class _MineState extends State<Mine> {
           letterSpacing: -0.6,
         ),
         borderColor: Colors.transparent,
+      ),
+    );
+  }
+}
+
+class TextFieldWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _TextFieldState();
+}
+
+class _TextFieldState extends State<TextFieldWidget> {
+  TextEditingController _userEtController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("TextField"),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            TextField(controller: _userEtController),
+            RaisedButton(
+              child: Text("赋值"),
+              onPressed: () {
+                _userEtController.text = "15937000045";
+              },
+            ),
+            RaisedButton(
+              child: Text("获取值"),
+              onPressed: () {
+                setState(() {});
+              },
+            ),
+            Text(_userEtController.text),
+          ],
+        ),
       ),
     );
   }
