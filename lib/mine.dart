@@ -56,6 +56,8 @@ class _MineState extends State<Mine> {
             ),
             suffixIcon: Icon(Icons.remove_red_eye),
             counterText: "counterText",
+            filled: true,
+            fillColor: Colors.grey,
           ),
         ),
         TextField(
