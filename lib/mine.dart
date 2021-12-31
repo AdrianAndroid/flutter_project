@@ -39,7 +39,15 @@ class _MineState extends State<Mine> {
       children: [
         TextField(
           decoration: InputDecoration(
-            border: InputBorder.none,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              borderSide: BorderSide(color: Colors.amber, width: 2),
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+              color: Colors.green,
+              width: 5,
+            )),
             labelText: "labelText",
             helperText: "helperText",
             hintText: "hintText",
@@ -49,13 +57,10 @@ class _MineState extends State<Mine> {
         TextField(
           decoration: InputDecoration(
             border: InputBorder.none,
-            icon: Icon(Icons.person),
-            labelText: "password",
-            errorText: "erroText",
-            errorStyle: TextStyle(
-              color: Colors.red,
-              fontSize: 20,
-            ),
+            labelText: "labelText",
+            helperText: "helperText",
+            hintText: "hintText",
+            prefixIcon: Icon(Icons.perm_identity),
           ),
         ),
       ],
