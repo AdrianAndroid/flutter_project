@@ -12,7 +12,7 @@ class _MineState extends State<Mine> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Expanded(flex: 1, child: Center(child: _buildTextField())),
+      Expanded(flex: 1, child: Expanded(child: _buildTextField())),
       SizedBox(
           height: 100,
           child: Row(
@@ -35,10 +35,21 @@ class _MineState extends State<Mine> {
   }
 
   Widget _buildTextField() {
-    return TextField(
-      decoration: InputDecoration(
-        icon: Icon(Icons.person),
-      ),
+    return Column(
+      children: [
+        TextField(
+          decoration: InputDecoration(
+            icon: Icon(Icons.person),
+            labelText: "labelText",
+          ),
+        ),
+        TextField(
+          decoration: InputDecoration(
+            icon: Icon(Icons.person),
+            labelText: "labelText",
+          ),
+        ),
+      ],
     );
   }
 
