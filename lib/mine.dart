@@ -60,6 +60,15 @@ class _MineState extends State<Mine> {
             hintText: "hintText",
             prefixIcon: Icon(Icons.perm_identity),
           ),
+          onChanged: (_val) {
+            print(_val);
+          },
+          onEditingComplete: () {
+            print("点击了键盘上的动作按钮!");
+          },
+          onSubmitted: (_val) {
+            print("点击了键盘上的动作按钮，当前输入框的值为${_val}");
+          },
           keyboardType: TextInputType.visiblePassword,
           textInputAction: TextInputAction.search,
         ),
