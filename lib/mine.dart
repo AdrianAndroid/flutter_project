@@ -155,7 +155,7 @@ class _TextFieldState extends State<TextFieldWidget> {
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
-            TextField(controller: _userEtController),
+            //TextField(controller: _userEtController),
             RaisedButton(
               child: Text("赋值"),
               onPressed: () {
