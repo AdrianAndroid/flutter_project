@@ -11,14 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  gallery:
-    path: modules/gallery
-  providers:
-    path: modules/providers
-  plugin_demo:
-    path: plugins/plugin_demo
-  cupertino_icons: ^1.0.0
-  shared_preferences: "^0.4.2"
 
 dev_dependencies:
   flutter_test:
