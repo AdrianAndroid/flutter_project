@@ -16,5 +16,4 @@ void main() {
   Singleton1 s1 = Singleton1();
   Singleton1 s2 = Singleton1();
   print(s1 == s2);
-
 }
