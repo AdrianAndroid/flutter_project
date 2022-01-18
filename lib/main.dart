@@ -1,20 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+// name                     description
+// Provider                 The most basic form of provider. It takes a value and exposes it, whatever the value is.
+// ListenableProvider       A specific provider for Listenable object. ListenableProvider will listen to the object and ask widgets which depend on it to rebuild whenever the listener is called.
+// ChangeNotifierProvider   A specification of ListenableProvider for ChangeNofifier. It will automatically call ChangeNotifier.dispose when needed.
+// ValueListenerProvider    Listen to a ValueListenable and only expose ValueListenable.value.
+// StreamProvider           Listen to a Stream and expose the latest value emitted.
+// FutureProvider           Takes a Future and updates dependents when the future completes.
 
 void main() {
-  runApp(MyApp());
+  // runApp(
+  //     ChangeNotifierProvider(
+  //       create: (context) => Counter(),
+  //       child: TestSTL(),
+  //     ),
+  // );
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context)=>Counter()),
+        //Provider(create: (context)=>Counter2()),
+        ListenableProvider(create: (contxt)=>Counter2()),
+      ],
+      child: TestSTL(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class TestSTL extends StatefulWidget{
+  @override
+  _TestSTLState createState() => _TestSTLState();
+}
+
+class _TestSTLState extends State<TestSTL> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+      title: "hello",
+      home: Scaffold(
+        appBar: AppBar(title: Text("Hi~")),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('You have pushed the  button this many times:'),
+              Consumer<Counter>(
+                builder: (context, counter, child) => Text(
+                  '${counter.count}',
+                  style: Theme.of(context).textTheme.display1,
+                ),
+              ),
+              Text('You have pushed the  button this many times:'),
+              Consumer<Counter2>(
+                builder: (context, cc, child) => Text(
+                  '${context.watch<Counter2>().num}',
+                  style: Theme.of(context).textTheme.display1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Provider.of<Counter>(context, listen: false).addCount();
+            Provider.of<Counter2>(context, listen: false).addNum();
+          },
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ),
       ),
-      home: MyHomePage(),
     );
   }
 }
@@ -30,53 +86,10 @@ class Counter extends ChangeNotifier {
   }
 }
 
-Counter _counter = Counter();
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    _counter.addListener(() {
-      // 数值改变的监听
-      print('YM--->新数值:${_counter.count}');
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _counter.dispose(); //移除监听
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Hello')),
-      body: Center(
-        child: Column(
-          children: [
-            RaisedButton(
-              onPressed: () {
-                // disposediao
-                _counter.dispose();// dispose之后就不能收到
-                print('YM->dispose()');
-              },
-              child: Text('dispose'),
-            ),
-            RaisedButton(
-              onPressed: () {
-                _counter.addCount();
-              },
-              child: Text('计数'),
-            ),
-          ],
-        ),
-      ),
-    );
+class Counter2 extends ChangeNotifier {
+  int  num = 13;
+  addNum() {
+    ++num;
+    notifyListeners();
   }
 }
