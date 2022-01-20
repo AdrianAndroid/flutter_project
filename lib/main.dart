@@ -1,47 +1,20 @@
 import 'package:flutter/material.dart';
 
-class InheritedTestModel {
-  final int count;
+class SharedDataWidget extends InheritedWidget {
+  final int data;
 
-  const InheritedTestModel(this.count);
-}
+  SharedDataWidget({Key? key, required this.data, required Widget child})
+      : super(key: key, child: child); //需要在子树中共享的数据，保存点击次数
 
-class InheritedContext extends InheritedWidget {
-  // 数据
-  final InheritedTestModel inheritedTestModel;
+  // 定义一个便捷方法，方便子树中的widget获取共享数据
+  static SharedDataWidget? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SharedDataWidget>();
+  }''
 
-  // 点击+号的方法
-  final Function() increment;
-
-  // 点击-号的方法
-  final Function() reduce;
-
-  InheritedContext({
-    Key? key,
-    required this.inheritedTestModel,
-    required this.increment,
-    required this.reduce,
-    required Widget child,
-  }) : super(key: key, child: child);
-
-  static InheritedContext? of(BuildContext context, {bool rebuild = true}) {
-    if (rebuild) {
-      return context.dependOnInheritedWidgetOfExactType<InheritedContext>();
-    } else {
-      final w = context
-          .getElementForInheritedWidgetOfExactType<InheritedContext>()
-          ?.widget;
-      if (w is InheritedContext) {
-        return w;
-      } else {
-        return context.dependOnInheritedWidgetOfExactType<InheritedContext>();
-      }
-    }
-  }
-
+  // 该回调决定当data发生变化时，是否通知子树中以来data的widget
   @override
-  bool updateShouldNotify(covariant InheritedContext oldWidget) {
-    return inheritedTestModel != oldWidget.inheritedTestModel;
+  bool updateShouldNotify(covariant SharedDataWidget oldWidget) {
+    return oldWidget.data != data;
   }
 }
 
@@ -56,112 +29,59 @@ class MyApp extends StatelessWidget {
       title: "Welcome to Flutter",
       home: Scaffold(
         appBar: AppBar(title: Text('Hello')),
-        body: InheritedWidgetTestContainer(),
+        body: InheritedWidgetTestRoute(),
       ),
     );
   }
 }
 
-class TestWidgetA extends StatelessWidget {
+class _TestWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => __TestWidgetState();
+}
+
+class __TestWidgetState extends State<_TestWidget> {
   @override
   Widget build(BuildContext context) {
-    // 去InheritedContext里面取值,重新构建的时候
-    final inheritedContext = InheritedContext.of(context);
-    final inheritedTestModel = inheritedContext?.inheritedTestModel;
-    print('TestWidgetA 中的count的值：${inheritedTestModel?.count}');
-    return Padding(
-      padding: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
-      child: RaisedButton(
-        onPressed: inheritedContext?.increment,
-        textColor: Colors.black,
-        child: new Text('+'),
-      ),
-    );
+    print('__TestWidgetState build.');
+    return Text(SharedDataWidget.of(context)!.data.toString());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    //父或祖先widget中的InheritedWidget改变(updateShouldNotify返回true)时会被调用。
+    //如果build中没有依赖InheritedWidget，则此回调不会被调用。
+    print('Dependencies change.');
   }
 }
 
-class TestWidgetB extends StatelessWidget {
+class InheritedWidgetTestRoute extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    final inheritedContext = InheritedContext.of(context);
-    final inheritedTestModel = inheritedContext?.inheritedTestModel;
-    print('TestWidgetB 中count的值:${inheritedTestModel?.count}');
-    return Padding(
-      padding: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
-      child: Text(
-        '当前count:${inheritedTestModel?.count}',
-        style: TextStyle(fontSize: 20.0),
-      ),
-    );
-  }
+  State<StatefulWidget> createState() => _InheritedWidgetTestRouteState();
 }
 
-class TestWidgetC extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final inheritedContext = InheritedContext.of(context);
-    final inheritedTestModel = inheritedContext?.inheritedTestModel;
-    print('TestWidgetC 中count的值：${inheritedTestModel?.count}');
-    return Padding(
-      padding: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
-      child: RaisedButton(
-        textColor: Colors.black,
-        child: Text('-'),
-        onPressed: inheritedContext?.reduce,
-      ),
-    );
-  }
-}
-
-class InheritedWidgetTestContainer extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _InheritedWidgetTestContainerState();
-}
-
-class _InheritedWidgetTestContainerState
-    extends State<InheritedWidgetTestContainer> {
-  late InheritedTestModel inheritedTestModel;
-
-  @override
-  void initState() {
-    inheritedTestModel = InheritedTestModel(0);
-    super.initState();
-  }
-
-  _incrementCount() {
-    setState(() {
-      inheritedTestModel = InheritedTestModel(inheritedTestModel.count + 1);
-    });
-  }
-
-  _reduceCount() {
-    setState(() {
-      inheritedTestModel = InheritedTestModel(inheritedTestModel.count - 1);
-    });
-  }
+class _InheritedWidgetTestRouteState extends State<InheritedWidgetTestRoute> {
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
-    print('_InheritedWidgetTestContainerState build(BuildContext...');
-    return InheritedContext(
-      inheritedTestModel: inheritedTestModel,
-      increment: _incrementCount,
-      reduce: _reduceCount,
-      child: Scaffold(
-        appBar: AppBar(title: Text('InheritedWidgetTest')),
-        body: Column(
+    return Center(
+      child: SharedDataWidget(
+        data: count,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
-              child: Text(
-                '我们常使用的\nTheme.of(context).textTheme\nMediaQuery.of'
-                '(context).size等\n就是通过InheritedWidget实现的',
-                style: TextStyle(fontSize: 20.0),
-              ),
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: _TestWidget(),
             ),
-            TestWidgetA(),
-            TestWidgetB(),
-            TestWidgetC(),
+            ElevatedButton(
+              onPressed: () => setState(() {
+                ++count;
+              }),
+              child: Text("Increment"),
+            ),
           ],
         ),
       ),
