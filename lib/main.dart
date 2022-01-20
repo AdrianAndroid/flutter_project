@@ -1,122 +1,87 @@
+import 'dart:collection';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-class TestProviderModel with ChangeNotifier, DiagnosticableTreeMixin {
-  int _number = 0;
+class Item {
+  Item(this.price, this.count);
 
-  int get number => _number;
-
-  set number(int value) {
-    _number = value;
-    notifyListeners();
-  }
-
-  void addNumber() {
-    _number++;
-    notifyListeners();
-  }
+  double price;
+  int count;
 }
 
-class UserModel {
-  String name;
-  String userID;
-  bool isAuthor;
-  bool isVIP;
+class CartModel extends ChangeNotifier {
+  // 用于保存购物车中商品列表
+  final List<Item> _items = [];
 
-  UserModel(this.name, this.userID, this.isAuthor, this.isVIP);
-}
+  // 禁止改变购物车里的商品信息
+  UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
 
-class UserProviderModel with ChangeNotifier, DiagnosticableTreeMixin {
-  UserModel _user;
+  // 购物车中商品的总价
+  double get totalPrice =>
+      _items.fold(0, (value, item) => value + item.count + item.price);
 
-  UserProviderModel(this._user);
-
-  set user(UserModel value) {
-    _user = value;
+  // 将[item]添加到购物车。这里唯一一种可能从外部改变购物车的方法
+  void add(Item item) {
+    _items.add(item);
+    //通知监听器（订阅者），重新构建InheritedProvider,更新状态。
     notifyListeners();
   }
 }
 
 void main() {
-  List<SingleChildWidget> providerList = [
-    ChangeNotifierProvider(create: (_) => TestProviderModel()),
-    ChangeNotifierProvider(
-      create: (_) => UserProviderModel(UserModel("cy", "1", true, true)),
-    )
-  ];
-
-  runApp(
-    MultiProvider(
-      providers: providerList,
-      child: TestProvider(),
-    ),
-  );
+  runApp(MyApp());
 }
 
-class TestProvider extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _TestProviderState();
-}
-
-class _TestProviderState extends State<TestProvider> {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Welcome to Flutter",
       home: Scaffold(
-        appBar: AppBar(title: Text('测试provider')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ChildOne(),
-              ChildTwo(),
-            ],
+        appBar: AppBar(title: Text('Hello')),
+        body: ProviderRoute(),
+      ),
+    );
+  }
+}
+
+class ProviderRoute extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _PreviderRouteState();
+}
+
+class _PreviderRouteState extends State<ProviderRoute> {
+  @override
+  Widget build(BuildContext context) => Center(
+        child: ChangeNotifierProvider<CartModel>(
+          create: (_) => CartModel(),
+          child: Builder(
+            builder: (context) {
+              return Column(
+                children: [
+                  Text('Hi~'),
+                  Builder(builder: (context) {
+                    var cart = context.watch<CartModel>();
+                    return Text("Hello cart => ${cart.totalPrice}");
+                  }),
+                  Builder(builder: (context) {
+                    print('ElevatedButton build');
+                    return ElevatedButton(
+                      onPressed: () {
+                        // 给购物车中添加商品，添加后总价会更新
+                        Provider.of<CartModel>(context, listen: false)
+                            .add(Item(20.0, 1));
+                      },
+                      child: Text("添加商品"),
+                    );
+                  }),
+                ],
+              );
+            },
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            context.read<TestProviderModel>().addNumber();
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class ChildOne extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _ChildOneState();
-}
-
-class ChildTwo extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _ChildTwoState();
-}
-
-class _ChildOneState extends State<ChildOne> {
-  @override
-  Widget build(BuildContext context) {
-    print('1build');
-    return Container(
-      child: Text('1number = ${context.watch<TestProviderModel>()._number}'),
-    );
-  }
-}
-
-class _ChildTwoState extends State<ChildTwo> {
-  @override
-  Widget build(BuildContext context) {
-    print('2build');
-    return Container(
-      child: Consumer2<TestProviderModel, UserProviderModel>(
-        builder: (context, testProvider, userProvider, child) {
-          return Text(
-              'testProviderNumber:${testProvider.number}\n用户:${userProvider._user.name}');
-        },
-      ),
-    );
-  }
+      );
 }
