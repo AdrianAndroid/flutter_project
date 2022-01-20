@@ -1,33 +1,47 @@
-import 'dart:collection';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
 
-class Item {
-  Item(this.price, this.count);
+class InheritedTestModel {
+  final int count;
 
-  double price;
-  int count;
+  const InheritedTestModel(this.count);
 }
 
-class CartModel extends ChangeNotifier {
-  // 用于保存购物车中商品列表
-  final List<Item> _items = [];
+class InheritedContext extends InheritedWidget {
+  // 数据
+  final InheritedTestModel inheritedTestModel;
 
-  // 禁止改变购物车里的商品信息
-  UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
+  // 点击+号的方法
+  final Function() increment;
 
-  // 购物车中商品的总价
-  double get totalPrice =>
-      _items.fold(0, (value, item) => value + item.count + item.price);
+  // 点击-号的方法
+  final Function() reduce;
 
-  // 将[item]添加到购物车。这里唯一一种可能从外部改变购物车的方法
-  void add(Item item) {
-    _items.add(item);
-    //通知监听器（订阅者），重新构建InheritedProvider,更新状态。
-    notifyListeners();
+  InheritedContext({
+    Key? key,
+    required this.inheritedTestModel,
+    required this.increment,
+    required this.reduce,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  static InheritedContext? of(BuildContext context, {bool rebuild = true}) {
+    if (rebuild) {
+      return context.dependOnInheritedWidgetOfExactType<InheritedContext>();
+    } else {
+      final w = context
+          .getElementForInheritedWidgetOfExactType<InheritedContext>()
+          ?.widget;
+      if (w is InheritedContext) {
+        return w;
+      } else {
+        return context.dependOnInheritedWidgetOfExactType<InheritedContext>();
+      }
+    }
+  }
+
+  @override
+  bool updateShouldNotify(covariant InheritedContext oldWidget) {
+    return inheritedTestModel != oldWidget.inheritedTestModel;
   }
 }
 
@@ -42,68 +56,115 @@ class MyApp extends StatelessWidget {
       title: "Welcome to Flutter",
       home: Scaffold(
         appBar: AppBar(title: Text('Hello')),
-        body: ProviderRoute(),
+        body: InheritedWidgetTestContainer(),
       ),
     );
   }
 }
 
-class ProviderRoute extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _PreviderRouteState();
-}
-
-// 这是一个便捷类，会获得当前context和指定数据类型的Provider
-class _Consumer<T> extends StatelessWidget {
-  final Widget Function(BuildContext context, T? value) builder;
-
-  const _Consumer({Key? key, required this.builder}) : super(key: key);
-
+class TestWidgetA extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return builder(context, context.watch<T>());
+    // 去InheritedContext里面取值,重新构建的时候
+    final inheritedContext = InheritedContext.of(context);
+    final inheritedTestModel = inheritedContext?.inheritedTestModel;
+    print('TestWidgetA 中的count的值：${inheritedTestModel?.count}');
+    return Padding(
+      padding: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+      child: RaisedButton(
+        onPressed: inheritedContext?.increment,
+        textColor: Colors.black,
+        child: new Text('+'),
+      ),
+    );
   }
 }
 
-class _PreviderRouteState extends State<ProviderRoute> {
+class TestWidgetB extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Center(
-        child: ChangeNotifierProvider<CartModel>(
-          create: (_) => CartModel(),
-          child: Builder(
-            builder: (context) {
-              return Column(
-                children: [
-                  Text('Hi~'),
-                  // 下面可以做如下优化
-                  // 1. 需要显示调用ChangeNotifierProvider.of,
-                  //    当APP内部依赖CartModel很多时，这样的代码将会很冗余
-                  // 2. 语义不明确：由于ChangeNotifierProvider是订阅者，那么依赖CartModel
-                  //    的Widget自然就是订阅者，其实也就是状态的消费者，如果我们用Builder
-                  //    来构建，语义就不是很明确；如果我们能使用一个具有明确意义的Widget，比如就叫Consumer
-                  //    ，这样最终的代码语义将会很明确，只要看到使用Consumer，我们就知道它是依赖某个跨组件或全局的状态。
-                  // Builder(builder: (context) {
-                  //   var cart = context.watch<CartModel>();
-                  //   return Text("Hello cart => ${cart.totalPrice}");
-                  // }),
-                  _Consumer<CartModel>(
-                    builder: (context, cart) => Text("总价:${cart?.totalPrice}"),
-                  ),
-                  Builder(builder: (context) {
-                    print('ElevatedButton build');
-                    return ElevatedButton(
-                      onPressed: () {
-                        // 给购物车中添加商品，添加后总价会更新
-                        Provider.of<CartModel>(context, listen: false)
-                            .add(Item(20.0, 1));
-                      },
-                      child: Text("添加商品"),
-                    );
-                  }),
-                ],
-              );
-            },
-          ),
+  Widget build(BuildContext context) {
+    final inheritedContext = InheritedContext.of(context);
+    final inheritedTestModel = inheritedContext?.inheritedTestModel;
+    print('TestWidgetB 中count的值:${inheritedTestModel?.count}');
+    return Padding(
+      padding: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+      child: Text(
+        '当前count:${inheritedTestModel?.count}',
+        style: TextStyle(fontSize: 20.0),
+      ),
+    );
+  }
+}
+
+class TestWidgetC extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final inheritedContext = InheritedContext.of(context);
+    final inheritedTestModel = inheritedContext?.inheritedTestModel;
+    print('TestWidgetC 中count的值：${inheritedTestModel?.count}');
+    return Padding(
+      padding: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+      child: RaisedButton(
+        textColor: Colors.black,
+        child: Text('-'),
+        onPressed: inheritedContext?.reduce,
+      ),
+    );
+  }
+}
+
+class InheritedWidgetTestContainer extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _InheritedWidgetTestContainerState();
+}
+
+class _InheritedWidgetTestContainerState
+    extends State<InheritedWidgetTestContainer> {
+  late InheritedTestModel inheritedTestModel;
+
+  @override
+  void initState() {
+    inheritedTestModel = InheritedTestModel(0);
+    super.initState();
+  }
+
+  _incrementCount() {
+    setState(() {
+      inheritedTestModel = InheritedTestModel(inheritedTestModel.count + 1);
+    });
+  }
+
+  _reduceCount() {
+    setState(() {
+      inheritedTestModel = InheritedTestModel(inheritedTestModel.count - 1);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('_InheritedWidgetTestContainerState build(BuildContext...');
+    return InheritedContext(
+      inheritedTestModel: inheritedTestModel,
+      increment: _incrementCount,
+      reduce: _reduceCount,
+      child: Scaffold(
+        appBar: AppBar(title: Text('InheritedWidgetTest')),
+        body: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+              child: Text(
+                '我们常使用的\nTheme.of(context).textTheme\nMediaQuery.of'
+                '(context).size等\n就是通过InheritedWidget实现的',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+            TestWidgetA(),
+            TestWidgetB(),
+            TestWidgetC(),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }
