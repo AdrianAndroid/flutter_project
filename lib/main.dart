@@ -15,11 +15,14 @@ class Item {
 class CartModel extends ChangeNotifier {
   // 用于保存购物车中商品列表
   final List<Item> _items = [];
+
   // 禁止改变购物车里的商品信息
   UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
+
   // 购物车中商品的总价
   double get totalPrice =>
       _items.fold(0, (value, item) => value + item.count + item.price);
+
   // 将[item]添加到购物车。这里唯一一种可能从外部改变购物车的方法
   void add(Item item) {
     _items.add(item);
@@ -27,9 +30,11 @@ class CartModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
 void main() {
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -42,6 +47,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class ProviderRoute extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _PreviderRouteState();
@@ -49,16 +55,13 @@ class ProviderRoute extends StatefulWidget {
 
 // 这是一个便捷类，会获得当前context和指定数据类型的Provider
 class _Consumer<T> extends StatelessWidget {
-
   final Widget Function(BuildContext context, T? value) builder;
 
-  const _Consumer({Key? key,required this.builder}) : super(key: key);
+  const _Consumer({Key? key, required this.builder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return builder(
-      context, context.watch<T>()
-    );
+    return builder(context, context.watch<T>());
   }
 }
 
