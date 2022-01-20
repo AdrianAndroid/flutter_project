@@ -1,95 +1,122 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
-// name                     description
-// Provider                 The most basic form of provider. It takes a value and exposes it, whatever the value is.
-// ListenableProvider       A specific provider for Listenable object. ListenableProvider will listen to the object and ask widgets which depend on it to rebuild whenever the listener is called.
-// ChangeNotifierProvider   A specification of ListenableProvider for ChangeNofifier. It will automatically call ChangeNotifier.dispose when needed.
-// ValueListenerProvider    Listen to a ValueListenable and only expose ValueListenable.value.
-// StreamProvider           Listen to a Stream and expose the latest value emitted.
-// FutureProvider           Takes a Future and updates dependents when the future completes.
+class TestProviderModel with ChangeNotifier, DiagnosticableTreeMixin {
+  int _number = 0;
+
+  int get number => _number;
+
+  set number(int value) {
+    _number = value;
+    notifyListeners();
+  }
+
+  void addNumber() {
+    _number++;
+    notifyListeners();
+  }
+}
+
+class UserModel {
+  String name;
+  String userID;
+  bool isAuthor;
+  bool isVIP;
+
+  UserModel(this.name, this.userID, this.isAuthor, this.isVIP);
+}
+
+class UserProviderModel with ChangeNotifier, DiagnosticableTreeMixin {
+  UserModel _user;
+
+  UserProviderModel(this._user);
+
+  set user(UserModel value) {
+    _user = value;
+    notifyListeners();
+  }
+}
 
 void main() {
-  // runApp(
-  //     ChangeNotifierProvider(
-  //       create: (context) => Counter(),
-  //       child: TestSTL(),
-  //     ),
-  // );
+  List<SingleChildWidget> providerList = [
+    ChangeNotifierProvider(create: (_) => TestProviderModel()),
+    ChangeNotifierProvider(
+      create: (_) => UserProviderModel(UserModel("cy", "1", true, true)),
+    )
+  ];
 
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context)=>Counter()),
-        //Provider(create: (context)=>Counter2()),
-        ListenableProvider(create: (contxt)=>Counter2()),
-      ],
-      child: TestSTL(),
+      providers: providerList,
+      child: TestProvider(),
     ),
   );
 }
 
-class TestSTL extends StatefulWidget{
+class TestProvider extends StatefulWidget {
   @override
-  _TestSTLState createState() => _TestSTLState();
+  State<StatefulWidget> createState() => _TestProviderState();
 }
 
-class _TestSTLState extends State<TestSTL> {
+class _TestProviderState extends State<TestProvider> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "hello",
       home: Scaffold(
-        appBar: AppBar(title: Text("Hi~")),
+        appBar: AppBar(title: Text('测试provider')),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('You have pushed the  button this many times:'),
-              Consumer<Counter>(
-                builder: (context, counter, child) => Text(
-                  '${counter.count}',
-                  style: Theme.of(context).textTheme.display1,
-                ),
-              ),
-              Text('You have pushed the  button this many times:'),
-              Consumer<Counter2>(
-                builder: (context, cc, child) => Text(
-                  '${context.watch<Counter2>().num}',
-                  style: Theme.of(context).textTheme.display1,
-                ),
-              ),
+              ChildOne(),
+              ChildTwo(),
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Provider.of<Counter>(context, listen: false).addCount();
-            Provider.of<Counter2>(context, listen: false).addNum();
-          },
-          tooltip: 'Increment',
           child: Icon(Icons.add),
+          onPressed: () {
+            context.read<TestProviderModel>().addNumber();
+          },
         ),
       ),
     );
   }
 }
 
-class Counter extends ChangeNotifier {
-  // 这里也可以使用with来进行实现
-  int _count = 0; //数值计算
-  int get count => _count;
+class ChildOne extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ChildOneState();
+}
 
-  addCount() {
-    _count++;
-    notifyListeners();
+class ChildTwo extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ChildTwoState();
+}
+
+class _ChildOneState extends State<ChildOne> {
+  @override
+  Widget build(BuildContext context) {
+    print('1build');
+    return Container(
+      child: Text('1number = ${context.watch<TestProviderModel>()._number}'),
+    );
   }
 }
 
-class Counter2 extends ChangeNotifier {
-  int  num = 13;
-  addNum() {
-    ++num;
-    notifyListeners();
+class _ChildTwoState extends State<ChildTwo> {
+  @override
+  Widget build(BuildContext context) {
+    print('2build');
+    return Container(
+      child: Consumer2<TestProviderModel, UserProviderModel>(
+        builder: (context, testProvider, userProvider, child) {
+          return Text(
+              'testProviderNumber:${testProvider.number}\n用户:${userProvider._user.name}');
+        },
+      ),
+    );
   }
 }
