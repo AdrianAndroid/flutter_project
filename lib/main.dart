@@ -9,7 +9,7 @@ class SharedDataWidget extends InheritedWidget {
   // 定义一个便捷方法，方便子树中的widget获取共享数据
   static SharedDataWidget? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<SharedDataWidget>();
-  }''
+  }
 
   // 该回调决定当data发生变化时，是否通知子树中以来data的widget
   @override
