@@ -12,10 +12,17 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.2
+  equatable: ^2.0.0
+  uuid: ^3.0.0
+  flutter_bloc: ^8.0.1
+  formz: ^0.4.0
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  bloc_test: ^9.0.2
+  mocktail: ^0.2.0
 
 
 flutter:
