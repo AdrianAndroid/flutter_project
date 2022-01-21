@@ -12,6 +12,7 @@ class User extends Equatable {
   static const empty = User('-');
 }
 
+// 获取登陆用户信息
 class UserRepository {
   User? _user;
 
