@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project/http_util.dart';
 
-// 网上找到的一个例子
-// https://blog.csdn.net/u011272795/article/details/83010974
+// Flutter实战*第二版
+// https://book.flutterchina.club/chapter7/futurebuilder_and_streambuilder.html#_7-6-1-futurebuilder
 
 void main() {
   runApp(
@@ -20,11 +19,6 @@ class FutureBuilderPage extends StatefulWidget {
 class FutureBuilderState extends State<FutureBuilderPage> {
   String title = 'FutureBuilder使用';
 
-  Future _getData() async {
-    return Http.get(
-        path: 'http://api.douban.com/v2/movie/top250', data: {'count': '15'});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,54 +27,49 @@ class FutureBuilderState extends State<FutureBuilderPage> {
         onPressed: () {
           setState(() {
             title = title + '.';
+            print(title);
           });
         },
         child: Icon(Icons.title),
       ),
-      body: FutureBuilder(
-        builder: _buildFuture,
-        future: _getData(),
+      body: Center(
+        child: FutureBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                print('ConnectionState.done');
+                break;
+              case ConnectionState.active:
+                print('ConnectionState.active');
+                break;
+              case ConnectionState.waiting:
+                print('ConnectionState.waiting');
+                break;
+              case ConnectionState.none:
+                print('ConnectionState.none');
+                break;
+            }
+            // 请求已结束
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                // 请求失败
+                return Text("Error: ${snapshot.error}");
+              } else {
+                // 请求成功，显示数据
+                return Text("Contents: ${snapshot.data}");
+              }
+            } else {
+              // 请求未结束，显示loading
+              return CircularProgressIndicator();
+            }
+          },
+          future: mockNetworkData(),
+        ),
       ),
     );
   }
 
-  Widget _buildFuture(BuildContext context, AsyncSnapshot snapshot) {
-    switch (snapshot.connectionState) {
-      case ConnectionState.none:
-        print('还没开始网络请求');
-        return Text('还没有开始网络请求');
-      case ConnectionState.active:
-        print('active');
-        return Text('ConnectionState.active');
-      case ConnectionState.waiting:
-        print('waiting');
-        return Center(child: CircularProgressIndicator());
-      case ConnectionState.done:
-        print('done');
-        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-        return _createListView(context, snapshot);
-      default:
-        return Container();
-    }
-  }
-
-  Widget _createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List movies = [];
-    return ListView.builder(
-      itemBuilder: (context, index) => _itemBuilder(context, index, movies),
-      itemCount: movies.length + 2,
-    );
-  }
-
-  Widget _itemBuilder(BuildContext context, int index, List movies) {
-    if (index.isOdd) {
-      return Divider();
-    }
-    index = index ~/ 2;
-    return ListTile(
-      title: Text('title $index'),
-      leading: Text('year $index'),
-      trailing: Text('trailing $index'),
-    );
+  Future<String> mockNetworkData() async {
+    return Future.delayed(Duration(seconds: 2), () => '我是从互联网上获取的数据');
   }
 }
