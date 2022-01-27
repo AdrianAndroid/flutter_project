@@ -1,75 +1,95 @@
 import 'package:flutter/material.dart';
 
 // Flutter实战*第二版
-// https://book.flutterchina.club/chapter7/futurebuilder_and_streambuilder.html#_7-6-1-futurebuilder
+// https://www.woolha.com/tutorials/flutter-using-futurebuilder-widget-examples
 
-void main() {
-  runApp(
-    MaterialApp(
-      home: FutureBuilderPage(),
-    ),
-  );
-}
 
-class FutureBuilderPage extends StatefulWidget {
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+
   @override
-  State<StatefulWidget> createState() => FutureBuilderState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Woolha.com Flutter Tutorial',
+      home: FutureBuilderExample(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }
 
-class FutureBuilderState extends State<FutureBuilderPage> {
-  String title = 'FutureBuilder使用';
+Future<String> getValue() async {
+  await Future.delayed(Duration(seconds: 3));
+
+  return 'Woolha';
+}
+
+class FutureBuilderExample extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _FutureBuilderExampleState ();
+  }
+}
+
+class _FutureBuilderExampleState extends State<FutureBuilderExample> {
+
+  Future<String> _value;
+
+  @override
+  initState() {
+    super.initState();
+    _value = getValue();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            title = title + '.';
-            print(title);
-          });
-        },
-        child: Icon(Icons.title),
+      appBar: AppBar(
+        title: const Text('Woolha.com Flutter Tutorial'),
       ),
-      body: Center(
-        child: FutureBuilder(
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.done:
-                print('ConnectionState.done');
-                break;
-              case ConnectionState.active:
-                print('ConnectionState.active');
-                break;
-              case ConnectionState.waiting:
-                print('ConnectionState.waiting');
-                break;
-              case ConnectionState.none:
-                print('ConnectionState.none');
-                break;
-            }
-            // 请求已结束
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                // 请求失败
-                return Text("Error: ${snapshot.error}");
+      body: SizedBox(
+        width: double.infinity,
+        child: Center(
+          child: FutureBuilder<String>(
+            future: _value,
+            initialData: 'App Name',
+            builder: (
+                BuildContext context,
+                AsyncSnapshot<String> snapshot,
+                ) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    Visibility(
+                      visible: snapshot.hasData,
+                      child: Text(
+                        snapshot.data,
+                        style: const TextStyle(color: Colors.black, fontSize: 24),
+                      ),
+                    )
+                  ],
+                );
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return const Text('Error');
+                } else if (snapshot.hasData) {
+                  return Text(
+                      snapshot.data,
+                      style: const TextStyle(color: Colors.teal, fontSize: 36)
+                  );
+                } else {
+                  return const Text('Empty data');
+                }
               } else {
-                // 请求成功，显示数据
-                return Text("Contents: ${snapshot.data}");
+                return Text('State: ${snapshot.connectionState}');
               }
-            } else {
-              // 请求未结束，显示loading
-              return CircularProgressIndicator();
-            }
-          },
-          future: mockNetworkData(),
+            },
+          ),
         ),
       ),
     );
-  }
-
-  Future<String> mockNetworkData() async {
-    return Future.delayed(Duration(seconds: 2), () => '我是从互联网上获取的数据');
   }
 }
