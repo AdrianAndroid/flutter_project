@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
+import 'chrome_safari_browser_example.sceen.dart';
 import 'const.dart';
+import 'headless_in_app_webview.screen.dart';
 import 'in_app_broser_example.screen.dart';
 import 'in_app_webview_example.screen.dart';
 
@@ -97,8 +99,10 @@ class _MyAppState extends State<MyApp> {
       routes: {
         Const.Route: (context) => InAppWebViewExampleScreen(),
         Const.InAppBrowser: (context) => InAppBrowserExampleScreen(),
-        // '/ChromeSafariBrowser': (context) => ChromeSafariBrowserExampleScreen(),
-        // '/HeadlessInAppWebView': (context) => HeadlessInAppWebViewExampleScreen(),
+        Const.ChromeSafariBrowser: (context) =>
+            ChromeSafariBrowserExampleScreen(),
+        Const.HeadlessInAppWebView: (context) =>
+            HeadlessInAppWebViewExampleScreen(),
       },
     );
   }
