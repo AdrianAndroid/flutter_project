@@ -2,92 +2,30 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Woolha.com Flutter Tutorial',
-      home: FutureBuilderExample(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+  State<StatefulWidget> createState() => _MyAppState();
 }
 
-Future<String> getValue() async {
-  await Future.delayed(Duration(seconds: 3));
-  return 'Woolha';
-}
-
-class FutureBuilderExample extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _FutureBuilderExampleState();
-}
-
-class _FutureBuilderExampleState extends State<FutureBuilderExample> {
-  late Future<String> _value;
-
+class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _value = getValue();
   }
 
-  String _title = 'Hi';
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Woolha.com Flutter Tutorial')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _title = _title + ".";
-          });
-        },
-        child: Icon(Icons.title),
-      ),
-      body: SizedBox(
-        width: double.infinity,
-        child: Center(
-          child: FutureBuilder<String>(
-            future: _value,
-            initialData: 'App Name',
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-              print('State: ${snapshot.connectionState}');
-              print('State is Active ${ConnectionState.active == snapshot.connectionState}');
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    Visibility(
-                      child: Text(
-                        snapshot.data ?? "NULL",
-                        style: TextStyle(color: Colors.black, fontSize: 24),
-                      ),
-                    ),
-                  ],
-                );
-              } else if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return const Text('Error');
-                } else if (snapshot.hasData) {
-                  return Text(
-                    snapshot.data ?? 'NULL',
-                    style: const TextStyle(color: Colors.teal, fontSize: 36),
-                  );
-                } else {
-                  return const Text('Empty data');
-                }
-              } else {
-                return Text('State: ${snapshot.connectionState}');
-              }
-            },
-          ),
-        ),
-      ),
-    );
+    return MaterialApp(initialRoute: '/', routes: {
+      // '/': (context) => InAppWebViewExampleScreen(),
+      // '/InAppBrowser': (context) => InAppBrowserExampleScreen(),
+      // '/ChromeSafariBrowser': (context) => ChromeSafariBrowserExampleScreen(),
+      // '/HeadlessInAppWebView': (context) => HeadlessInAppWebViewExampleScreen(),
+    });
   }
 }
-
