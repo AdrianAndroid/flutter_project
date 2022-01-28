@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'const.dart';
+import 'in_app_broser_example.screen.dart';
 import 'in_app_webview_example.screen.dart';
 
 Future main() async {
@@ -95,8 +96,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: Const.Route,
       routes: {
         Const.Route: (context) => InAppWebViewExampleScreen(),
-        //'/': (context) => InAppWebViewExampleScreen(),
-        // '/InAppBrowser': (context) => InAppBrowserExampleScreen(),
+        Const.InAppBrowser: (context) => InAppBrowserExampleScreen(),
         // '/ChromeSafariBrowser': (context) => ChromeSafariBrowserExampleScreen(),
         // '/HeadlessInAppWebView': (context) => HeadlessInAppWebViewExampleScreen(),
       },
