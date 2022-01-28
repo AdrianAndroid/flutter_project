@@ -1,7 +1,77 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-void main() => runApp(MyApp());
+import 'const.dart';
+import 'in_app_webview_example.screen.dart';
 
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await Permission.camera.request();
+  //await Permission.microphone.request();
+  //await Permission.storage.request();
+
+  if (Platform.isAndroid) {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+
+    var swAvailable = await AndroidWebViewFeature.isFeatureSupported(
+        AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
+    var swInterceptAvailable = await AndroidWebViewFeature.isFeatureSupported(
+        AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+
+    if (swAvailable && swInterceptAvailable) {
+      AndroidServiceWorkerController serviceWorkerController =
+          AndroidServiceWorkerController.instance();
+
+      serviceWorkerController.serviceWorkerClient = AndroidServiceWorkerClient(
+        shouldInterceptRequest: (request) async {
+          print(request);
+          return null;
+        },
+      );
+    }
+  }
+
+  runApp(MyApp());
+}
+
+Drawer myDrawer({required BuildContext context}) {
+  return Drawer(
+    child: ListView(
+      children: [
+        DrawerHeader(
+          child: Text('flutter_inappbrowser example'),
+          decoration: BoxDecoration(color: Colors.blue),
+        ),
+        ListTile(
+          title: Text('InAppBrowser'),
+          onTap: () {
+            Navigator.pushReplacementNamed(context, Const.InAppBrowser);
+          },
+        ),
+        ListTile(
+          title: Text('ChromeSafariBrowser'),
+          onTap: () {
+            Navigator.pushReplacementNamed(context, Const.ChromeSafariBrowser);
+          },
+        ),
+        ListTile(
+          title: Text('InAppWebView'),
+          onTap: () {
+            Navigator.pushReplacementNamed(context, Const.Route);
+          },
+        ),
+        ListTile(
+          title: Text('HeadlessInAppWebView'),
+          onTap: () {
+            Navigator.pushReplacementNamed(context, Const.HeadlessInAppWebView);
+          },
+        ),
+      ],
+    ),
+  );
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -21,11 +91,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(initialRoute: '/', routes: {
-      // '/': (context) => InAppWebViewExampleScreen(),
-      // '/InAppBrowser': (context) => InAppBrowserExampleScreen(),
-      // '/ChromeSafariBrowser': (context) => ChromeSafariBrowserExampleScreen(),
-      // '/HeadlessInAppWebView': (context) => HeadlessInAppWebViewExampleScreen(),
-    });
+    return MaterialApp(
+      initialRoute: Const.Route,
+      routes: {
+        Const.Route: (context) => InAppWebViewExampleScreen(),
+        //'/': (context) => InAppWebViewExampleScreen(),
+        // '/InAppBrowser': (context) => InAppBrowserExampleScreen(),
+        // '/ChromeSafariBrowser': (context) => ChromeSafariBrowserExampleScreen(),
+        // '/HeadlessInAppWebView': (context) => HeadlessInAppWebViewExampleScreen(),
+      },
+    );
   }
 }
