@@ -331,13 +331,101 @@ class _TestAlertDialogWidget extends StatelessWidget {
               changeLanguage(context);
             },
             child: Text('对话框2')),
-        ElevatedButton(onPressed: () {}, child: Text('对话框3(复选框可以点击)')),
+        ElevatedButton(
+            onPressed: () async {
+              // 弹出删除确认对话框，等待用户确认
+              bool? deleteTree = await showDeleteConfirmDialog3(context);
+              if (deleteTree == null) {
+                print('取消删除');
+              } else {
+                print('同事删除子目录：$deleteTree');
+              }
+            },
+            child: Text('对话框3(复选框可以点击)')),
         ElevatedButton(onPressed: () {}, child: Text('对话框4(复选框可以点击)')),
       ],
     );
   }
 
-  void test() {
-    // showGeneralDialog(context: context, pageBuilder: pageBuilder)
+  Future<bool?> showDeleteConfirmDialog3(BuildContext context) {
+    bool _withTree = false; //记录复选框是否选中
+    return showDialog<bool>(
+      context: context,
+      // false = user must tap button, true = tap outside dialog
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('提示'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('您确定要删除当前文件吗？'),
+              Row(
+                children: [
+                  Text('同事删除子目录？'),
+                  DialogCheckbox(
+                    onChanged: (bool? value) {
+                      // 更新选中状态
+                      _withTree = !_withTree;
+                    },
+                    value: _withTree,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('取消'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+            TextButton(
+              child: Text('删除'),
+              onPressed: () {
+                // 将选中的状态返回
+                Navigator.of(dialogContext).pop(_withTree);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class DialogCheckbox extends StatefulWidget {
+  const DialogCheckbox({Key? key, required this.onChanged, this.value})
+      : super(key: key);
+  final ValueChanged<bool?> onChanged;
+  final bool? value;
+
+  @override
+  State<StatefulWidget> createState() => _DialogCheckboxState();
+}
+
+class _DialogCheckboxState extends State<DialogCheckbox> {
+  bool? value;
+
+  @override
+  void initState() {
+    value = widget.value;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Checkbox(
+      value: value,
+      onChanged: (v) {
+        // 将选中状态通过事件的形式抛出
+        widget.onChanged(v);
+        setState(() {
+          // 更新自身选中状态
+          value = v;
+        });
+      },
+    );
   }
 }
