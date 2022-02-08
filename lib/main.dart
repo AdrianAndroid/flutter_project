@@ -10,174 +10,44 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Woolha.com Flutter Tutorial',
-      home: FutureBuilderExample(),
+      home: Scaffold(
+        body: WillPopScopeTestRoute(),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-Future<String> getValue() async {
-  await Future.delayed(Duration(seconds: 3));
-  return 'Woolha';
-}
-
-class FutureBuilderExample extends StatefulWidget {
+class WillPopScopeTestRoute extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _FutureBuilderExampleState();
-}
-
-class _FutureBuilderExampleState extends State<FutureBuilderExample> {
-  late Future<String> _value;
-
-  @override
-  void initState() {
-    super.initState();
-    _value = getValue();
+  State<StatefulWidget> createState() {
+    return WillPopScopeTestRouteState();
   }
+}
 
-  String _title = 'Hi';
+class WillPopScopeTestRouteState extends State<WillPopScopeTestRoute> {
+  DateTime? _lastPressedAt; //上次点击时候
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Woolha.com Flutter Tutorial')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _title = _title + ".";
-          });
-        },
-        child: Icon(Icons.title),
-      ),
-      body: SizedBox(
-        width: double.infinity,
-        child: Center(
-          child: FutureBuilder<String>(
-            future: _value,
-            initialData: 'App Name',
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-              print('State: ${snapshot.connectionState}');
-              print('State is Active ${ConnectionState.active == snapshot.connectionState}');
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    Visibility(
-                      child: Text(
-                        snapshot.data ?? "NULL",
-                        style: TextStyle(color: Colors.black, fontSize: 24),
-                      ),
-                    ),
-                  ],
-                );
-              } else if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return const Text('Error');
-                } else if (snapshot.hasData) {
-                  return Text(
-                    snapshot.data ?? 'NULL',
-                    style: const TextStyle(color: Colors.teal, fontSize: 36),
-                  );
-                } else {
-                  return const Text('Empty data');
-                }
-              } else {
-                return Text('State: ${snapshot.connectionState}');
-              }
-            },
-          ),
+    return WillPopScope(
+      child: Container(
+        alignment: Alignment.center,
+        child: Text(
+          '1秒内连续按两次返回键退出',
+          style: TextStyle(color: Colors.black),
         ),
       ),
+      onWillPop: () async {
+        if (_lastPressedAt == null ||
+            DateTime.now().difference(_lastPressedAt!) > Duration(seconds: 1)) {
+          // 两次点击间隔超过1秒则重新计时
+          _lastPressedAt = DateTime.now();
+          print('1秒内失误点击！！！');
+          return false;
+        }
+        return true;
+      },
     );
   }
 }
-
-// class MyApp extends StatelessWidget {
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Woolha.com Flutter Tutorial',
-//       home: FutureBuilderExample(),
-//       debugShowCheckedModeBanner: false,
-//     );
-//   }
-// }
-//
-// Future<String> getValue() async {
-//   await Future.delayed(Duration(seconds: 3));
-//
-//   return 'Woolha';
-// }
-//
-// class FutureBuilderExample extends StatefulWidget {
-//   @override
-//   State<StatefulWidget> createState() {
-//     return _FutureBuilderExampleState ();
-//   }
-// }
-//
-// class _FutureBuilderExampleState extends State<FutureBuilderExample> {
-//
-//   Future<String> _value;
-//
-//   @override
-//   initState() {
-//     super.initState();
-//     _value = getValue();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Woolha.com Flutter Tutorial'),
-//       ),
-//       body: SizedBox(
-//         width: double.infinity,
-//         child: Center(
-//           child: FutureBuilder<String>(
-//             future: _value,
-//             initialData: 'App Name',
-//             builder: (
-//                 BuildContext context,
-//                 AsyncSnapshot<String> snapshot,
-//                 ) {
-//               if (snapshot.connectionState == ConnectionState.waiting) {
-//                 return Column(
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     CircularProgressIndicator(),
-//                     Visibility(
-//                       visible: snapshot.hasData,
-//                       child: Text(
-//                         snapshot.data,
-//                         style: const TextStyle(color: Colors.black, fontSize: 24),
-//                       ),
-//                     )
-//                   ],
-//                 );
-//               } else if (snapshot.connectionState == ConnectionState.done) {
-//                 if (snapshot.hasError) {
-//                   return const Text('Error');
-//                 } else if (snapshot.hasData) {
-//                   return Text(
-//                       snapshot.data,
-//                       style: const TextStyle(color: Colors.teal, fontSize: 36)
-//                   );
-//                 } else {
-//                   return const Text('Empty data');
-//                 }
-//               } else {
-//                 return Text('State: ${snapshot.connectionState}');
-//               }
-//             },
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
