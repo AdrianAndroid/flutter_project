@@ -1,22 +1,25 @@
-Future<String> createOrderMessage() async {
+Future<void> printOrderMessage() async {
+  print('Awaiting user order...');
   var order = await fetchUserOrder();
-  return 'Your order is : $order';
+  print('Your order is: $order');
 }
-Future<String> fetchUserOrder() =>
-    // Imagine that this function is more complex and slow.
-    Future.delayed(const Duration(seconds: 2), () => 'Large Latte');
 
-// 这种用法其实是错误的。
+Future<String> fetchUserOrder() {
+  // Imagine that this function is more complex and slow.
+  return Future.delayed(Duration(seconds: 4), () => 'Large Latte');
+}
+
 Future<void> main() async {
-  print('Fetching user order...');
-  print(await createOrderMessage());
+  countSeconds(4);
+  print('printOrderMessage start ...');
+  await printOrderMessage(); // 这个是阻塞的
+  print('printOrderMessage end ...');
 }
 
-// Key terms
-// * async: You can use the async keyword before a function's body to mark it
-//          as asynchronous.
-// * async  function: An async function is a function labeled with the async
-//          keyword.
-// * await: You can use the await keyword to get the completed result of an
-//          asynchronous expression. The await keyword only works within an
-//          async function.
+void countSeconds(int s) {
+  for (var i = 1; i <= s; i++) {
+    print('countSecond $i start ...');
+    Future.delayed(Duration(seconds: 1), () => print(i));
+    print('countSecond $i end ...');
+  }
+}
