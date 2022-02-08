@@ -315,35 +315,82 @@ class _TestAlertDialogWidget extends StatelessWidget {
           child: Text('ShowCustomDialog()'),
         ),
         ElevatedButton(
-            onPressed: () async {
-              // 弹出对话框并等待其关闭
-              bool? delete = await showDeleteConfirmDialog1(context);
-              if (delete == null) {
-                print('取消删除!');
-              } else {
-                print('已确认删除!');
-              }
-              // ... 删除文件
-            },
-            child: Text('对话框1')),
+          onPressed: () async {
+            // 弹出对话框并等待其关闭
+            bool? delete = await showDeleteConfirmDialog1(context);
+            if (delete == null) {
+              print('取消删除!');
+            } else {
+              print('已确认删除!');
+            }
+            // ... 删除文件
+          },
+          child: Text('对话框1'),
+        ),
         ElevatedButton(
-            onPressed: () {
-              changeLanguage(context);
-            },
-            child: Text('对话框2')),
+          onPressed: () {
+            changeLanguage(context);
+          },
+          child: Text('对话框2'),
+        ),
         ElevatedButton(
-            onPressed: () async {
-              // 弹出删除确认对话框，等待用户确认
-              bool? deleteTree = await showDeleteConfirmDialog3(context);
-              if (deleteTree == null) {
-                print('取消删除');
-              } else {
-                print('同事删除子目录：$deleteTree');
-              }
-            },
-            child: Text('对话框3(复选框可以点击)')),
+          onPressed: () async {
+            // 弹出删除确认对话框，等待用户确认
+            bool? deleteTree = await showDeleteConfirmDialog3(context);
+            if (deleteTree == null) {
+              print('取消删除');
+            } else {
+              print('同事删除子目录：$deleteTree');
+            }
+          },
+          child: Text('对话框3(复选框可以点击)'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            await showDeleteConfirmDialog4(context);
+          },
+          child: Text('对话框4(复选框可以点击) markNeedsBuild'),
+        ),
         ElevatedButton(onPressed: () {}, child: Text('对话框4(复选框可以点击)')),
       ],
+    );
+  }
+
+  Future<bool?> showDeleteConfirmDialog4(BuildContext context) {
+    bool _withTree = false;
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('提示'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('您确定要删除当前文件吗？'),
+              Checkbox(
+                value: _withTree,
+                onChanged: (bool? value) {
+                  // 此时context为对话框UI的根Elemment，我们
+                  // 直接将对话框UI对应的Element标记为dirty
+                  (context as Element).markNeedsBuild();
+                  _withTree = !_withTree;
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('取消'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(_withTree),
+              child: Text('删除'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -428,4 +475,36 @@ class _DialogCheckboxState extends State<DialogCheckbox> {
       },
     );
   }
+}
+
+class StatefulBuilder extends StatefulWidget {
+  final StatefulWidgetBuilder builder;
+
+  const StatefulBuilder({Key? key, required this.builder}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _StatefulBuilderState();
+}
+
+class _StatefulBuilderState extends State<StatefulBuilder> {
+  @override
+  Widget build(BuildContext context) => widget.builder(context, setState);
+}
+
+// 测试用
+void test() {
+  bool? _withTree = false;
+  Row(
+    children: [
+      Text('同时删除子目录?'),
+      // 使用StatefuleBuilder来构建StatefulWidget上下文
+      StatefulBuilder(builder: (context, _setState) {
+        return Checkbox(
+            value: _withTree,
+            onChanged: (bool? value) {
+              // _setState方法实际就是该
+            });
+      }),
+    ],
+  );
 }
