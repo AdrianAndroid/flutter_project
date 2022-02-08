@@ -43,13 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
-  dio:
+  cupertino_icons:
     dependency: "direct main"
     description:
-      name: dio
+      name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.4"
+    version: "1.0.4"
   fake_async:
     dependency: transitive
     description:
@@ -62,18 +62,30 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
-  http_parser:
+  intl:
     dependency: transitive
     description:
-      name: http_parser
+      name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "0.17.0"
+  localization:
+    dependency: "direct main"
+    description:
+      name: localization
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   matcher:
     dependency: transitive
     description:
@@ -157,4 +169,4 @@ packages:
     source: hosted
     version: "2.1.0"
 sdks:
-  dart: ">=2.12.0 <3.0.0"
+  dart: ">=2.13.0 <3.0.0"
