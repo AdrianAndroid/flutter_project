@@ -2,6 +2,7 @@ Future<void> printOrderMessage() async {
   try {
     print('Awaiting user orer..');
     var order = await fetchUserOrder();
+    print(order);
   } catch (err) {
     print('Caught error: $err');
   }
