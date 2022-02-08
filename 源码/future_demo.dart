@@ -15,6 +15,7 @@ Future<void> fetchUserOrder2() {
 // 这种用法其实是错误的。
 main() {
   print('Future main start...');
-  fetchUserOrder2();
+  var f = fetchUserOrder2();
+  // print('Future result = $f'); // 使用返回值，就阻塞了
   print('Future main end...');
 }
