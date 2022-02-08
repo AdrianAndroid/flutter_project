@@ -8,6 +8,7 @@ Future<String> fetchUserOrder() =>
     // Imagine that this function is more complex and slow.
     Future.delayed(const Duration(seconds: 2), () => 'Large Latte');
 
+// 这种用法其实是错误的。
 main() {
   print('Future main start...');
   print(createOrderMessage());
