@@ -377,6 +377,9 @@ class _TestAlertDialogWidget extends StatelessWidget {
             },
             child: Text('日历选择'),
           ),
+          SizedBox(height: 100),
+          SizedBox(height: 100),
+          SizedBox(height: 100),
         ],
       ),
     );
