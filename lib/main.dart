@@ -132,6 +132,68 @@ class _TestAlertDialogWidget extends StatelessWidget {
     }
   }
 
+  // list dialog
+  Future<void> showListDialog(BuildContext context) async {
+    int? index = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        var child = Column(
+          children: [
+            ListTile(title: Text('请选择')),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text("$index"),
+                    onTap: () => Navigator.of(context).pop(index),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+        return Dialog(child: child);
+      },
+    );
+    if (index != null) {
+      print('点击了: $index');
+    }
+  }
+
+  // list dialog
+  Future<void> showListDialog2(BuildContext context) async {
+    int? index = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        var child = Column(
+          children: [
+            ListTile(title: Text('请选择')),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text("$index"),
+                    onTap: () => Navigator.of(context).pop(index),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+        return UnconstrainedBox(
+          constrainedAxis: Axis.vertical,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 240),
+            child: Material(child: child, type: MaterialType.card),
+          ),
+        );
+      },
+    );
+    if (index != null) {
+      print('点击了: $index');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -167,6 +229,18 @@ class _TestAlertDialogWidget extends StatelessWidget {
           child: Text('SimpleDialog class'),
         ),
         ElevatedButton(
+          onPressed: () async {
+            await showListDialog(context);
+          },
+          child: Text('ShowListDilaog'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            await showListDialog2(context);
+          },
+          child: Text('ShowListDilaog222222'),
+        ),
+        ElevatedButton(
             onPressed: () async {
               // 弹出对话框并等待其关闭
               bool? delete = await showDeleteConfirmDialog1(context);
@@ -178,9 +252,11 @@ class _TestAlertDialogWidget extends StatelessWidget {
               // ... 删除文件
             },
             child: Text('对话框1')),
-        ElevatedButton(onPressed: () {
-          changeLanguage(context);
-        }, child: Text('对话框2')),
+        ElevatedButton(
+            onPressed: () {
+              changeLanguage(context);
+            },
+            child: Text('对话框2')),
         ElevatedButton(onPressed: () {}, child: Text('对话框3(复选框可以点击)')),
         ElevatedButton(onPressed: () {}, child: Text('对话框4(复选框可以点击)')),
       ],
