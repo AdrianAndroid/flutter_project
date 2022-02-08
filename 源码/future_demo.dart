@@ -1,5 +1,5 @@
-String createOrderMessage() {
-  var order = fetchUserOrder();
+Future<String> createOrderMessage() async {
+  var order = await fetchUserOrder();
   return 'Your order is : $order';
 }
 Future<String> fetchUserOrder() =>
@@ -9,5 +9,5 @@ Future<String> fetchUserOrder() =>
 // 这种用法其实是错误的。
 Future<void> main() async {
   print('Fetching user order...');
-  print(createOrderMessage());
+  print(await createOrderMessage());
 }
