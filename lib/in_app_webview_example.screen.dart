@@ -73,16 +73,17 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
         });
 
     pullToRefreshController = PullToRefreshController(
-        options: PullToRefreshOptions(color: Colors.blue),
-        onRefresh: () async {
-          if (Platform.isAndroid) {
-            webViewController?.reload();
-          } else if (Platform.isIOS) {
-            webViewController?.loadUrl(
-              urlRequest: URLRequest(url: await webViewController?.getUrl()),
-            );
-          }
-        });
+      options: PullToRefreshOptions(color: Colors.blue),
+      onRefresh: () async {
+        if (Platform.isAndroid) {
+          webViewController?.reload();
+        } else if (Platform.isIOS) {
+          webViewController?.loadUrl(
+            urlRequest: URLRequest(url: await webViewController?.getUrl()),
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -98,6 +99,7 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            SizedBox(height: 40),
             TextField(
               decoration: InputDecoration(prefixIcon: Icon(Icons.search)),
               controller: urlController,
@@ -214,6 +216,7 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                 ),
               ],
             ),
+            SizedBox(height:70)
           ],
         ),
       ),
