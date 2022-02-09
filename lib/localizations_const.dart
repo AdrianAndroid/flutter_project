@@ -3,9 +3,14 @@ import 'package:flutter/foundation.dart';
 
 enum LOCAL_TYPE { EN, CH }
 
-List<Locale> mapLocals = [
-  const Locale('en', 'US'), // 美国英语
-  const Locale('zh', 'CN'), // 中文简体
+const locale_enUs = const Locale('en', 'US');
+const locale_zhCN = const Locale('zh', 'CN');
+const locale_zhHK = const Locale('zh', 'HK');
+
+const List<Locale> mapLocals = [
+  locale_enUs, // 美国英语
+  locale_zhCN, // 中文简体
+  locale_zhHK,
 ];
 
 // 是否包含这个语言

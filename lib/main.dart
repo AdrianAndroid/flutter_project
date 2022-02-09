@@ -11,6 +11,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: locale_enUs,
       localizationsDelegates: [
         // 本地化的代理类
         // 为Material组件库提供的本地化的字符串和其他值，它可以使Material组建支持多语言
@@ -20,12 +21,7 @@ class Home extends StatelessWidget {
         // 注册我们自己的Delegate
         DemoLocalizationsDelegate()
       ],
-      supportedLocales: [
-        // 需要支持的语言列表
-        const Locale('en', 'US'), // 美国英语
-        const Locale('zh', 'CN'), // 中文简体
-        const Locale('zh', 'HK'), // 中文简体
-      ],
+      supportedLocales: mapLocals,
       title: 'Woolha.com Flutter Tutorial',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: MyApp(),
