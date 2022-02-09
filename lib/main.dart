@@ -24,6 +24,7 @@ class Home extends StatelessWidget {
         // 需要支持的语言列表
         const Locale('en', 'US'), // 美国英语
         const Locale('zh', 'CN'), // 中文简体
+        const Locale('zh', 'HK'), // 中文简体
       ],
       title: 'Woolha.com Flutter Tutorial',
       theme: ThemeData(primarySwatch: Colors.blue),

@@ -8,7 +8,7 @@ class I18nDemo extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('${locale.languageCode}'),
+          Text('${locale.toString()}'),
         ],
       ),
     );
