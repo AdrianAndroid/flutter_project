@@ -12,6 +12,8 @@ dependencies:
   dio: ^4.0.4
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
