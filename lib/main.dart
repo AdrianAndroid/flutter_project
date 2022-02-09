@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/localizations_const.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -52,7 +53,8 @@ class _MyAppState extends State<MyApp> {
           IconButton(
             onPressed: () {
               setState(() {
-                local_type = toggleLocal(local_type);
+                //local_type = toggleLocal(local_type);
+                _showDatePicker1(context);
               });
             },
             icon: Icon(Icons.toggle_on),
@@ -63,5 +65,36 @@ class _MyAppState extends State<MyApp> {
         child: Text(getLocalName(local_type)),
       ),
     );
+  }
+
+  // 日历选择
+  Future<DateTime?> _showDatePicker1(BuildContext context) {
+    bool useIOS = true;
+    var date = DateTime.now();
+    return useIOS
+        ? showDatePicker(
+            context: context,
+            initialDate: date,
+            firstDate: date,
+            lastDate: date.add(Duration(days: 30)),
+          )
+        : showCupertinoModalPopup(
+            context: context,
+            builder: (ctx) {
+              return Container(
+                height: 200,
+                color: Colors.white,
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  minimumDate: date,
+                  maximumDate: date.add(Duration(days: 30)),
+                  onDateTimeChanged: (DateTime value) {
+                    print(value);
+                  },
+                  maximumYear: date.year + 1,
+                ),
+              );
+            },
+          );
   }
 }
