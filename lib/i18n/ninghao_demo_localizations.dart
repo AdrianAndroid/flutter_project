@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_project/i18n/intl/ninghao_demo_messages_all.dart';
-import 'package:intl/intl.dart';
+
 import '../localizations_const.dart';
 
 // 手动版本

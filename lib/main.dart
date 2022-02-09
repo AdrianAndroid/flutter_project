@@ -25,7 +25,7 @@ class Home extends StatelessWidget {
       ) {
         print('localeResolutionCallback locale = $locale');
         print('localeResolutionCallback supportedLocales = $supportedLocales');
-        return locale_enUs;
+        return locale_zhCN;
       },
       localizationsDelegates: [
         // 本地化的代理类
