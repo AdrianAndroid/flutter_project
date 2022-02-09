@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import '../../localizations_const.dart';
 import 'ninghao_demo_messages_all.dart';
 
+// 自动版本
+
 // 宁皓网教程
 // flutter pub pub run intl_translation:extract_to_arb
 // --output-dir=lib/demo/i18n/intl/
