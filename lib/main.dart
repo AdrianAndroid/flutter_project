@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/localizations_const.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'i18n/i18n_demo.dart';
+
 void main() => runApp(Home());
 
 class Home extends StatelessWidget {
@@ -61,9 +63,10 @@ class _MyAppState extends State<MyApp> {
           ),
         ],
       ),
-      body: Center(
-        child: Text(getLocalName(local_type)),
-      ),
+      body: I18nDemo(),
+      // body: Center(
+      //   child: Text(getLocalName(local_type)),
+      // ),
     );
   }
 
