@@ -19,7 +19,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  intl_generator: ^0.2.1
+  intl_generator: ^0.1.0+0
 #  intl_translation: ^0.17.10
 
 flutter:

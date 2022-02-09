@@ -1,5 +1,11 @@
 import 'package:intl/intl.dart';
 
+// 宁皓网教程
+// flutter pub run intl_translation:extract_to_arb
+// --output-dir=lib/demo/i18n/intl/
+// lib/demo/i18n/intl/ninghao_demo_localizations.dart
+// 自己摸索
+// flutter pub run intl_generator:extract_to_arb --output-dir=lib/i18n/intl/ lib/i18n/intl/ninghao_demo_localizations.dart
 class NinghaoDemoLocalizations {
   String get title => Intl.message(
         'hello',
