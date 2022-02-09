@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-
-// Flutter实战*第二版
-// https://www.woolha.com/tutorials/flutter-using-futurebuilder-widget-examples
+import 'package:flutter_project/localizations_const.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  LOCAL_TYPE local_type = LOCAL_TYPE.CH;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,9 +23,19 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
           //automaticallyImplyLeading: false,
           leading: Icon(Icons.add),
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  local_type = toggleLocal(local_type);
+                });
+              },
+              icon: Icon(Icons.toggle_on),
+            ),
+          ],
         ),
         body: Center(
-          child: Text('Hello World!'),
+          child: Text(getLocalName(local_type)),
         ),
       ),
       debugShowCheckedModeBanner: false,
