@@ -14,6 +14,8 @@ class Home extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         // 定义组件默认的文本方向，从左到右或从右到左，这是因为有些语言的阅读习惯不是从左到右
         GlobalWidgetsLocalizations.delegate,
+        // 注册我们自己的Delegate
+        DemoLocalizationsDelegate()
       ],
       supportedLocales: [
         // 需要支持的语言列表
@@ -40,7 +42,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('多语言/国际化'),
+        title: Text(DemoLocalizations.of(context).title),
         centerTitle: true,
         backgroundColor: Colors.green,
         brightness: Brightness.dark,
