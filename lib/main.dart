@@ -4,6 +4,7 @@ import 'package:flutter_project/localizations_const.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'i18n/i18n_demo.dart';
+import 'i18n/ninghao_demo_localizations.dart';
 
 void main() => runApp(Home());
 
@@ -28,7 +29,8 @@ class Home extends StatelessWidget {
         // 定义组件默认的文本方向，从左到右或从右到左，这是因为有些语言的阅读习惯不是从左到右
         GlobalWidgetsLocalizations.delegate,
         // 注册我们自己的Delegate
-        DemoLocalizationsDelegate()
+        DemoLocalizationsDelegate(),
+        NinghaoDemoLocalizationDelegate(),
       ],
       supportedLocales: mapLocals,
       title: 'Woolha.com Flutter Tutorial',
