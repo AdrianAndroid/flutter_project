@@ -4,7 +4,12 @@ import 'package:flutter_project/localizations_const.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'i18n/i18n_demo.dart';
-import 'i18n/ninghao_demo_localizations.dart';
+
+// 自动生成的
+import 'i18n/intl/ninghao_demo_localizations.dart';
+
+// 手动生成的
+// import 'i18n/ninghao_demo_localizations.dart';
 
 void main() => runApp(Home());
 

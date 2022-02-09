@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project/i18n/ninghao_demo_localizations.dart';
+
+import 'intl/ninghao_demo_localizations.dart';
+
+// 手动写的
+// import 'package:flutter_project/i18n/ninghao_demo_localizations.dart';
+// intl_generator 自动生成的
 
 class I18nDemo extends StatelessWidget {
   @override
@@ -13,6 +18,10 @@ class I18nDemo extends StatelessWidget {
           Text(
             '${NinghaoDemoLocalizations.of(context)?.title}',
             style: Theme.of(context).textTheme.headline6,
+          ),
+          Text(
+            '${NinghaoDemoLocalizations.of(context)?.greet('flannery')}',
+            style: Theme.of(context).textTheme.headline4,
           ),
         ],
       ),
