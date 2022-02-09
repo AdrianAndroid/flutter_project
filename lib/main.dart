@@ -11,7 +11,16 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: locale_enUs,
+      //locale: locale_enUs,
+      // 系统回调回来的语言设置
+      localeResolutionCallback: (
+        Locale? locale,
+        Iterable<Locale> supportedLocales,
+      ) {
+        print('localeResolutionCallback locale = $locale');
+        print('localeResolutionCallback supportedLocales = $supportedLocales');
+        return locale_zhCN;
+      },
       localizationsDelegates: [
         // 本地化的代理类
         // 为Material组件库提供的本地化的字符串和其他值，它可以使Material组建支持多语言
