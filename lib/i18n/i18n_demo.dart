@@ -11,8 +11,8 @@ class I18nDemo extends StatelessWidget {
         children: [
           Text('${locale.toString()}'),
           Text(
-            '${Localizations.of(context, NinghaoDemoLocalizations).title}',
-            style: Theme.of(context).textTheme.headline4,
+            '${NinghaoDemoLocalizations.of(context)?.title}',
+            style: Theme.of(context).textTheme.headline6,
           ),
         ],
       ),

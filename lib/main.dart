@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
       ) {
         print('localeResolutionCallback locale = $locale');
         print('localeResolutionCallback supportedLocales = $supportedLocales');
-        return locale_zhCN;
+        return locale_enUs;
       },
       localizationsDelegates: [
         // 本地化的代理类
