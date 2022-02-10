@@ -1,4 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class Commodity {
+  final String name;
+  final bool isSelected;
+
+  Commodity(this.name, this.isSelected);
+}
+
+class CommodityProvider with ChangeNotifier {
+  List<Commodity> _commodityList =
+      List.generate(10, (index) => Commodity('Commodity Name_$index', false));
+
+  get commodityList => _commodityList;
+
+  get length => _commodityList.length;
+
+  addToCart(int index) {
+    Commodity commodity = commodityList[index];
+    commodityList[index] = Commodity(commodity.name, !commodity.isSelected);
+    notifyListeners();
+  }
+}
 
 void main() {
   runApp(MyApp());
@@ -14,68 +37,25 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: Scaffold(
+        appBar: AppBar(title: Text('Selector')),
+        body: Center(child: Text('Hello World!')),
+      ),
     );
   }
 }
 
-class Counter extends ChangeNotifier {
-  // 这里也可以使用with来进行实现
-  int _count = 0; //数值计算
-  int get count => _count;
-
-  addCount() {
-    _count++;
-    notifyListeners();
-  }
-}
-
-Counter _counter = Counter();
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    _counter.addListener(() {
-      // 数值改变的监听
-      print('YM--->新数值:${_counter.count}');
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _counter.dispose(); //移除监听
-  }
-
+class CommodityListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Hello')),
-      body: Center(
-        child: Column(
-          children: [
-            RaisedButton(
-              onPressed: () {
-                // disposediao
-                _counter.dispose();// dispose之后就不能收到
-                print('YM->dispose()');
-              },
-              child: Text('dispose'),
-            ),
-            RaisedButton(
-              onPressed: () {
-                _counter.addCount();
-              },
-              child: Text('计数'),
-            ),
-          ],
-        ),
+    return ChangeNotifierProvider(
+      create: (_) => CommodityProvider(),
+      // A 是我们从顶层获取的Provider的类型
+      // B 是我们关心的具体类型，也就是获取到的Provider中真正对我们有用的类型，需要在Selector中返回该类型，这个Selector
+      //    的刷新范围也从整个Provider编程了S.
+      child: ListView.builder(
+        itemCount: provi,
+        itemBuilder: itemBuilder,
       ),
     );
   }
