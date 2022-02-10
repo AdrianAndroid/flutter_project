@@ -1,28 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Commodity {
-  final String name;
-  final bool isSelected;
-
-  Commodity(this.name, this.isSelected);
-}
-
-class CommodityProvider with ChangeNotifier {
-  List<Commodity> _commodityList =
-      List.generate(10, (index) => Commodity('Commodity Name_$index', false));
-
-  get commodityList => _commodityList;
-
-  get length => _commodityList.length;
-
-  addToCart(int index) {
-    Commodity commodity = commodityList[index];
-    commodityList[index] = Commodity(commodity.name, !commodity.isSelected);
-    notifyListeners();
-  }
-}
-
 void main() {
   runApp(MyApp());
 }
@@ -37,25 +15,100 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Scaffold(
-        appBar: AppBar(title: Text('Selector')),
-        body: Center(child: Text('Hello World!')),
-      ),
+      home: MyPage(),
     );
   }
 }
 
-class CommodityListScreen extends StatelessWidget {
+class CounterProvider with ChangeNotifier {
+  int _count = 0;
+  int _count1 = 100;
+
+  int get value => _count;
+
+  int get value1 => _count1;
+
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+
+  void increment1() {
+    _count1++;
+    notifyListeners();
+  }
+}
+
+class MyPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return MyPageState();
+  }
+}
+
+class MyPageState extends State<MyPage> {
+  // 初始化CounterProvider
+  CounterProvider _counterProvider = new CounterProvider();
+
   @override
   Widget build(BuildContext context) {
+    print('页面重绘了.........');
+    // 整个页面使用ChangeNotifier来包裹
     return ChangeNotifierProvider(
-      create: (_) => CommodityProvider(),
-      // A 是我们从顶层获取的Provider的类型
-      // B 是我们关心的具体类型，也就是获取到的Provider中真正对我们有用的类型，需要在Selector中返回该类型，这个Selector
-      //    的刷新范围也从整个Provider编程了S.
-      child: ListView.builder(
-        itemCount: provi,
-        itemBuilder: itemBuilder,
+      create: (context) => _counterProvider,
+      // child里面的内容不会因为数据的改变而重绘
+      child: Scaffold(
+        appBar: AppBar(title: Text('my page')),
+        body: Center(
+          // 使用Consumer来获取provider
+          child: Column(
+            children: [
+              // 使用Consumer来获取CounterProvider,为Text提供数据
+              Consumer<CounterProvider>(
+                builder: (
+                  BuildContext context,
+                  CounterProvider counterProvider,
+                  Widget? child,
+                ) {
+                  print('Text1 重绘制了......');
+                  return Text(
+                    // 获取数据
+                    'Text1 : ${counterProvider.value}',
+                    style: TextStyle(fontSize: 20),
+                  );
+                },
+              ),
+              // 使用Consumer来获取CounterProvider,为Text提供数据
+              Consumer(
+                builder: (
+                  BuildContext context,
+                  CounterProvider counterProvider,
+                  Widget? child,
+                ) {
+                  print('Text2重绘制了......');
+                  return Text(
+                    'Text2 : ${counterProvider.value1}',
+                    style: TextStyle(fontSize: 20),
+                  );
+                },
+              ),
+              RaisedButton(
+                onPressed: () {
+                  print('Button 1 被点击了......');
+                  _counterProvider.increment();
+                },
+                child: Text('Button1'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  print('Button 2 被点击了.....');
+                  _counterProvider.increment1();
+                },
+                child: Text('Button2'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
