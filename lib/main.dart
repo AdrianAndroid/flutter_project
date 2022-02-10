@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// 得到的结果
-// I/flutter (14438): Button 1 被点击了......
-// I/flutter (14438): Text1 重绘制了......
-// I/flutter (14438): Text2重绘制了......
-// I/flutter (14438): Button 1 被点击了......
-// I/flutter (14438): Text1 重绘制了......
-// I/flutter (14438): Text2重绘制了......
-// I/flutter (14438): Button 2 被点击了.....
-// I/flutter (14438): Text1 重绘制了......
-// I/flutter (14438): Text2重绘制了......
-// I/flutter (14438): Button 2 被点击了.....
-// I/flutter (14438): Text1 重绘制了......
-// I/flutter (14438): Text2重绘制了......
+// 得到的结果, 改成了Selector的形式
+// I/flutter (15906): Button 1 被点击了......
+// I/flutter (15906): Selector Text 1 重绘了。。。。。。
+// I/flutter (15906): Button 2 被点击了.....
+// I/flutter (15906): Selector Text 2 重绘了。。。。。。
+
 
 void main() {
   runApp(MyApp());
@@ -77,33 +70,35 @@ class MyPageState extends State<MyPage> {
           // 使用Consumer来获取provider
           child: Column(
             children: [
-              // 使用Consumer来获取CounterProvider,为Text提供数据
-              Consumer<CounterProvider>(
-                builder: (
-                  BuildContext context,
-                  CounterProvider counterProvider,
-                  Widget? child,
-                ) {
-                  print('Text1 重绘制了......');
+              // 使用Selector
+              Selector(
+                builder: (BuildContext context, int data, Widget? child) {
+                  print('Selector Text 1 重绘了。。。。。。');
                   return Text(
-                    // 获取数据
-                    'Text1 : ${counterProvider.value}',
+                    'Text1 : ${data.toString()}',
                     style: TextStyle(fontSize: 20),
                   );
                 },
-              ),
-              // 使用Consumer来获取CounterProvider,为Text提供数据
-              Consumer(
-                builder: (
+                selector: (
                   BuildContext context,
                   CounterProvider counterProvider,
-                  Widget? child,
                 ) {
-                  print('Text2重绘制了......');
+                  return counterProvider.value;
+                },
+              ),
+              Selector(
+                builder: (BuildContext context, int data, Widget? child) {
+                  print('Selector Text 2 重绘了。。。。。。');
                   return Text(
-                    'Text2 : ${counterProvider.value1}',
+                    'Text2 : ${data.toString()}',
                     style: TextStyle(fontSize: 20),
                   );
+                },
+                selector: (
+                  BuildContext context,
+                  CounterProvider counterProvider,
+                ) {
+                  return counterProvider.value1;
                 },
               ),
               RaisedButton(
