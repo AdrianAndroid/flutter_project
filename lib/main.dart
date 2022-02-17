@@ -1,5 +1,30 @@
 import 'package:flutter/material.dart';
 
+// Flutter 基础布局Widgets之ConstrainedBox详解
+// https://www.jianshu.com/p/951047be0e55
+//
+// constraints 其类型为BoxConstraints, 一些基本的约束
+// [RenderBox]布局的不可变布局约束
+// 如果且仅当以下所有关系成立时，[Size]才会遵从[BoxConstraints]:
+// [minWidth]<=[Size.width]<=[maxWidth]
+// [minHeight]<=[Size.height]<=[maxHeight]
+// 约束本身必须满足这些关系：
+// 0.0<=[minWidth]<=[maxWidth]<=[double.infinity]
+// 0.0<=[minHeight]<=[maxHeight]<=[double.infinity]
+// [double.infinity]是每个约束的合法值(比如想要获取最大的扩展宽度，可以将宽度值设为double.infinity)
+
+// const BoxConstraints({
+//   this.minWidth = 0.0,
+//   this.maxWidth = double.infinity,
+//   this.minHeight = 0.0,
+//   this.maxHeight = double.infinity,
+// })
+// minWidth 满足约束条件的最小宽度
+// maxWidth 满足约束条件的最大宽度； 可能是[double.infinity](1.0/1.0)
+// minHeight 满足约束条件的最小宽度
+// maxHeight 满足约束条件的最大宽度；可能是[double.infinity](1.0/1.0)
+// child受约束的子child
+
 void main() {
   runApp(MyApp());
 }
@@ -13,62 +38,50 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyPage(),
+      home: ConstrainedBoxLearn(),
     );
   }
 }
 
-class MyPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return MyPageState();
-  }
-}
-
-class MyPageState extends State<MyPage> {
-  String _url = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg'
-      '.jj20.com%2Fup%2Fallimg%2Ftp09%2F210611094Q512b-0-lp.jpg';
-
+class ConstrainedBoxLearn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('页面重绘了.........');
-    // 整个页面使用ChangeNotifier来包裹
     return Scaffold(
-      appBar: AppBar(title: Text('Overlay')),
-      body: _layoutbuilderWidget,
-    );
-  }
-
-  Widget get _normalWidget => Center(
+      appBar: AppBar(title: Text('ConstrainedBox')),
+      body: Center(
         child: Container(
-          child: Column(
-            children: [
-              Image.network(_url, fit: BoxFit.fill, height: 100),
-              Text("图片"),
-            ],
+          child: Container(
+            width: 300,
+            height: 400,
+            decoration: BoxDecoration(border: Border.all()),
+            // 利用UnconstrainedBox消除之前限制
+            child: UnconstrainedBox(
+              // 对child进行约束
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: 30,
+                  minWidth: 30,
+                  maxHeight: 150,
+                  maxWidth: 150,
+                ),
+                child: Container(
+                  width: 110,
+                  height: 110,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.blue,
+                        Colors.purple,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
-      );
-
-  Widget get _layoutbuilderWidget =>
-      LayoutBuilder(builder: (context, constraints) {
-        return Container(
-          child: Column(
-            children: [
-              Image.network(
-                _url,
-                fit: BoxFit.fill,
-                height: 100,
-                width: constraints.maxWidth,
-              ),
-              Text('图片'),
-            ],
-          ),
-        );
-      });
-
-  @override
-  void initState() {
-    super.initState();
+      ),
+    );
   }
 }
