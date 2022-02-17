@@ -35,7 +35,7 @@ class MyPageState extends State<MyPage> {
     // 整个页面使用ChangeNotifier来包裹
     return Scaffold(
       appBar: AppBar(title: Text('Overlay')),
-      body: _normalWidget,
+      body: _layoutbuilderWidget,
     );
   }
 
