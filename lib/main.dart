@@ -51,7 +51,9 @@ class _MyHomeState extends State<MyHome> {
           SizedBox(
             width: 15,
             height: 15,
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              strokeWidth: 1,
+            ),
           ),
           SizedBox(height: 50),
           Center(
