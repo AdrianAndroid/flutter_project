@@ -1,87 +1,141 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-// Flutter 基础布局Widgets之ConstrainedBox详解
-// https://www.jianshu.com/p/951047be0e55
-//
-// constraints 其类型为BoxConstraints, 一些基本的约束
-// [RenderBox]布局的不可变布局约束
-// 如果且仅当以下所有关系成立时，[Size]才会遵从[BoxConstraints]:
-// [minWidth]<=[Size.width]<=[maxWidth]
-// [minHeight]<=[Size.height]<=[maxHeight]
-// 约束本身必须满足这些关系：
-// 0.0<=[minWidth]<=[maxWidth]<=[double.infinity]
-// 0.0<=[minHeight]<=[maxHeight]<=[double.infinity]
-// [double.infinity]是每个约束的合法值(比如想要获取最大的扩展宽度，可以将宽度值设为double.infinity)
-
-// const BoxConstraints({
-//   this.minWidth = 0.0,
-//   this.maxWidth = double.infinity,
-//   this.minHeight = 0.0,
-//   this.maxHeight = double.infinity,
-// })
-// minWidth 满足约束条件的最小宽度
-// maxWidth 满足约束条件的最大宽度； 可能是[double.infinity](1.0/1.0)
-// minHeight 满足约束条件的最小宽度
-// maxHeight 满足约束条件的最大宽度；可能是[double.infinity](1.0/1.0)
-// child受约束的子child
-
 void main() {
-  runApp(MyApp());
+  runApp(
+    MaterialApp(
+      home: MyHome(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyHome extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: ConstrainedBoxLearn(),
-    );
+  State<StatefulWidget> createState() {
+    return _MyHomeState();
   }
 }
 
-class ConstrainedBoxLearn extends StatelessWidget {
+class _MyHomeState extends State<MyHome> {
+  bool _offstage = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('ConstrainedBox')),
-      body: Center(
-        child: Container(
-          child: Container(
-            width: 300,
-            height: 400,
-            decoration: BoxDecoration(border: Border.all()),
-            // 利用UnconstrainedBox消除之前限制
-            child: UnconstrainedBox(
-              // 对child进行约束
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: 30,
-                  minWidth: 30,
-                  maxHeight: 150,
-                  maxWidth: 150,
-                ),
-                child: Container(
-                  width: 110,
-                  height: 110,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.blue,
-                        Colors.purple,
-                      ],
-                    ),
-                  ),
-                ),
+      appBar: AppBar(title: Text('CircularProgressIndicator')),
+      body: Column(
+        children: [
+          SizedBox(height: 1.0),
+          Center(
+            child: RaisedButton(
+              child: Text('button'),
+              onPressed: () async {
+                // 开始倒计时
+                _value = 0;
+                startCountdownTimer();
+                // 进度指示器 loading 显示
+                setState(() {
+                  _offstage = false;
+                });
+                // 等待10秒中
+                await Future.delayed(Duration(milliseconds: 10000));
+
+                // 进度指示器 loading 隐藏
+                setState(() {
+                  _offstage = true;
+                });
+              },
+            ),
+          ),
+          SizedBox(
+            width: 15,
+            height: 15,
+            child: CircularProgressIndicator(),
+          ),
+          SizedBox(height: 50),
+          Center(
+            child: Offstage(
+              offstage: _offstage,
+              // 默认指示器
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          SizedBox(height: 50),
+          Center(
+            child: Offstage(
+              offstage: _offstage,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          SizedBox(height: 50),
+          Center(
+            child: Offstage(
+              offstage: _offstage,
+              // 有背景颜色， 指示器
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.black12,
               ),
             ),
           ),
-        ),
+          SizedBox(height: 50),
+          Center(
+            child: Offstage(
+              offstage: _offstage,
+              // 有进度值颜色 指示器
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+              ),
+            ),
+          ),
+          SizedBox(height: 50),
+          Center(
+            child: Offstage(
+              offstage: _offstage,
+              // 进度值 10个宽 指示器
+              child: CircularProgressIndicator(
+                strokeWidth: 10,
+              ),
+            ),
+          ),
+          SizedBox(height: 50),
+          Center(
+            child: Offstage(
+              offstage: _offstage,
+              // 根据 倒计时给定 进度值， 进度值在0到1之间。如果为空显示动画，非空显示进度
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.orange[100],
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                value: _value / 190,
+              ),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  // 倒计时
+  Timer? _timer;
+  double _value = 0;
+
+  void startCountdownTimer() {
+    if (_timer != null) {
+      _timer?.cancel();
+      _timer = null;
+    }
+
+    // 50毫秒执行一次
+    const oneSec = const Duration(milliseconds: 50);
+    var callback = (timer) => {
+          setState(() {
+            if (_value > 200) {
+              _timer?.cancel();
+            } else {
+              _value = _value + 1;
+            }
+          })
+        };
+    _timer = Timer.periodic(oneSec, callback);
   }
 }
