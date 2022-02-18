@@ -46,7 +46,7 @@ class FMCupertinoTabScaffoldState extends State<FMCupertinoTabScaffoldVC> {
       controller: CupertinoTabController(initialIndex: 2),
       backgroundColor: Colors.yellow,
       tabBuilder: (context, index) {
-        print('tabBuilder: (context=>$context, index=>$index)');
+        // print('tabBuilder: (context=>$context, index=>$index)');
         return CupertinoTabView(
           // 路由设置
           routes: {
