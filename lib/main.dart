@@ -12,6 +12,9 @@ import 'package:flutter/material.dart';
 // 2. App中有多个Navigator，想要的是让其中一个 Navigator 退出，而不是直接让在 Widget tree
 // 底层的 Navigator退出。
 
+// APP中有多个Navigator
+// 在页面底部有一个常驻bar，其上展示内容，这个常驻bar就需要一个自己的Navigator。
+// 在使用TabView、BottomNavigationBar、CupertinoTabView这些组件时，希望有多个Tab，但每个Tab中有自己的导航行为，这时需要给每一个Tab加一个Navigator。
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -20,45 +23,93 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Woolha.com Flutter Tutorial',
       home: Scaffold(
-        body: WillPopScopeTestRoute(),
+        body: MyHomePage(title: 'WillPopScope'),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class WillPopScopeTestRoute extends StatefulWidget {
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, this.title = ''}) : super(key: key);
+  final String title;
+
   @override
-  State<StatefulWidget> createState() {
-    return WillPopScopeTestRouteState();
-  }
+  State<StatefulWidget> createState() => _MyHomePageState();
 }
 
-class WillPopScopeTestRouteState extends State<WillPopScopeTestRoute> {
-  DateTime? _lastQuitTime;
+class _MyHomePageState extends State<MyHomePage> {
+  // 使用TabView、BottomNavigationBar、CupertinoTabView这些组件时也是一样的原理，
+  // 只需在每一个Tab中加入Navigator，不要忘记指定key。
+  GlobalKey<NavigatorState> _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (_lastQuitTime == null ||
-            DateTime.now().difference(_lastQuitTime!).inSeconds > 1) {
-          print('再按一次Back退出');
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: Text('再按一次Back按钮退出')));
-          _lastQuitTime = DateTime.now();
-          return false;
-        } else {
-          print('退出');
-          Navigator.of(context).pop(true);
+    return Scaffold(
+      body: WillPopScope(
+        onWillPop: () async {
+          if (_key.currentState?.canPop() == true) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('_key.currentState?.canPop() == true')));
+            _key.currentState?.pop();
+            return false;
+          } else {
+            print('return true;');
+          }
           return true;
-        }
-      },
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: Navigator(
+                key: _key,
+                onGenerateRoute: (RouteSettings settings) => MaterialPageRoute(
+                  builder: (context) {
+                    return OnePage();
+                  },
+                ),
+              ),
+            ),
+            Container(
+              height: 50,
+              color: Colors.blue,
+              alignment: Alignment.center,
+              child: Text('底部Bar'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// 第一个页面
+class OnePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
       child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          '点击后退按钮，询问是否退出。',
-          style: TextStyle(color: Colors.black),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return TwoPage();
+            }));
+          },
+          child: Text('去下一个页面'),
+        ),
+      ),
+    );
+  }
+}
+
+// 第二个页面
+class TwoPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Container(
+          child: Text('这是第二个页面'),
         ),
       ),
     );
