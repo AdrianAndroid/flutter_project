@@ -11,9 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.2
-  date_format: ^2.0.5
-  event_bus: ^2.0.0
 
 dev_dependencies:
   flutter_test:
