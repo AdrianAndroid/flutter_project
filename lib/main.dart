@@ -35,33 +35,32 @@ class WillPopScopeTestRoute extends StatefulWidget {
 }
 
 class WillPopScopeTestRouteState extends State<WillPopScopeTestRoute> {
+  DateTime? _lastQuitTime;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => _showDialog(),
+      onWillPop: () async {
+        if (_lastQuitTime == null ||
+            DateTime.now().difference(_lastQuitTime!).inSeconds > 1) {
+          print('再按一次Back退出');
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: Text('再按一次Back按钮退出')));
+          _lastQuitTime = DateTime.now();
+          return false;
+        } else {
+          print('退出');
+          Navigator.of(context).pop(true);
+          return true;
+        }
+      },
       child: Container(
         alignment: Alignment.center,
         child: Text(
-          '通过弹窗退出应用程序',
+          '点击后退按钮，询问是否退出。',
           style: TextStyle(color: Colors.black),
         ),
       ),
     );
-  }
-
-  Future<bool> _showDialog() async {
-    bool suc = await showDialog(
-        context: context,
-        builder: (context) =>
-            AlertDialog(title: Text('你确定要退出吗？'), actions: <Widget>[
-              RaisedButton(
-                  child: Text('退出'),
-                  onPressed: () => Navigator.of(context).pop(true)),
-              RaisedButton(
-                  child: Text('取消'),
-                  onPressed: () => Navigator.of(context).pop(false)),
-            ]));
-    return suc;
   }
 }
