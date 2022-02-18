@@ -35,28 +35,33 @@ class WillPopScopeTestRoute extends StatefulWidget {
 }
 
 class WillPopScopeTestRouteState extends State<WillPopScopeTestRoute> {
-  DateTime? _lastPressedAt; //上次点击时候
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: () async => _showDialog(),
       child: Container(
         alignment: Alignment.center,
         child: Text(
-          '1秒内连续按两次返回键退出',
+          '通过弹窗退出应用程序',
           style: TextStyle(color: Colors.black),
         ),
       ),
-      onWillPop: () async {
-        if (_lastPressedAt == null ||
-            DateTime.now().difference(_lastPressedAt!) > Duration(seconds: 1)) {
-          // 两次点击间隔超过1秒则重新计时
-          _lastPressedAt = DateTime.now();
-          print('1秒内失误点击！！！');
-          return false;
-        }
-        return true;
-      },
     );
+  }
+
+  Future<bool> _showDialog() async {
+    bool suc = await showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(title: Text('你确定要退出吗？'), actions: <Widget>[
+              RaisedButton(
+                  child: Text('退出'),
+                  onPressed: () => Navigator.of(context).pop(true)),
+              RaisedButton(
+                  child: Text('取消'),
+                  onPressed: () => Navigator.of(context).pop(false)),
+            ]));
+    return suc;
   }
 }
