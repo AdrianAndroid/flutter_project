@@ -1,105 +1,169 @@
-import 'dart:math';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-// https://www.jianshu.com/p/540dccbd5a51
+//  Wrap({
+//     Key key,
+//     this.direction = Axis.horizontal,   //排列方向，默认水平方向排列
+//     this.alignment = WrapAlignment.start,  //子控件在主轴上的对齐方式
+//     this.spacing = 0.0,  //主轴上子控件中间的间距
+//     this.runAlignment = WrapAlignment.start,  //子控件在交叉轴上的对齐方式
+//     this.runSpacing = 0.0,  //交叉轴上子控件之间的间距
+//     this.crossAxisAlignment = WrapCrossAlignment.start,   //交叉轴上子控件的对齐方式
+//     this.textDirection,   //textDirection水平方向上子控件的起始位置
+//     this.verticalDirection = VerticalDirection.down,  //垂直方向上子控件的其实位置
+//     List<Widget> children = const <Widget>[],   //要显示的子控件集合
+//   })
 
-// 在切换横竖屏时用到 SystemChrome，小菜理解它作为一个全局属性，
-// 很像 Android 的 Application，功能很强大。
-// setPreferedOrientations
-////  在我们日常应用中可能会需要设置横竖屏，或锁定单方向屏幕等不同要求，通过 **setPreferredOrientations** 配合实现；简单可以按
-////  portraitUp 上 / portraitDown 下 / landscapeLeft 右 / landscapeRight 左 ** 来区分；
-////  Tips：landscapeLeft 是以 portraitUp 顺时针旋转 90 度；landscapeRight 是以逆时针旋转 90度，故是视觉相反。**
-
-// Tips
-//// portraitDown属性请注意，多方向时一般不会有效果，系统默认不会颠倒
-//// 多方向设置时初始化方向分两种情况：
-////// 第一种：当前重力感应方向不再设置多方向列表中，初始方向为列表第一个设置方法
-////// 第二种：当前重力感应方向在设置多方向列表中，无论顺序第几位，默认均展示当前重力感应方向（非portraitDown）
-
-void test() {
-  // 竖直上
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // 竖直下
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown]);
-  // 水平左
-  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
-  // 水平右
-  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
-
-  // 竖直方向
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  // 水平方向
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-  // 多方向
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight
-  ]);
+// https://www.jianshu.com/p/5ffb4c9030d6
+// 构建
+void demo1() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription<int> streamSubscription = stream.listen((event) {
+    print('event -> $event');
+  });
+  print(streamSubscription);
 }
 
-// setEnabledSystemOverlays
-////   **setEnabledSystemUIOverlays** 是指定在应用程序运行时可见的系统叠加，主要对状态栏的操作，读起来比较拗口，但是看测试用例就很明了；参数分 **top 顶部 / bottom 底部** 两种；
-//// 1. SystemUiOverlay.top   默认隐藏底部虚拟状态栏(需手机支持虚拟状态栏设备)，即三大金刚键；获取焦点后展示状态栏，展示大小为去掉状态栏时整体大小；
-//// 2. SystemUiOverlay.bottom   默认隐藏顶部虚拟状态栏，获取焦点后展示状态栏，展示大小为去掉状态栏时整体大小；
-//// 3. 两者皆有   即默认情况，顶部底部状态栏均展示；
-void test2() {
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  SystemChrome.setEnabledSystemUIOverlays(
-      [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+// isPaused -> bool
+void demo2() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription<int> streamSubscription = stream.listen((event) {
+    print('event -> $event');
+  });
+  print(streamSubscription.isPaused); // false
+  streamSubscription.pause();
+  print(streamSubscription.isPaused); // true
+  streamSubscription.cancel();
 }
 
-// setSystemUIOverlayStyle
-//// 1. systemNavigationBarColor 该属性仅用于 **Android** 设备且 **SDK >= O** 时，底部状态栏颜色；
-//// 2. systemNavigationBarDividerColor 该属性仅用于 **Android** 设备且 **SDK >= P** 时，底部状态栏与主内容分割线颜色，效果不是很明显；
-//// 3. systemNavigationBarIconBrightness   该属性仅用于 **Android** 设备且 **SDK >= O** 时，底部状态栏图标样式，主要是三大按键颜色；
-//// 4. statusBarColor   该属性仅用于 **Android** 设备且 **SDK >= M** 时，顶部状态栏颜色；
-//// 5. statusBarIconBrightness   该属性仅用于 **Android** 设备且 **SDK >= M** 时，顶部状态栏图标的亮度；但小菜感觉并不明显；
-//// 6. statusBarBrightness   该属性仅用于 **iOS** 设备顶部状态栏亮度；
-
-void test3() {
-  // 1.
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(systemNavigationBarColor: Colors.pink));
-  // 2.
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(systemNavigationBarDividerColor: Colors.yellow));
-  // 3.
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(systemNavigationBarIconBrightness: Brightness.dark));
-  // 4.
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.red));
-  // 5.
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarIconBrightness: Brightness.dark));
-  // 6.
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarBrightness: Brightness.light));
+// onDone
+void demo3() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription<int> streamSubscription = stream.listen((event) {
+    print('Stream -- listen -- $event');
+  });
+  streamSubscription.onData((data) {
+    print('StreamSubscription -- onData -- $data');
+  });
+  // streamSubscription.cancel();
 }
 
-// setApplicationSwitcherDescription   小菜个人理解该属性显示效果是在应用程序切换器相关的应用程序的当前状态时，但是小菜反复测试并没有实际效果，希望有理解的大神多多指点；
-void test5() {
-  SystemChrome.setApplicationSwitcherDescription(
-          const ApplicationSwitcherDescription(
-              label: "Demo Flutter", primaryColor: 0xFFE53935))
-      .then((value) => runApp(MyApp()));
+// onDone
+void onDone() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription<int> streamSubscription = stream.listen(null);
+  streamSubscription.onData((data) {
+    print("StreamSubscription -- onData -- $data");
+  });
+  streamSubscription.onDone(() {
+    print("StreamSubscription -- onDone");
+  });
 }
 
-class ColorUtils {
-  static Color getRandomColor() {
-    return Color.fromARGB(
-      255,
-      Random.secure().nextInt(200),
-      Random.secure().nextInt(200),
-      Random.secure().nextInt(200),
-    );
-  }
+// onError
+void onError() {
+  var stream = Stream.error("对不起，出错了"); // 出发点
+  StreamSubscription streamSubscription = stream.listen(null); // 监听
+  streamSubscription.onData((data) {
+    // 返回数据
+    print("StreamSubscription -- onData");
+  });
+  streamSubscription.onDone(() {
+    print("StreamSubscription -- onDone");
+  });
+  streamSubscription.onError((e) {
+    print('StreamSubscription -- onError -- $e');
+  });
+}
+
+// cancel() -> Future<void>
+void cancel() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription<int> streamSubscription = stream.listen(null);
+  streamSubscription.onData((data) {
+    print('StreamSubscription -- onData -- $data');
+  });
+  streamSubscription.cancel();
+}
+
+// pause是对Stream的订阅者进行暂停
+// resume是对暂停的订阅者纪念性恢复
+void pauseAndResume() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription<int> streamSubscription = stream.listen(null);
+  streamSubscription.onData((data) {
+    print("StreamSubscription -- onData -- $data");
+  });
+  print('---->streamSubscription.pause();');
+  streamSubscription.pause();
+  print('---->print(streamSubscription.isPaused); ');
+  print(streamSubscription.isPaused); // true
+  print('---->streamSubscription.resume();');
+  streamSubscription.resume();
+  print('---->print(streamSubscription.isPaused);');
+  print(streamSubscription.isPaused); // false
+}
+
+// 如果实现pasue的Future方法，则StreamSubscription将撤销暂停，在Future完成时再恢复StreamSubscription
+void pauseAndResume1() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription<int> streamSubscription = stream.listen(null);
+  streamSubscription.onData((data) {
+    print('StreamSubscription -- onData -- $data');
+  });
+  streamSubscription.pause(Future(() {
+    print('pause -- future -- 完成');
+  }));
+}
+
+void pauseAndResume2() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription<int> streamSubscription = stream.listen((event) {});
+  streamSubscription.onData((data) {
+    print("StreamSubscripton -- onData -- $data");
+  });
+  streamSubscription.pause();
+  Future(() {
+    print("pause -- future - 完成");
+  }).whenComplete(() => streamSubscription.resume());
+}
+
+void asFuture() {
+  var stream = Stream.fromIterable([1, 2, 3, 4]);
+  StreamSubscription streamSubscription = stream.listen((event) {});
+  streamSubscription.onData((data) {
+    print("StreamSubscripton -- onData -- $data");
+  });
+  streamSubscription.onDone(() {
+    print("--onDone--");
+  });
+  streamSubscription.asFuture(Future(() {
+    return "onDone & onError 合集";
+  })).then((value) {
+    print("asFuture -- $value");
+  }).catchError((e) {
+    print("sFuture --catchError -- $e");
+  });
+}
+
+// onError取代
+void asFuture2() {
+  var stream = Stream.error("对不起我错了");
+  StreamSubscription streamSubscription = stream.listen((event) {});
+  streamSubscription.onData((data) {
+    print("StreamSubscription -- onData -- $data");
+  });
+  streamSubscription.onError((e) {
+    print("--onError-- $e");
+  });
+  streamSubscription.asFuture(Future(() {
+    return "onDone & onError 合集";
+  }).then((value) {
+    print("asFuture -- $value");
+  }).catchError((e) {
+    print("asFuture --catchError -- $e");
+  }));
 }
 
 void main() => runApp(MyApp());
@@ -110,233 +174,32 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Woolha.com Flutter Tutorial',
       home: Scaffold(
-        appBar: AppBar(title: Text('SystemChrome')),
-        body: OrgPage(),
+        appBar: AppBar(title: Text('StreamSubscription')),
+        body: SingleChildScrollView(
+          child: Wrap(
+            spacing: 10,
+            children: [
+              _buildButton('listen监听', demo1),
+              _buildButton('isPaused -> bool', demo2),
+              _buildButton('onData', demo3),
+              _buildButton('onDone', onDone),
+              _buildButton('onError', onError),
+              _buildButton('onError', onError),
+              _buildButton('cancel', cancel),
+              _buildButton('pauseAndResume', pauseAndResume),
+              _buildButton('pauseAndResume1', pauseAndResume1),
+              _buildButton('pauseAndResume2', pauseAndResume2),
+              _buildButton('asFuture', asFuture),
+              _buildButton('asFuture2', asFuture2),
+            ],
+          ),
+        ),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
-}
 
-class OrgPage extends StatefulWidget {
-  @override
-  State<OrgPage> createState() => _OrgPageState();
-}
-
-class _OrgPageState extends State<OrgPage> {
-  Brightness? b1 = Brightness.light;
-  Brightness? b2 = Brightness.light;
-  Brightness? b3 = Brightness.light;
-
-  Brightness _toggleBrigthness(Brightness? brightness) {
-    if (brightness == Brightness.dark) {
-      print('return light');
-      return Brightness.light;
-    } else {
-      print('return dark');
-      return Brightness.dark;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Center(
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return OnePage();
-                }));
-              },
-              child: Text('OnePage'),
-            ),
-            _buildOrientation(), //单方向
-            _buildOrientation2(), //多方向
-            _buildBigText('setEnabledSystemUIOverlays'),
-            _build1Text1Button('SystemUiOverlay.top', () {
-              SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
-            }),
-            _build1Text1Button('SystemUiOverlay.bottom', () {
-              SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-            }),
-            _build1Text1Button('两者皆有', () {
-              SystemChrome.setEnabledSystemUIOverlays(
-                  [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-            }),
-            _buildBigText('setSystemUIOverlayStyle'),
-            _build1Text1Button('systemNavigationBarColor', () {
-              SystemChrome.setSystemUIOverlayStyle(
-                SystemUiOverlayStyle(
-                  systemNavigationBarColor: ColorUtils.getRandomColor(),
-                ),
-              );
-            }),
-            _build1Text1Button('systemNavigationBarDividerColor', () {
-              SystemChrome.setSystemUIOverlayStyle(
-                SystemUiOverlayStyle(
-                  systemNavigationBarDividerColor: ColorUtils.getRandomColor(),
-                ),
-              );
-            }),
-            _build1Text1Button('systemNavigationBarIconBrightness', () {
-              b1 = _toggleBrigthness(b1);
-              SystemChrome.setSystemUIOverlayStyle(
-                SystemUiOverlayStyle(
-                  systemNavigationBarIconBrightness: b1,
-                ),
-              );
-            }),
-            _build1Text1Button('statusBarColor', () {
-              SystemChrome.setSystemUIOverlayStyle(
-                SystemUiOverlayStyle(
-                  statusBarColor: ColorUtils.getRandomColor(),
-                ),
-              );
-            }),
-            _build1Text1Button('statusBarIconBrightness', () {
-              b2 = _toggleBrigthness(b2);
-              SystemChrome.setSystemUIOverlayStyle(
-                SystemUiOverlayStyle(
-                  statusBarIconBrightness: b2,
-                ),
-              );
-            }),
-            _build1Text1Button('statusBarBrightness', () {
-              b3 = _toggleBrigthness(b3);
-              SystemChrome.setSystemUIOverlayStyle(
-                SystemUiOverlayStyle(
-                  statusBarBrightness: b3,
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _buildBigText(String title) => Text(
-        title,
-        style: TextStyle(
-          color: Colors.red,
-          fontSize: 20,
-        ),
-      );
-
-  _build1Text1Button(String title, VoidCallback onPress) {
-    return Row(
-      children: [
-        ElevatedButton(
-          onPressed: onPress,
-          child: Text('点击'),
-        ),
-        Text(title),
-      ],
-    );
-  }
-
-  _buildOrientation() => Row(
-        children: [
-          Text('单方向 '),
-          ElevatedButton(
-            onPressed: () {
-              // 竖直上
-              SystemChrome.setPreferredOrientations(
-                  [DeviceOrientation.portraitUp]);
-            },
-            child: Text('上'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              SystemChrome.setPreferredOrientations(
-                  [DeviceOrientation.portraitUp]);
-            },
-            child: Text('下'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              SystemChrome.setPreferredOrientations(
-                  [DeviceOrientation.landscapeLeft]);
-            },
-            child: Text('左'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              SystemChrome.setPreferredOrientations(
-                  [DeviceOrientation.landscapeRight]);
-            },
-            child: Text('右'),
-          ),
-        ],
-      );
-
-  _buildOrientation2() => Row(
-        children: [
-          Text('多方向 '),
-          ElevatedButton(
-            onPressed: () {
-              // 竖直上
-              SystemChrome.setPreferredOrientations([
-                DeviceOrientation.portraitUp,
-                DeviceOrientation.portraitDown
-              ]);
-            },
-            child: Text('竖直方向'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              SystemChrome.setPreferredOrientations([
-                DeviceOrientation.landscapeLeft,
-                DeviceOrientation.landscapeLeft
-              ]);
-            },
-            child: Text('水平方向'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              SystemChrome.setPreferredOrientations([
-                DeviceOrientation.landscapeLeft,
-                DeviceOrientation.landscapeLeft,
-                DeviceOrientation.portraitUp
-              ]);
-            },
-            child: Text('多方向'),
-          ),
-        ],
-      );
-}
-
-class OnePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('OnePage')),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return TwoPage();
-              }));
-            },
-            child: Text('按钮'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TwoPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('TwoPage')),
-      body: Center(
-        child: Text('TwoPage'),
-      ),
-    );
+  _buildButton(String title, VoidCallback onPress) {
+    return ElevatedButton(onPressed: onPress, child: Text(title));
   }
 }
