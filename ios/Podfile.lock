@@ -1,27 +1,27 @@
 PODS:
   - Flutter (1.0.0)
-  - plugin_demo (0.0.1):
+  - plugin1 (0.0.1):
     - Flutter
-  - shared_preferences (0.0.1):
+  - plugin2 (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - plugin_demo (from `.symlinks/plugins/plugin_demo/ios`)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - plugin1 (from `.symlinks/plugins/plugin1/ios`)
+  - plugin2 (from `.symlinks/plugins/plugin2/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  plugin_demo:
-    :path: ".symlinks/plugins/plugin_demo/ios"
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
+  plugin1:
+    :path: ".symlinks/plugins/plugin1/ios"
+  plugin2:
+    :path: ".symlinks/plugins/plugin2/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  plugin_demo: 04641716cc533ed7529cee6890ffad3f337954e1
-  shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  plugin1: d34fc90c50ce451e6491b0fd6a0e20940d75391d
+  plugin2: 52603e1f5ca612c08694a27169e22be5324dc49d
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
