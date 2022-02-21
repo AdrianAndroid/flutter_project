@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-// https://www.jianshu.com/p/46cf3de34e72
-// 找一个文档
-// 通过LayoutBuilder组件可以获取父组件的约束尺寸
+// 通过addPostFrameCallback可以做一些安全的操作，在有些时候是很有用的，
+// 它会在当前Frame绘制完成后进行回调，并且只会回调一次，如果要再次监听需要再设置
 
 void main() {
   runApp(MyApp());
@@ -30,7 +29,13 @@ class MyPage extends StatefulWidget {
 }
 
 class MyPageState extends State<MyPage> {
-  double _height = 50;
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      print('MyPage addPostFrameCallback timeStamp:$timeStamp');
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,48 +47,70 @@ class MyPageState extends State<MyPage> {
         children: [
           ElevatedButton(
               onPressed: () {
-                _height = 50;
-                setState(() {});
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return SecondPage();
+                }));
               },
-              child: Text('50')),
+              child: Text('Second Page')),
           ElevatedButton(
               onPressed: () {
-                _height = 200;
-                setState(() {});
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return ThirdPage();
+                }));
               },
-              child: Text('200')),
-          Container(
-            height: _height,
-            child: _layoutbuilderWidget,
-          ),
+              child: Text('Third Page')),
         ],
       ),
     );
   }
+}
 
-  Widget get _layoutbuilderWidget {
-    print('_layoutbuilderWidget');
-    return LayoutBuilder(
-        builder: (context, constraints) {
+class SecondPage extends StatefulWidget {
+  @override
+  State<SecondPage> createState() => _SecondPageState();
+}
 
-          print('constraints height => ${constraints.maxHeight}');
-          var color = Colors.red;
-          if (constraints.maxHeight > 100) {
-            color = Colors.blue;
-          } else {
-            color = Colors.red;
-          }
-          return Container(
-            height: 50,
-            width: 50,
-            color: color,
-          );
-        },
-      );
+class _SecondPageState extends State<SecondPage> {
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      print('SecondPage addPostFrameCallback timeStamp=$timeStamp');
+    });
+    super.initState();
   }
 
   @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('SecondPage')),
+      body: Center(
+        child: Text('Second Page'),
+      ),
+    );
+  }
+}
+
+class ThirdPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ThirdPageState();
+}
+
+class _ThirdPageState extends State<ThirdPage> {
+  @override
   void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      print('ThirdPage addPostFrameCallback timeStamp=$timeStamp');
+    });
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Third Page')),
+      body: Center(child: Text('Third Page')),
+    );
   }
 }
