@@ -17,8 +17,10 @@
 
 # Plugin项目结构
 
-![](/Users/flannery/Desktop/mylibrary/flutter_project/assets/2022-02-21-18-28-07-image.png)
+![](./assets/2022-02-21-18-28-07-image.png)
+
+![](./assets/2022-02-21-18-58-46-image.png)
 
 # Models项目结构
 
-![](/Users/flannery/Desktop/mylibrary/flutter_project/assets/2022-02-21-18-28-25-image.png)
+![](./assets/2022-02-21-18-28-25-image.png)
