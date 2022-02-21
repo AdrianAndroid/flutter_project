@@ -32,6 +32,7 @@ class MyPage extends StatefulWidget {
 class MyPageState extends State<MyPage> {
   String _url = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg'
       '.jj20.com%2Fup%2Fallimg%2Ftp09%2F210611094Q512b-0-lp.jpg';
+  bool _normal = true;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,30 @@ class MyPageState extends State<MyPage> {
     // 整个页面使用ChangeNotifier来包裹
     return Scaffold(
       appBar: AppBar(title: Text('Overlay')),
-      body: _layoutbuilderWidget,
+      body: Column(
+        children: [
+          Row(
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _normal = true;
+                    });
+                  },
+                  child: Text('Normal')),
+              SizedBox(width: 20),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _normal = false;
+                    });
+                  },
+                  child: Text('LayoutBuilder')),
+            ],
+          ),
+          _normal ? _normalWidget : _layoutbuilderWidget
+        ],
+      ),
     );
   }
 
