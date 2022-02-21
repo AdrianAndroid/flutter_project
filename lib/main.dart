@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+// https://www.jianshu.com/p/46cf3de34e72
+// 找一个文档
+// 通过LayoutBuilder组件可以获取父组件的约束尺寸
+
 void main() {
   runApp(MyApp());
 }
