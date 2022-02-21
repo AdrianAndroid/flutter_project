@@ -13,6 +13,14 @@ dependencies:
     sdk: flutter
   provider: ^6.0.2
   date_format: ^2.0.5
+  plugin1:
+    path: flutter-plugin/plugin1
+  plugin2:
+    path: flutter-plugin/plugin2
+  models1:
+    path: flutter-models/models1
+  models2:
+    path: flutter-models/models2
 
 dev_dependencies:
   flutter_test:

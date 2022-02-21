@@ -43,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  cupertino_icons:
+    dependency: transitive
+    description:
+      name: cupertino_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   date_format:
     dependency: "direct main"
     description:
@@ -67,6 +74,18 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.3"
   matcher:
     dependency: transitive
     description:
@@ -81,6 +100,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  models1:
+    dependency: "direct main"
+    description:
+      path: "flutter-models/models1"
+      relative: true
+    source: path
+    version: "1.0.0+1"
+  models2:
+    dependency: "direct main"
+    description:
+      path: "flutter-models/models2"
+      relative: true
+    source: path
+    version: "1.0.0+1"
   nested:
     dependency: transitive
     description:
@@ -95,6 +128,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  plugin1:
+    dependency: "direct main"
+    description:
+      path: "flutter-plugin/plugin1"
+      relative: true
+    source: path
+    version: "0.0.1"
+  plugin2:
+    dependency: "direct main"
+    description:
+      path: "flutter-plugin/plugin2"
+      relative: true
+    source: path
+    version: "0.0.1"
   provider:
     dependency: "direct main"
     description:
@@ -165,4 +212,4 @@ packages:
     version: "2.1.0"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=1.16.0"
+  flutter: ">=1.20.0"

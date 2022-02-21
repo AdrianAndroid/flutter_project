@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - plugin1 (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - plugin1 (from `../../ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  plugin1:
+    :path: "../../ios"
+
+SPEC CHECKSUMS:
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  plugin1: d34fc90c50ce451e6491b0fd6a0e20940d75391d
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.11.2

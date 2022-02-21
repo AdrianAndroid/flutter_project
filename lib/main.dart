@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:plugin1/plugin1.dart';
 
 // 通过addPostFrameCallback可以做一些安全的操作，在有些时候是很有用的，
 // 它会在当前Frame绘制完成后进行回调，并且只会回调一次，如果要再次监听需要再设置
@@ -29,6 +31,8 @@ class MyPage extends StatefulWidget {
 }
 
 class MyPageState extends State<MyPage> {
+  String title = '';
+
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -45,72 +49,26 @@ class MyPageState extends State<MyPage> {
       appBar: AppBar(title: Text('Overlay')),
       body: Column(
         children: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return SecondPage();
-                }));
-              },
-              child: Text('Second Page')),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return ThirdPage();
-                }));
-              },
-              child: Text('Third Page')),
+          ElevatedButton(onPressed: initPlatformState, child: Text('获取版本号')),
+          Text('版本号：$title'),
+          ElevatedButton(onPressed: () {}, child: Text('Third Page')),
         ],
       ),
     );
   }
-}
 
-class SecondPage extends StatefulWidget {
-  @override
-  State<SecondPage> createState() => _SecondPageState();
-}
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    try {
+      platformVersion = await Plugin1.platformVersion;
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
 
-class _SecondPageState extends State<SecondPage> {
-  @override
-  void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      print('SecondPage addPostFrameCallback timeStamp=$timeStamp');
+    if (!mounted) return;
+
+    setState(() {
+      title = platformVersion;
     });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('SecondPage')),
-      body: Center(
-        child: Text('Second Page'),
-      ),
-    );
-  }
-}
-
-class ThirdPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _ThirdPageState();
-}
-
-class _ThirdPageState extends State<ThirdPage> {
-  @override
-  void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      print('ThirdPage addPostFrameCallback timeStamp=$timeStamp');
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Third Page')),
-      body: Center(child: Text('Third Page')),
-    );
   }
 }
