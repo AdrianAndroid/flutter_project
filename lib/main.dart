@@ -9,11 +9,8 @@ class MyApp extends StatelessWidget {
       title: 'Woolha.com Flutter Tutorial',
       home: Scaffold(
         appBar: AppBar(title: Text('StreamSubscription')),
-        body: SingleChildScrollView(
-          child: Wrap(
-            spacing: 10,
-            children: [],
-          ),
+        body: Center(
+          child: Text('看源码文件夹'),
         ),
       ),
       debugShowCheckedModeBanner: false,
