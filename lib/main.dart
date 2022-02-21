@@ -30,8 +30,7 @@ class MyPage extends StatefulWidget {
 }
 
 class MyPageState extends State<MyPage> {
-  String _url = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg'
-      '.jj20.com%2Fup%2Fallimg%2Ftp09%2F210611094Q512b-0-lp.jpg';
+  double _height = 50;
 
   @override
   Widget build(BuildContext context) {
@@ -39,37 +38,49 @@ class MyPageState extends State<MyPage> {
     // 整个页面使用ChangeNotifier来包裹
     return Scaffold(
       appBar: AppBar(title: Text('Overlay')),
-      body: _layoutbuilderWidget,
+      body: Column(
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                _height = 50;
+                setState(() {});
+              },
+              child: Text('50')),
+          ElevatedButton(
+              onPressed: () {
+                _height = 200;
+                setState(() {});
+              },
+              child: Text('200')),
+          Container(
+            height: _height,
+            child: _layoutbuilderWidget,
+          ),
+        ],
+      ),
     );
   }
 
-  Widget get _normalWidget => Center(
-        child: Container(
-          child: Column(
-            children: [
-              Image.network(_url, fit: BoxFit.fill, height: 100),
-              Text("图片"),
-            ],
-          ),
-        ),
-      );
+  Widget get _layoutbuilderWidget {
+    print('_layoutbuilderWidget');
+    return LayoutBuilder(
+        builder: (context, constraints) {
 
-  Widget get _layoutbuilderWidget =>
-      LayoutBuilder(builder: (context, constraints) {
-        return Container(
-          child: Column(
-            children: [
-              Image.network(
-                _url,
-                fit: BoxFit.fill,
-                height: 100,
-                width: constraints.maxWidth,
-              ),
-              Text('图片'),
-            ],
-          ),
-        );
-      });
+          print('constraints height => ${constraints.maxHeight}');
+          var color = Colors.red;
+          if (constraints.maxHeight > 100) {
+            color = Colors.blue;
+          } else {
+            color = Colors.red;
+          }
+          return Container(
+            height: 50,
+            width: 50,
+            color: color,
+          );
+        },
+      );
+  }
 
   @override
   void initState() {
