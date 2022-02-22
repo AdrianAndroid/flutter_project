@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:models1/galleria.dart';
 import 'package:plugin1/plugin1.dart';
 
 // 通过addPostFrameCallback可以做一些安全的操作，在有些时候是很有用的，
@@ -52,6 +53,15 @@ class MyPageState extends State<MyPage> {
           ElevatedButton(onPressed: initPlatformState, child: Text('获取版本号')),
           Text('版本号：$title'),
           ElevatedButton(onPressed: () {}, child: Text('Third Page')),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return Galleria();
+                  }),
+                );
+              },
+              child: Text('Gallery')),
         ],
       ),
     );
