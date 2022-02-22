@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:plugin1/plugin1.dart';
+import 'package:plugin1/plugin_demo_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -49,8 +50,12 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: [
+            Center(child: Text('Running on: $_platformVersion\n')),
+            SizedBox(height: 100),
+            PluginDemoView(),
+          ],
         ),
       ),
     );
