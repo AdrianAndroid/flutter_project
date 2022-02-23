@@ -14,12 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: ROUTE_ROOT,
-      routes: {
-        ROUTE_A: (context) => Apage(),
-        ROUTE_B: (context) => Bpage(),
-        ROUTE_C: (context) => Cpage(),
-      },
+      // initialRoute: ROUTE_R OOT,
+      // routes: {
+      //   ROUTE_A: (context) => Apage(),
+      //   ROUTE_B: (context) => Bpage(),
+      //   ROUTE_C: (context) => Cpage(),
+      // },
       home: RootPage(),
     );
   }
@@ -39,17 +39,23 @@ class RootPage extends StatelessWidget {
           children: [
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(ROUTE_A);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Apage(),
+                  ));
                 },
                 child: Text('跳转到A')),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(ROUTE_B);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Bpage(),
+                  ));
                 },
                 child: Text('跳转到B')),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(ROUTE_C);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Cpage(),
+                  ));
                 },
                 child: Text('跳转到C')),
           ],
