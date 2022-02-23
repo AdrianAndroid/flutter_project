@@ -7,9 +7,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Woolha.com Flutter Tutorial',
+      title: 'Listener',
       home: Scaffold(
-        appBar: AppBar(title: Text('CupertinoSegmentedControl')),
+        appBar: AppBar(title: Text('Listener')),
         body: MyHomePage(),
       ),
       debugShowCheckedModeBanner: false,
@@ -20,99 +20,72 @@ class MyApp extends StatelessWidget {
 // MyHomePage
 class MyHomePage extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _PointerMoveIndicatorState();
 }
 
-// MyHomePageState
-class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 0;
+class _PointerMoveIndicatorState extends State<MyHomePage> {
+  PointerEvent? _event;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          buildSegment(),
-          _buildTab(),
-        ],
-      ),
+    return Stack(
+      children: [
+        _buildListener1(),
+        SizedBox(height: 20),
+        _buildListener2(),
+      ],
     );
   }
 
-  buildSegment() {
-    return CupertinoSegmentedControl(
-      // 子标签
-      children: <int, Widget>{
-        0: Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
-          child: Text("全部"),
+  _buildListener1() => Listener(
+        child: Container(
+          alignment: Alignment.center,
+          color: Colors.blue,
+          width: 300.0,
+          height: 150.0,
+          child: Text(
+            '${_event?.localPosition ?? ''}',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-        1: Text("收入"),
-        2: Text("支出"),
-      },
-      // 当前选中的索引
-      groupValue: _currentIndex,
-      // 点击回调
-      onValueChanged: (int index) {
-        print('当前选中 $index');
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      // 选中的背景颜色
-      selectedColor: Colors.blue,
-      // 未选中的背景颜色
-      unselectedColor: Colors.white,
-      // 边框颜色
-      borderColor: Colors.blue,
-      // 按下的颜色
-      pressedColor: Colors.blue.withOpacity(0.4),
-    );
-  }
+        onPointerDown: (PointerDownEvent event) => setState(() {
+          print('onPointerDown $event');
+          _event = event;
+        }),
+        onPointerMove: (PointerMoveEvent event) => setState(() {
+          print('onPointerMove $event');
+          _event = event;
+        }),
+        onPointerUp: (PointerUpEvent event) => setState(() {
+          print('onPointerUp $event');
+          _event = event;
+        }),
+      );
 
-  _buildTab() {
-    if (_currentIndex == 0) {
-      return TabOne();
-    } else if (_currentIndex == 1) {
-      return TabTwo();
-    } else {
-      return TabThree();
-    }
-  }
-}
-
-class TabOne extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
-      child: Center(
-        child: Text('TabOne'),
-      ),
-    );
-  }
-}
-
-class TabTwo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green,
-      child: Expanded(
-        child: Text('TabTwo'),
-      ),
-    );
-  }
-}
-
-class TabThree extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      child: Center(
-        child: Text('TabThree'),
-      ),
-    );
-  }
+  _buildListener2() => Listener(
+        child: IgnorePointer(
+          child: Container(
+            alignment: Alignment.center,
+            color: Colors.green,
+            width: 200.0,
+            height: 50.0,
+            child: Text(
+              '${_event?.localPosition ?? ''}',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        onPointerDown: (PointerDownEvent event) => setState(() {
+          print('onPointerDown $event');
+          _event = event;
+        }),
+        onPointerMove: (PointerMoveEvent event) => setState(() {
+          print('onPointerMove $event');
+          _event = event;
+        }),
+        onPointerUp: (PointerUpEvent event) => setState(() {
+          print('onPointerUp $event');
+          _event = event;
+        }),
+      );
 }
