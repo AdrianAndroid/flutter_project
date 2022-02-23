@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Listener',
       home: Scaffold(
-        appBar: AppBar(title: Text('Listener')),
+        appBar: AppBar(title: Text('手势检测')),
         body: MyHomePage(),
       ),
       debugShowCheckedModeBanner: false,
@@ -20,72 +20,37 @@ class MyApp extends StatelessWidget {
 // MyHomePage
 class MyHomePage extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _PointerMoveIndicatorState();
+  State<MyHomePage> createState() => _GestureTestState();
 }
 
-class _PointerMoveIndicatorState extends State<MyHomePage> {
-  PointerEvent? _event;
+class _GestureTestState extends State<MyHomePage> {
+  String _operation = 'No Gesture detected!';
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _buildListener1(),
-        SizedBox(height: 20),
-        _buildListener2(),
-      ],
-    );
-  }
-
-  _buildListener1() => Listener(
+    return Center(
+      child: GestureDetector(
         child: Container(
           alignment: Alignment.center,
           color: Colors.blue,
-          width: 300.0,
-          height: 150.0,
+          width: 200.0,
+          height: 100.0,
           child: Text(
-            '${_event?.localPosition ?? ''}',
+            _operation,
             style: TextStyle(color: Colors.white),
           ),
         ),
-        onPointerDown: (PointerDownEvent event) => setState(() {
-          print('onPointerDown $event');
-          _event = event;
-        }),
-        onPointerMove: (PointerMoveEvent event) => setState(() {
-          print('onPointerMove $event');
-          _event = event;
-        }),
-        onPointerUp: (PointerUpEvent event) => setState(() {
-          print('onPointerUp $event');
-          _event = event;
-        }),
-      );
+        onTap: () => updateText("Tap"), // 点击
+        onDoubleTap: () => updateText("DoubleTap"), // 双击
+        onLongPress: () => updateText("LongPress"), // 长按
+      ),
+    );
+  } //保存事件名
 
-  _buildListener2() => Listener(
-        child: IgnorePointer(
-          child: Container(
-            alignment: Alignment.center,
-            color: Colors.green,
-            width: 200.0,
-            height: 50.0,
-            child: Text(
-              '${_event?.localPosition ?? ''}',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        onPointerDown: (PointerDownEvent event) => setState(() {
-          print('onPointerDown $event');
-          _event = event;
-        }),
-        onPointerMove: (PointerMoveEvent event) => setState(() {
-          print('onPointerMove $event');
-          _event = event;
-        }),
-        onPointerUp: (PointerUpEvent event) => setState(() {
-          print('onPointerUp $event');
-          _event = event;
-        }),
-      );
+  void updateText(String text) {
+    // 更新显示的事件名
+    setState(() {
+      _operation = text;
+    });
+  }
 }
