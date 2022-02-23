@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// 这个是资料
+// https://dandanlove.com/2019/07/20/flutter_router_fix_param/
+
 void main() => runApp(MyApp());
 
 Map<String, WidgetBuilder> routers = {
