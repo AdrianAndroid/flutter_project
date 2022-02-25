@@ -4,6 +4,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+// https://blog.csdn.net/qq939782569/article/details/111035348
+// 参考链接
+
 const MAX_COUNT = 0x7fffffff;
 
 // Item的点击事件
