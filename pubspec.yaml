@@ -9,11 +9,12 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  cupertino_icons: ^1.0.4
   dio: ^4.0.4
   flutter:
     sdk: flutter
-  transparent_image: ^2.0.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_easyrefresh: ^2.2.1
 
 dev_dependencies:
   flutter_test:
@@ -22,6 +23,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - images/sea.jpg
-    - images/banner.json

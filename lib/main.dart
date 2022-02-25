@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/banner.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-//https://www.wanandroid.com/banner/json
+// Flutter 给列表增加下拉刷新和上滑加载更多功能
+// https://www.jb51.net/article/213385.htm
 
 void main() => runApp(MyApp());
 
@@ -10,62 +12,104 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Banner',
-      home: Scaffold(
-        appBar: AppBar(title: Text('Banner')),
-        body: Container(child: BannerPage()),
-      ),
-      debugShowCheckedModeBanner: false,
+      // App名字
+      title: 'EasyRefresh',
+      // App主题
+      theme: ThemeData(primarySwatch: Colors.orange),
+      // 主页
+      home: _Example(),
+      localizationsDelegates: [
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
     );
   }
 }
 
-class BannerPage extends StatefulWidget {
+class _Example extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _BannerPage();
+  State<StatefulWidget> createState() => _ExampleState();
 }
 
-class _BannerPage extends State<BannerPage> {
-  List<BannerItem> datas = [];
+class _ExampleState extends State<_Example> {
+  late EasyRefreshController _controller;
+
+  // 条目总数
+  int _count = 20;
 
   @override
   void initState() {
-    getHomeData();
     super.initState();
-  }
-
-  getHomeData() async {
-    datas.addAll([
-      BannerItem.defaultBannerItem(
-        'https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png',
-        '一起来做个App吧',
-      ),
-      BannerItem.defaultBannerItem(
-        'https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png',
-        '我们新增了一个常用导航Tab~',
-      ),
-      BannerItem.defaultBannerItem(
-        'https://www.wanandroid.com/blogimgs/90c6cc12-742e-4c9f-b318-b912f163b8d0.png',
-        '"flutter 中文社区',
-      ),
-    ]);
-    setState(() {});
+    _controller = EasyRefreshController();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          BannerWidget(
-            180.0,
-            datas,
-            bannerPress: (pos, item) {
-              print('bannerPress pos=>$pos, item=$item');
-            },
+    return Scaffold(
+      appBar: AppBar(title: Text("EasyRefresh")),
+      body: EasyRefresh.custom(
+        enableControlFinishRefresh: false,
+        enableControlFinishLoad: true,
+        controller: _controller,
+        header: ClassicalHeader(),
+        footer: ClassicalFooter(),
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 2), () {
+            print('onRefresh');
+            setState(() {
+              _count = 20;
+            });
+            _controller.resetLoadState();
+          });
+          _controller.resetLoadState();
+        },
+        onLoad: () async {
+          await Future.delayed(Duration(seconds: 2), () {
+            print('onLoad');
+            setState(() {
+              _count += 10;
+            });
+          });
+          _controller.finishLoad(noMore: _count >= 40);
+        },
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return Container(
+                  width: 60.0,
+                  height: 60.0,
+                  child: Center(child: Text('$index')),
+                  color: index % 2 == 0 ? Colors.grey[300] : Colors.transparent,
+                );
+              },
+              childCount: _count,
+            ),
           ),
         ],
       ),
+      persistentFooterButtons: [
+        FlatButton(
+          onPressed: () {
+            print('FlatButton Refresh');
+          },
+          child: Text(
+            'Refresh',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        FlatButton(
+          onPressed: () {
+            print('FlatButton Load more');
+            _controller.callLoad();
+          },
+          child: Text(
+            "Load more",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      ],
     );
   }
 }
