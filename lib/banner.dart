@@ -4,8 +4,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-// https://blog.csdn.net/qq939782569/article/details/111035348
-// 参考链接
+// Flutter 给列表增加下拉刷新和上滑加载更多功能
+// https://www.jb51.net/article/213385.htm
 
 const MAX_COUNT = 0x7fffffff;
 
