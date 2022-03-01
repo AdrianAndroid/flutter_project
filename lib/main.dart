@@ -1,454 +1,173 @@
-import 'dart:async';
-
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
+    as extended;
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-
-import 'widget/list_item.dart';
-import 'widget/sample_list_item.dart';
+import 'package:flutter_project/widget/sample_list_item.dart';
 
 main() {
   runApp(MaterialApp(
     title: 'EasyRefresh',
     theme: ThemeData(primarySwatch: Colors.orange),
-    home: BasicPage('基本使用'),
+    home: NestedScrollViewPage(),
   ));
 }
 
-/// 基本示例(经典样式)页面
-class BasicPage extends StatefulWidget {
-  /// 标题
-  final String title;
-
-  const BasicPage(this.title, {Key? key}) : super(key: key);
-
+/// NestedScrollView示例页面
+class NestedScrollViewPage extends StatefulWidget {
   @override
-  _BasicPageState createState() => _BasicPageState();
+  State<StatefulWidget> createState() => NestedScrollViewPageState();
 }
 
-class _BasicPageState extends State<BasicPage> {
-  late EasyRefreshController _controller;
-  late ScrollController _scrollController;
+class NestedScrollViewPageState extends State<NestedScrollViewPage>
+    with SingleTickerProviderStateMixin {
+  // Tab控制器
+  late TabController _tabController;
+  int _tabIndex = 0;
 
-  // 条目总数
-  int _count = 20;
+  // 列表
+  int _listCount = 20;
 
-  // 反向
-  bool _reverse = false;
-
-  // 方向
-  Axis _direction = Axis.vertical;
-
-  // Header浮动
-  bool _headerFloat = false;
-
-  // 无限加载
-  bool _enableInfiniteLoad = true;
-
-  // 控制结束
-  bool _enableControlFinish = false;
-
-  // 任务独立
-  bool _taskIndependence = false;
-
-  // 震动
-  bool _vibration = true;
-
-  // 是否开启刷新
-  bool _enableRefresh = true;
-
-  // 是否开启加载
-  bool _enableLoad = true;
-
-  // 顶部回弹
-  bool _topBouncing = true;
-
-  // 底部回弹
-  bool _bottomBouncing = true;
+  // 表格
+  int _gridCount = 30;
 
   @override
   void initState() {
     super.initState();
-    _controller = EasyRefreshController();
-    _scrollController = ScrollController();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Colors.white,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () => showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return _buildModalMenu();
-              },
+      body: extended.NestedScrollView(
+        pinnedHeaderSliverHeightBuilder: () {
+          return MediaQuery.of(context).padding.top + kToolbarHeight;
+        },
+        innerScrollPositionKeyBuilder: () {
+          if (_tabController.index == 0) {
+            return Key('Tab0');
+          } else {
+            return Key('Tab1');
+          }
+        },
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              title: Text('NestedScrollView'),
+              centerTitle: true,
+              expandedHeight: 190.0,
+              flexibleSpace: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: Container(),
+              ),
+              floating: false,
+              pinned: true,
             ),
-          )
-        ],
-      ),
-      body: Center(
-        child: Container(
-          height: _direction == Axis.vertical ? double.infinity : 210.0,
-          child: EasyRefresh.custom(
-            enableControlFinishRefresh: true,
-            enableControlFinishLoad: true,
-            taskIndependence: _taskIndependence,
-            controller: _controller,
-            scrollController: _scrollController,
-            reverse: _reverse,
-            scrollDirection: _direction,
-            topBouncing: _topBouncing,
-            bottomBouncing: _bottomBouncing,
-            header: _enableRefresh
-                ? ClassicalHeader(
-                    enableInfiniteRefresh: false,
-                    bgColor: _headerFloat
-                        ? Theme.of(context).primaryColor
-                        : Colors.transparent,
-                    infoColor: _headerFloat ? Colors.black87 : Colors.teal,
-                    float: _headerFloat,
-                    enableHapticFeedback: _vibration,
-                    refreshText: 'pullToRefresh',
-                    refreshReadyText: 'releaseToRefresh',
-                    refreshingText: 'refreshing',
-                    refreshedText: 'refreshed',
-                    refreshFailedText: 'refreshFailed',
-                    noMoreText: 'noMore',
-                    infoText: 'updateAt',
-                  )
-                : null,
-            footer: _enableLoad
-                ? ClassicalFooter(
-                    enableInfiniteLoad: _enableInfiniteLoad,
-                    enableHapticFeedback: _vibration,
-                    loadText: 'pushToLoad',
-                    loadReadyText: 'releaseToLoad',
-                    loadingText: 'loading',
-                    loadedText: 'loaded',
-                    loadFailedText: 'loadFailed',
-                    noMoreText: 'noMore',
-                    infoText: 'updateAt',
-                  )
-                : null,
-            onRefresh: _enableRefresh
-                ? () async {
-                    await Future.delayed(Duration(seconds: 2), () {
-                      if (mounted) {
-                        setState(() {
-                          _count = 20;
-                        });
-                        if (!_enableControlFinish) {
-                          _controller.resetLoadState();
-                          _controller.finishRefresh();
-                        }
-                      }
+          ];
+        },
+        body: Column(
+          children: [
+            PreferredSize(
+              child: Card(
+                color: Theme.of(context).primaryColor,
+                elevation: 0.0,
+                margin: EdgeInsets.all(0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                ),
+                child: TabBar(
+                  controller: _tabController,
+                  onTap: (index) {
+                    setState(() {
+                      _tabIndex = index;
                     });
-                  }
-                : null,
-            onLoad: _enableLoad
-                ? () async {
-                    await Future.delayed(Duration(seconds: 2), () {
-                      if (mounted) {
-                        setState(() {
-                          _count += 20;
-                        });
-                        if (!_enableControlFinish) {
-                          _controller.finishLoad(noMore: _count >= 80);
-                        }
-                      }
-                    });
-                  }
-                : null,
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return SampleListItem(
-                      direction: _direction,
-                      width:
-                          _direction == Axis.vertical ? double.infinity : 150.0,
-                    );
                   },
-                  childCount: _count,
+                  tabs: [
+                    Tab(text: 'List'),
+                    Tab(text: 'Grid'),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-      persistentFooterButtons: <Widget>[
-        _enableControlFinish
-            ? FlatButton(
-                onPressed: () {
-                  _controller.resetLoadState();
-                  _controller.finishRefresh();
-                },
-                child: Text('completeRefresh',
-                    style: TextStyle(color: Colors.black)))
-            : SizedBox(
-                width: 0.0,
-                height: 0.0,
-              ),
-        _enableControlFinish
-            ? FlatButton(
-                onPressed: () {
-                  _controller.finishLoad(noMore: _count >= 80);
-                },
-                child: Text(
-                  'completeLoad',
-                  style: TextStyle(color: Colors.black),
-                ),
-              )
-            : SizedBox(
-                width: 0.0,
-                height: 0.0,
-              ),
-        FlatButton(
-          onPressed: () {
-            _controller.callRefresh();
-          },
-          child: Text(
-            'refresh',
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-        FlatButton(
-          onPressed: () {
-            _controller.callLoad();
-          },
-          child: Text(
-            'loadMore',
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // 构建模态窗口菜单
-  Widget _buildModalMenu() {
-    return StatefulBuilder(
-      builder: (context, state) {
-        return EasyRefresh.custom(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildListDelegate([
-                // 列表方向
-                ListItem(
-                  title: 'direction',
-                  describe: 'listDirection',
-                  rightWidget: Container(
-                    child: Row(
-                      children: <Widget>[
-                        Text('vertical'),
-                        Radio<Axis>(
-                          groupValue: _direction,
-                          value: Axis.vertical,
-                          onChanged: (axis) {
+              preferredSize: Size(double.infinity, 46.0),
+            ),
+            Expanded(
+              child: IndexedStack(
+                index: _tabIndex,
+                children: [
+                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key('Tab0'),
+                    EasyRefresh(
+                      child: ListView.builder(
+                        padding: EdgeInsets.all(0.0),
+                        itemBuilder: (context, index) {
+                          return SampleListItem();
+                        },
+                        itemCount: _listCount,
+                      ),
+                      onRefresh: () async {
+                        await Future.delayed(Duration(seconds: 2), () {
+                          if (mounted) {
                             setState(() {
-                              _direction = Axis.vertical;
+                              _listCount = 20;
                             });
-                            state(() {});
-                          },
-                        ),
-                        Text('horizontal'),
-                        Radio<Axis>(
-                          groupValue: _direction,
-                          value: Axis.horizontal,
-                          onChanged: (axis) {
-                            setState(() {
-                              _direction = Axis.horizontal;
-                            });
-                            state(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // 反向
-                ListItem(
-                  title: 'reverse',
-                  describe: 'listReverse',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _reverse,
-                      onChanged: (reverse) {
-                        setState(() {
-                          _reverse = reverse;
-                        });
-                        state(() {});
-                      },
-                    ),
-                  ),
-                ),
-                // 无限加载
-                ListItem(
-                  title: 'infiniteLoad',
-                  describe: 'infiniteLoadDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _enableInfiniteLoad,
-                      onChanged: (infinite) {
-                        setState(() {
-                          _enableInfiniteLoad = infinite;
-                        });
-                        state(() {});
-                        _controller.resetLoadState();
-                      },
-                    ),
-                  ),
-                ),
-                // 控制结束
-                ListItem(
-                  title: 'controlFinish',
-                  describe: 'controlFinishDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _enableControlFinish,
-                      onChanged: (control) {
-                        setState(() {
-                          _enableControlFinish = control;
-                        });
-                        state(() {});
-                      },
-                    ),
-                  ),
-                ),
-                // 任务独立
-                ListItem(
-                  title: 'taskIndependence',
-                  describe: 'taskIndependenceDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _taskIndependence,
-                      onChanged: (independence) {
-                        setState(() {
-                          _taskIndependence = independence;
-                        });
-                        state(() {});
-                      },
-                    ),
-                  ),
-                ),
-                // Header浮动
-                ListItem(
-                  title: 'headerFloat',
-                  describe: 'headerFloatDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _headerFloat,
-                      onChanged: (float) {
-                        setState(() {
-                          _headerFloat = float;
-                        });
-                        state(() {});
-                      },
-                    ),
-                  ),
-                ),
-                // 震动
-                ListItem(
-                  title: 'vibration',
-                  describe: 'vibrationDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _vibration,
-                      onChanged: (vibration) {
-                        setState(() {
-                          _vibration = vibration;
-                        });
-                        state(() {});
-                      },
-                    ),
-                  ),
-                ),
-                // 刷新开关
-                ListItem(
-                  title: 'refreshSwitch',
-                  describe: 'refreshSwitchDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _enableRefresh,
-                      onChanged: (refresh) {
-                        setState(() {
-                          _enableRefresh = refresh;
-                          if (!_topBouncing) {
-                            _topBouncing = true;
                           }
                         });
-                        state(() {});
                       },
-                    ),
-                  ),
-                ),
-                // 加载开关
-                ListItem(
-                  title: 'loadSwitch',
-                  describe: 'loadSwitchDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _enableLoad,
-                      onChanged: (load) {
-                        setState(() {
-                          _enableLoad = load;
-                          if (!_bottomBouncing) {
-                            _bottomBouncing = true;
+                      onLoad: () async {
+                        await Future.delayed(Duration(seconds: 2), () {
+                          if (mounted) {
+                            setState(() {
+                              _listCount += 10;
+                            });
                           }
                         });
-                        state(() {});
                       },
                     ),
                   ),
-                ),
-                // 顶部回弹
-                ListItem(
-                  title: 'topBouncing',
-                  describe: 'topBouncingDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _topBouncing,
-                      onChanged: _enableRefresh
-                          ? null
-                          : (bouncing) {
-                              setState(() {
-                                _topBouncing = bouncing;
-                              });
-                              state(() {});
-                            },
+                  extended.NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key('Tab1'),
+                    EasyRefresh(
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 6 / 7,
+                        ),
+                        itemBuilder: (context, index) {
+                          return SampleListItem(direction: Axis.horizontal);
+                        },
+                      ),
+                      onRefresh: () async {
+                        await Future.delayed(Duration(seconds: 2), () {
+                          if (mounted) {
+                            setState(() {
+                              _gridCount = 30;
+                            });
+                          }
+                        });
+                      },
+                      onLoad: () async {
+                        await Future.delayed(Duration(seconds: 2), () {
+                          if (mounted) {
+                            setState(() {
+                              _gridCount += 10;
+                            });
+                          }
+                        });
+                      },
                     ),
                   ),
-                ),
-                // 底部回弹
-                ListItem(
-                  title: 'bottomBouncing',
-                  describe: 'bottomBouncingDescribe',
-                  rightWidget: Center(
-                    child: Switch(
-                      value: _bottomBouncing,
-                      onChanged: _enableLoad
-                          ? null
-                          : (bouncing) {
-                              setState(() {
-                                _bottomBouncing = bouncing;
-                              });
-                              state(() {});
-                            },
-                    ),
-                  ),
-                ),
-                SafeArea(
-                  child: SizedBox(),
-                ),
-              ]),
+                ],
+              ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }
