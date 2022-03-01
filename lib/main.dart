@@ -8,6 +8,8 @@ import 'widget/sample_list_item.dart';
 
 main() {
   runApp(MaterialApp(
+    title: 'EasyRefresh',
+    theme: ThemeData(primarySwatch: Colors.orange),
     home: BasicPage('基本使用'),
   ));
 }
@@ -110,26 +112,26 @@ class _BasicPageState extends State<BasicPage> {
                     infoColor: _headerFloat ? Colors.black87 : Colors.teal,
                     float: _headerFloat,
                     enableHapticFeedback: _vibration,
-                    refreshText: 'S.of(context).pullToRefresh',
-                    refreshReadyText: 'S.of(context).releaseToRefresh',
-                    refreshingText: 'S.of(context).refreshing',
-                    refreshedText: 'S.of(context).refreshed',
-                    refreshFailedText: 'S.of(context).refreshFailed',
-                    noMoreText: 'S.of(context).noMore',
-                    infoText: 'S.of(context).updateAt',
+                    refreshText: 'pullToRefresh',
+                    refreshReadyText: 'releaseToRefresh',
+                    refreshingText: 'refreshing',
+                    refreshedText: 'refreshed',
+                    refreshFailedText: 'refreshFailed',
+                    noMoreText: 'noMore',
+                    infoText: 'updateAt',
                   )
                 : null,
             footer: _enableLoad
                 ? ClassicalFooter(
                     enableInfiniteLoad: _enableInfiniteLoad,
                     enableHapticFeedback: _vibration,
-                    loadText: 'S.of(context).pushToLoad',
-                    loadReadyText: 'S.of(context).releaseToLoad',
-                    loadingText: 'S.of(context).loading',
-                    loadedText: 'S.of(context).loaded',
-                    loadFailedText: 'S.of(context).loadFailed',
-                    noMoreText: 'S.of(context).noMore',
-                    infoText: 'S.of(context).updateAt',
+                    loadText: 'pushToLoad',
+                    loadReadyText: 'releaseToLoad',
+                    loadingText: 'loading',
+                    loadedText: 'loaded',
+                    loadFailedText: 'loadFailed',
+                    noMoreText: 'noMore',
+                    infoText: 'updateAt',
                   )
                 : null,
             onRefresh: _enableRefresh
@@ -185,7 +187,7 @@ class _BasicPageState extends State<BasicPage> {
 //                  _controller.resetLoadState();
 //                  _controller.finishRefresh();
 //                },
-//                child: Text(S.of(context).completeRefresh,
+//                child: Text(completeRefresh,
 //                    style: TextStyle(color: Colors.black)))
 //            : SizedBox(
 //                width: 0.0,
@@ -196,7 +198,7 @@ class _BasicPageState extends State<BasicPage> {
 //                onPressed: () {
 //                  _controller.finishLoad(noMore: _count >= 80);
 //                },
-//                child: Text(S.of(context).completeLoad,
+//                child: Text(completeLoad,
 //                    style: TextStyle(color: Colors.black)))
 //            : SizedBox(
 //                width: 0.0,
@@ -206,13 +208,13 @@ class _BasicPageState extends State<BasicPage> {
 //            onPressed: () {
 //              _controller.callRefresh();
 //            },
-//            child: Text(S.of(context).refresh,
+//            child: Text(refresh,
 //                style: TextStyle(color: Colors.black))),
 //        FlatButton(
 //            onPressed: () {
 //              _controller.callLoad();
 //            },
-//            child: Text(S.of(context).loadMore,
+//            child: Text(loadMore,
 //                style: TextStyle(color: Colors.black))),
 //      ],
     );
@@ -228,12 +230,12 @@ class _BasicPageState extends State<BasicPage> {
               delegate: SliverChildListDelegate([
                 // 列表方向
                 ListItem(
-                  title: 'S.of(context).direction',
-                  describe: 'S.of(context).listDirection',
+                  title: 'direction',
+                  describe: 'listDirection',
                   rightWidget: Container(
                     child: Row(
                       children: <Widget>[
-                        Text('S.of(context).vertical'),
+                        Text('vertical'),
                         Radio<Axis>(
                           groupValue: _direction,
                           value: Axis.vertical,
@@ -244,7 +246,7 @@ class _BasicPageState extends State<BasicPage> {
                             state(() {});
                           },
                         ),
-                        Text('S.of(context).horizontal'),
+                        Text('horizontal'),
                         Radio<Axis>(
                           groupValue: _direction,
                           value: Axis.horizontal,
@@ -261,8 +263,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 反向
                 ListItem(
-                  title: 'S.of(context).reverse',
-                  describe: 'S.of(context).listReverse',
+                  title: 'reverse',
+                  describe: 'listReverse',
                   rightWidget: Center(
                     child: Switch(
                       value: _reverse,
@@ -277,8 +279,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 无限加载
                 ListItem(
-                  title: 'S.of(context).infiniteLoad',
-                  describe: 'S.of(context).infiniteLoadDescribe',
+                  title: 'infiniteLoad',
+                  describe: 'infiniteLoadDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _enableInfiniteLoad,
@@ -294,8 +296,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 控制结束
                 ListItem(
-                  title: 'S.of(context).controlFinish',
-                  describe: 'S.of(context).controlFinishDescribe',
+                  title: 'controlFinish',
+                  describe: 'controlFinishDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _enableControlFinish,
@@ -310,8 +312,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 任务独立
                 ListItem(
-                  title: 'S.of(context).taskIndependence',
-                  describe: 'S.of(context).taskIndependenceDescribe',
+                  title: 'taskIndependence',
+                  describe: 'taskIndependenceDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _taskIndependence,
@@ -326,8 +328,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // Header浮动
                 ListItem(
-                  title: 'S.of(context).headerFloat',
-                  describe: 'S.of(context).headerFloatDescribe',
+                  title: 'headerFloat',
+                  describe: 'headerFloatDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _headerFloat,
@@ -342,8 +344,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 震动
                 ListItem(
-                  title: 'S.of(context).vibration',
-                  describe: 'S.of(context).vibrationDescribe',
+                  title: 'vibration',
+                  describe: 'vibrationDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _vibration,
@@ -358,8 +360,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 刷新开关
                 ListItem(
-                  title: 'S.of(context).refreshSwitch',
-                  describe: 'S.of(context).refreshSwitchDescribe',
+                  title: 'refreshSwitch',
+                  describe: 'refreshSwitchDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _enableRefresh,
@@ -377,8 +379,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 加载开关
                 ListItem(
-                  title: 'S.of(context).loadSwitch',
-                  describe: 'S.of(context).loadSwitchDescribe',
+                  title: 'loadSwitch',
+                  describe: 'loadSwitchDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _enableLoad,
@@ -396,8 +398,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 顶部回弹
                 ListItem(
-                  title: 'S.of(context).topBouncing',
-                  describe: 'S.of(context).topBouncingDescribe',
+                  title: 'topBouncing',
+                  describe: 'topBouncingDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _topBouncing,
@@ -414,8 +416,8 @@ class _BasicPageState extends State<BasicPage> {
                 ),
                 // 底部回弹
                 ListItem(
-                  title: 'S.of(context).bottomBouncing',
-                  describe: 'S.of(context).bottomBouncingDescribe',
+                  title: 'bottomBouncing',
+                  describe: 'bottomBouncingDescribe',
                   rightWidget: Center(
                     child: Switch(
                       value: _bottomBouncing,
