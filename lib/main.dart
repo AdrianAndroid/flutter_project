@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
 
-// Flutter实战*第二版
-// https://www.woolha.com/tutorials/flutter-using-futurebuilder-widget-examples
-// https://zhuanlan.zhihu.com/p/140235529
-// -->WillPopScope用于处理是否离开当前页面，在Flutter中有多种方式可以离开当前页面，
-// 比如AppBar、CupertinoNavigationBar上面的返回按钮，点击将会回到前一个页面，
-// 在Android手机上点击实体（虚拟）返回按钮，也将会回到前一个页面，此功能对于iOS程序员来说
-// 可能特别容易忽略。
-// -->以下集中情况我们会用到WillPopScope
-// 1. 需要询问用户是否退出。
-// 2. App中有多个Navigator，想要的是让其中一个 Navigator 退出，而不是直接让在 Widget tree
-// 底层的 Navigator退出。
+// Flutter（72）：Sliver组件之SliverList
+// https://www.jianshu.com/p/4b4b0b6f38b5
 
 void main() => runApp(MyApp());
 
@@ -19,10 +10,96 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Woolha.com Flutter Tutorial',
-      home: Scaffold(
-        body: SliverListDemo(),
-      ),
+      home: SliverListPage(),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class SliverListPage extends StatelessWidget {
+  final _tip = '''
+1.SliverList介绍
+CustomScrollView+SliverList组合使用其实就相当于是个ListView
+2.SliverList属性
+- delegate：SliverChildDelegate 系统提供个两个已经实现好的代理：SliverChildListDelegate/SliverChildBuilderDelegate
+  ''';
+
+  _mySliverAppBar() {
+    return SliverAppBar(
+      title: Text('SliverList'),
+      expandedHeight: 250,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Image.network(
+          'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1113%2F092919113248%2F1Z929113248-8-1200.jpg',
+          fit: BoxFit.cover,
+        ),
+        collapseMode: CollapseMode.parallax,
+      ),
+    );
+  }
+
+  _mySliverChildListDelegate() {
+    return SliverChildListDelegate([
+      Container(
+        height: 80,
+        color: Colors.primaries[0],
+      ),
+      Container(
+        height: 80,
+        color: Colors.primaries[1],
+      ),
+      Container(
+        height: 80,
+        color: Colors.primaries[2],
+      ),
+      Container(
+        height: 80,
+        color: Colors.primaries[3],
+      ),
+      Container(
+        height: 80,
+        color: Colors.primaries[4],
+      ),
+      Container(
+        height: 80,
+        color: Colors.primaries[5],
+      ),
+      Container(
+        height: 80,
+        color: Colors.primaries[6],
+      ),
+      Container(
+        height: 80,
+        color: Colors.primaries[7],
+      ),
+      Container(
+        height: 80,
+        color: Colors.primaries[8],
+      ),
+    ]);
+  }
+
+  _mySliverChildBuilderDelegate() {
+    return SliverChildBuilderDelegate(
+      (BuildContext context, int index) {
+        return Container(
+          height: 80,
+          color: Colors.primaries[index % 11],
+        );
+      },
+      childCount: 30,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        _mySliverAppBar(),
+        SliverList(
+          delegate: _mySliverChildBuilderDelegate(),
+        ),
+      ],
     );
   }
 }
