@@ -1,39 +1,29 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_project/widget/list_item.dart';
 
-// Flutter 给列表增加下拉刷新和上滑加载更多功能
-// https://www.jb51.net/article/213385.htm
+import 'widget/list_item.dart';
+import 'widget/sample_list_item.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      // App名字
-      title: 'EasyRefresh',
-      // App主题
-      theme: ThemeData(primarySwatch: Colors.orange),
-      // 主页
-      home: _Example(),
-      localizationsDelegates: [
-        GlobalCupertinoLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ],
-    );
-  }
+main() {
+  runApp(MaterialApp(
+    home: BasicPage('基本使用'),
+  ));
 }
 
-class _Example extends StatefulWidget {
+/// 基本示例(经典样式)页面
+class BasicPage extends StatefulWidget {
+  /// 标题
+  final String title;
+
+  const BasicPage(this.title, {Key? key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => _ExampleState();
+  _BasicPageState createState() => _BasicPageState();
 }
 
-class _ExampleState extends State<_Example> {
+class _BasicPageState extends State<BasicPage> {
   late EasyRefreshController _controller;
   late ScrollController _scrollController;
 
@@ -50,7 +40,7 @@ class _ExampleState extends State<_Example> {
   bool _headerFloat = false;
 
   // 无限加载
-  bool _enableInfinitedLoad = true;
+  bool _enableInfiniteLoad = true;
 
   // 控制结束
   bool _enableControlFinish = false;
@@ -84,237 +74,370 @@ class _ExampleState extends State<_Example> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('基本使用'),
+        title: Text(widget.title),
         backgroundColor: Colors.white,
-        actions: [
+        actions: <Widget>[
           IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return _buildModalMenu();
-                  },
-                );
+            icon: Icon(Icons.menu),
+            onPressed: () => showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return _buildModalMenu();
               },
-              icon: Icon(Icons.menu)),
+            ),
+          )
         ],
       ),
-      body: Center(),
+      body: Center(
+        child: Container(
+          height: _direction == Axis.vertical ? double.infinity : 210.0,
+          child: EasyRefresh.custom(
+            enableControlFinishRefresh: true,
+            enableControlFinishLoad: true,
+            taskIndependence: _taskIndependence,
+            controller: _controller,
+            scrollController: _scrollController,
+            reverse: _reverse,
+            scrollDirection: _direction,
+            topBouncing: _topBouncing,
+            bottomBouncing: _bottomBouncing,
+            header: _enableRefresh
+                ? ClassicalHeader(
+                    enableInfiniteRefresh: false,
+                    bgColor: _headerFloat
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
+                    infoColor: _headerFloat ? Colors.black87 : Colors.teal,
+                    float: _headerFloat,
+                    enableHapticFeedback: _vibration,
+                    refreshText: 'S.of(context).pullToRefresh',
+                    refreshReadyText: 'S.of(context).releaseToRefresh',
+                    refreshingText: 'S.of(context).refreshing',
+                    refreshedText: 'S.of(context).refreshed',
+                    refreshFailedText: 'S.of(context).refreshFailed',
+                    noMoreText: 'S.of(context).noMore',
+                    infoText: 'S.of(context).updateAt',
+                  )
+                : null,
+            footer: _enableLoad
+                ? ClassicalFooter(
+                    enableInfiniteLoad: _enableInfiniteLoad,
+                    enableHapticFeedback: _vibration,
+                    loadText: 'S.of(context).pushToLoad',
+                    loadReadyText: 'S.of(context).releaseToLoad',
+                    loadingText: 'S.of(context).loading',
+                    loadedText: 'S.of(context).loaded',
+                    loadFailedText: 'S.of(context).loadFailed',
+                    noMoreText: 'S.of(context).noMore',
+                    infoText: 'S.of(context).updateAt',
+                  )
+                : null,
+            onRefresh: _enableRefresh
+                ? () async {
+                    await Future.delayed(Duration(seconds: 2), () {
+                      if (mounted) {
+                        setState(() {
+                          _count = 20;
+                        });
+                        if (!_enableControlFinish) {
+                          _controller.resetLoadState();
+                          _controller.finishRefresh();
+                        }
+                      }
+                    });
+                  }
+                : null,
+            onLoad: _enableLoad
+                ? () async {
+                    await Future.delayed(Duration(seconds: 2), () {
+                      if (mounted) {
+                        setState(() {
+                          _count += 20;
+                        });
+                        if (!_enableControlFinish) {
+                          _controller.finishLoad(noMore: _count >= 80);
+                        }
+                      }
+                    });
+                  }
+                : null,
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return SampleListItem(
+                      direction: _direction,
+                      width:
+                          _direction == Axis.vertical ? double.infinity : 150.0,
+                    );
+                  },
+                  childCount: _count,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+//      persistentFooterButtons: <Widget>[
+//        _enableControlFinish
+//            ? FlatButton(
+//                onPressed: () {
+//                  _controller.resetLoadState();
+//                  _controller.finishRefresh();
+//                },
+//                child: Text(S.of(context).completeRefresh,
+//                    style: TextStyle(color: Colors.black)))
+//            : SizedBox(
+//                width: 0.0,
+//                height: 0.0,
+//              ),
+//        _enableControlFinish
+//            ? FlatButton(
+//                onPressed: () {
+//                  _controller.finishLoad(noMore: _count >= 80);
+//                },
+//                child: Text(S.of(context).completeLoad,
+//                    style: TextStyle(color: Colors.black)))
+//            : SizedBox(
+//                width: 0.0,
+//                height: 0.0,
+//              ),
+//        FlatButton(
+//            onPressed: () {
+//              _controller.callRefresh();
+//            },
+//            child: Text(S.of(context).refresh,
+//                style: TextStyle(color: Colors.black))),
+//        FlatButton(
+//            onPressed: () {
+//              _controller.callLoad();
+//            },
+//            child: Text(S.of(context).loadMore,
+//                style: TextStyle(color: Colors.black))),
+//      ],
     );
   }
 
-  _buildModalMenu() {
-    return StatefulBuilder(builder: (context, state) {
-      return EasyRefresh.custom(slivers: [
-        SliverList(
-          delegate: SliverChildListDelegate([
-            // 列表方向
-            ListItem(
-              title: "direction",
-              describe: 'listDirection',
-              rightWidget: Container(
-                child: Row(
-                  children: [
-                    Text('vertical'),
-                    Radio(
-                      value: Axis.vertical,
-                      groupValue: _direction,
-                      onChanged: (axis) {
-                        setState(() {
-                          _direction = Axis.vertical;
-                        });
-                        state(() {});
-                      },
-                    ),
-                    Text('horizontal'),
-                    Radio(
-                      groupValue: _direction,
-                      value: Axis.horizontal,
-                      onChanged: (axis) {
-                        setState(() {
-                          _direction = Axis.horizontal;
-                        });
-                        state(() {});
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // 反向
-            ListItem(
-              title: "reverse",
-              describe: "listReverse",
-              rightWidget: Center(
-                child: Switch(
-                  value: _reverse,
-                  onChanged: (reverse) {
-                    setState(() {
-                      _reverse = reverse;
-                    });
-                    state(() {});
-                  },
-                ),
-              ),
-            ),
-            // 无限加载
-            ListItem(
-              title: 'infiniteLoad',
-              describe: 'infiniteLoadDescribe',
-              rightWidget: Center(
-                child: Switch(
-                  value: _enableInfinitedLoad,
-                  onChanged: (infinite) {
-                    setState(() {
-                      _enableInfinitedLoad = infinite;
-                    });
-                    state(() {});
-                    _controller.resetLoadState();
-                  },
-                ),
-              ),
-            ),
-            // 控制结束
-            ListItem(
-              title: 'controlFinish',
-              describe: 'controlFinishDescribe',
-              rightWidget: Center(
-                child: Switch(
-                  value: _enableControlFinish,
-                  onChanged: (control) {
-                    setState(() {
-                      _enableControlFinish = control;
-                    });
-                    state(() {});
-                  },
-                ),
-              ),
-            ),
-            // 任务独立
-            ListItem(
-              title: 'taskIndependence',
-              describe: 'taskIndependenceDescribe',
-              rightWidget: Center(
-                child: Switch(
-                  value: _taskIndependence,
-                  onChanged: (independence) {
-                    setState(() {
-                      _taskIndependence = independence;
-                    });
-                    state(() {});
-                  },
-                ),
-              ),
-            ),
-            // Header浮动
-            ListItem(
-              title: 'headerFloat',
-              describe: 'headerFloatDescribe',
-              rightWidget: Center(
-                child: Switch(
-                  value: _headerFloat,
-                  onChanged: (float) {
-                    setState(() {
-                      _headerFloat = float;
-                    });
-                    state(() {});
-                  },
-                ),
-              ),
-            ),
-            // 震动
-            ListItem(
-              title: 'vibration',
-              describe: 'vibrationDescribe',
-              rightWidget: Center(
-                child: Switch(
-                  value: _vibration,
-                  onChanged: (vibration) {
-                    setState(() {
-                      _vibration = vibration;
-                    });
-                    state(() {});
-                  },
-                ),
-              ),
-            ),
-            // 刷新开关
-            ListItem(
-              title: 'refreshSwitch',
-              describe: 'refreshSwitchDescribe',
-              rightWidget: Center(
-                child: Switch(
-                  value: _enableRefresh,
-                  onChanged: (refresh) {
-                    setState(() {
-                      _enableRefresh = refresh;
-                      if (!_topBouncing) {
-                        _topBouncing = true;
-                      }
-                      state(() {});
-                    });
-                  },
-                ),
-              ),
-            ),
-            // 加载开关
-            ListItem(
-              title: 'loadSwitch',
-              describe: 'loadSwitchDescribe',
-              rightWidget: Center(
-                child: Switch(
-                  value: _enableLoad,
-                  onChanged: (load) {
-                    setState(() {
-                      _enableLoad = load;
-                      if (!_bottomBouncing) {
-                        _bottomBouncing = true;
-                      }
-                      state(() {});
-                    });
-                  },
-                ),
-              ),
-            ),
-            // 顶部回弹
-            ListItem(
-              title: 'topBouncing',
-              describe: 'topBouncingDescribe',
-              rightWidget: Center(
-                child: Switch(
-                    value: _topBouncing,
-                    onChanged: _enableRefresh
-                        ? null
-                        : (bouncing) {
+  // 构建模态窗口菜单
+  Widget _buildModalMenu() {
+    return StatefulBuilder(
+      builder: (context, state) {
+        return EasyRefresh.custom(
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildListDelegate([
+                // 列表方向
+                ListItem(
+                  title: 'S.of(context).direction',
+                  describe: 'S.of(context).listDirection',
+                  rightWidget: Container(
+                    child: Row(
+                      children: <Widget>[
+                        Text('S.of(context).vertical'),
+                        Radio<Axis>(
+                          groupValue: _direction,
+                          value: Axis.vertical,
+                          onChanged: (axis) {
                             setState(() {
-                              _topBouncing = bouncing;
+                              _direction = Axis.vertical;
                             });
                             state(() {});
-                          }),
-              ),
-            ),
-            // 底部回弹
-            ListItem(
-              title: 'bottomBouncing',
-              describe: 'bottomBouncingDescribe',
-              rightWidget: Center(
-                child: Switch(
-                  value: _bottomBouncing,
-                  onChanged: _enableLoad
-                      ? null
-                      : (bouncing) {
-                          setState(() {
-                            _bottomBouncing = bouncing;
-                          });
-                          state(() {});
-                        },
+                          },
+                        ),
+                        Text('S.of(context).horizontal'),
+                        Radio<Axis>(
+                          groupValue: _direction,
+                          value: Axis.horizontal,
+                          onChanged: (axis) {
+                            setState(() {
+                              _direction = Axis.horizontal;
+                            });
+                            state(() {});
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                // 反向
+                ListItem(
+                  title: 'S.of(context).reverse',
+                  describe: 'S.of(context).listReverse',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _reverse,
+                      onChanged: (reverse) {
+                        setState(() {
+                          _reverse = reverse;
+                        });
+                        state(() {});
+                      },
+                    ),
+                  ),
+                ),
+                // 无限加载
+                ListItem(
+                  title: 'S.of(context).infiniteLoad',
+                  describe: 'S.of(context).infiniteLoadDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _enableInfiniteLoad,
+                      onChanged: (infinite) {
+                        setState(() {
+                          _enableInfiniteLoad = infinite;
+                        });
+                        state(() {});
+                        _controller.resetLoadState();
+                      },
+                    ),
+                  ),
+                ),
+                // 控制结束
+                ListItem(
+                  title: 'S.of(context).controlFinish',
+                  describe: 'S.of(context).controlFinishDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _enableControlFinish,
+                      onChanged: (control) {
+                        setState(() {
+                          _enableControlFinish = control;
+                        });
+                        state(() {});
+                      },
+                    ),
+                  ),
+                ),
+                // 任务独立
+                ListItem(
+                  title: 'S.of(context).taskIndependence',
+                  describe: 'S.of(context).taskIndependenceDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _taskIndependence,
+                      onChanged: (independence) {
+                        setState(() {
+                          _taskIndependence = independence;
+                        });
+                        state(() {});
+                      },
+                    ),
+                  ),
+                ),
+                // Header浮动
+                ListItem(
+                  title: 'S.of(context).headerFloat',
+                  describe: 'S.of(context).headerFloatDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _headerFloat,
+                      onChanged: (float) {
+                        setState(() {
+                          _headerFloat = float;
+                        });
+                        state(() {});
+                      },
+                    ),
+                  ),
+                ),
+                // 震动
+                ListItem(
+                  title: 'S.of(context).vibration',
+                  describe: 'S.of(context).vibrationDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _vibration,
+                      onChanged: (vibration) {
+                        setState(() {
+                          _vibration = vibration;
+                        });
+                        state(() {});
+                      },
+                    ),
+                  ),
+                ),
+                // 刷新开关
+                ListItem(
+                  title: 'S.of(context).refreshSwitch',
+                  describe: 'S.of(context).refreshSwitchDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _enableRefresh,
+                      onChanged: (refresh) {
+                        setState(() {
+                          _enableRefresh = refresh;
+                          if (!_topBouncing) {
+                            _topBouncing = true;
+                          }
+                        });
+                        state(() {});
+                      },
+                    ),
+                  ),
+                ),
+                // 加载开关
+                ListItem(
+                  title: 'S.of(context).loadSwitch',
+                  describe: 'S.of(context).loadSwitchDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _enableLoad,
+                      onChanged: (load) {
+                        setState(() {
+                          _enableLoad = load;
+                          if (!_bottomBouncing) {
+                            _bottomBouncing = true;
+                          }
+                        });
+                        state(() {});
+                      },
+                    ),
+                  ),
+                ),
+                // 顶部回弹
+                ListItem(
+                  title: 'S.of(context).topBouncing',
+                  describe: 'S.of(context).topBouncingDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _topBouncing,
+                      onChanged: _enableRefresh
+                          ? null
+                          : (bouncing) {
+                              setState(() {
+                                _topBouncing = bouncing;
+                              });
+                              state(() {});
+                            },
+                    ),
+                  ),
+                ),
+                // 底部回弹
+                ListItem(
+                  title: 'S.of(context).bottomBouncing',
+                  describe: 'S.of(context).bottomBouncingDescribe',
+                  rightWidget: Center(
+                    child: Switch(
+                      value: _bottomBouncing,
+                      onChanged: _enableLoad
+                          ? null
+                          : (bouncing) {
+                              setState(() {
+                                _bottomBouncing = bouncing;
+                              });
+                              state(() {});
+                            },
+                    ),
+                  ),
+                ),
+                SafeArea(
+                  child: SizedBox(),
+                ),
+              ]),
             ),
-            SafeArea(child: SizedBox()),
-          ]),
-        ),
-      ]);
-    });
+          ],
+        );
+      },
+    );
   }
 }
