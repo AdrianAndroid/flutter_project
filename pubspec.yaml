@@ -16,6 +16,7 @@ dependencies:
     sdk: flutter
   flutter_easyrefresh: ^2.2.1
   extended_nested_scroll_view: ^3.0.1
+  flutter_swiper_null_safety: ^1.0.0
 
 dev_dependencies:
   flutter_test:
