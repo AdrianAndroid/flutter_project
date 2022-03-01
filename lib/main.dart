@@ -180,43 +180,52 @@ class _BasicPageState extends State<BasicPage> {
           ),
         ),
       ),
-//      persistentFooterButtons: <Widget>[
-//        _enableControlFinish
-//            ? FlatButton(
-//                onPressed: () {
-//                  _controller.resetLoadState();
-//                  _controller.finishRefresh();
-//                },
-//                child: Text(completeRefresh,
-//                    style: TextStyle(color: Colors.black)))
-//            : SizedBox(
-//                width: 0.0,
-//                height: 0.0,
-//              ),
-//        _enableControlFinish
-//            ? FlatButton(
-//                onPressed: () {
-//                  _controller.finishLoad(noMore: _count >= 80);
-//                },
-//                child: Text(completeLoad,
-//                    style: TextStyle(color: Colors.black)))
-//            : SizedBox(
-//                width: 0.0,
-//                height: 0.0,
-//              ),
-//        FlatButton(
-//            onPressed: () {
-//              _controller.callRefresh();
-//            },
-//            child: Text(refresh,
-//                style: TextStyle(color: Colors.black))),
-//        FlatButton(
-//            onPressed: () {
-//              _controller.callLoad();
-//            },
-//            child: Text(loadMore,
-//                style: TextStyle(color: Colors.black))),
-//      ],
+      persistentFooterButtons: <Widget>[
+        _enableControlFinish
+            ? FlatButton(
+                onPressed: () {
+                  _controller.resetLoadState();
+                  _controller.finishRefresh();
+                },
+                child: Text('completeRefresh',
+                    style: TextStyle(color: Colors.black)))
+            : SizedBox(
+                width: 0.0,
+                height: 0.0,
+              ),
+        _enableControlFinish
+            ? FlatButton(
+                onPressed: () {
+                  _controller.finishLoad(noMore: _count >= 80);
+                },
+                child: Text(
+                  'completeLoad',
+                  style: TextStyle(color: Colors.black),
+                ),
+              )
+            : SizedBox(
+                width: 0.0,
+                height: 0.0,
+              ),
+        FlatButton(
+          onPressed: () {
+            _controller.callRefresh();
+          },
+          child: Text(
+            'refresh',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        FlatButton(
+          onPressed: () {
+            _controller.callLoad();
+          },
+          child: Text(
+            'loadMore',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      ],
     );
   }
 
