@@ -20,47 +20,139 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Woolha.com Flutter Tutorial',
       home: Scaffold(
-        body: WillPopScopeTestRoute(),
+        body: SliverListDemo(),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class WillPopScopeTestRoute extends StatefulWidget {
+class SliverListDemo extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return WillPopScopeTestRouteState();
-  }
+  State<StatefulWidget> createState() => _SliverListDemoState();
 }
 
-class WillPopScopeTestRouteState extends State<WillPopScopeTestRoute> {
-  DateTime? _lastQuitTime;
+class _SliverListDemoState extends State<SliverListDemo> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (_lastQuitTime == null ||
-            DateTime.now().difference(_lastQuitTime!).inSeconds > 1) {
-          print('再按一次Back退出');
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: Text('再按一次Back按钮退出')));
-          _lastQuitTime = DateTime.now();
-          return false;
-        } else {
-          print('退出');
-          Navigator.of(context).pop(true);
-          return true;
-        }
-      },
-      child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          '点击后退按钮，询问是否退出。',
-          style: TextStyle(color: Colors.black),
+    return Scaffold(
+      appBar: AppBar(title: Text("SliverList简单样例")),
+      body: CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Container(
+                height: 80,
+                color: Colors.primaries[0],
+                child: Text('SliverChildListDelegate_0'),
+              ),
+              Container(
+                height: 80,
+                color: Colors.primaries[1],
+                child: Text('SliverChildListDelegate_1'),
+              ),
+              Container(
+                height: 80,
+                color: Colors.primaries[2],
+                child: Text('SliverChildListDelegate_2'),
+              ),
+              Container(
+                height: 80,
+                color: Colors.primaries[3],
+                child: Text('SliverChildListDelegate_3'),
+              ),
+              Container(
+                height: 80,
+                color: Colors.primaries[4],
+                child: Text('SliverChildListDelegate_4'),
+              ),
+            ]),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => Container(),
+              // 行数
+              childCount: 20,
+              //是否保存行的状态，默认是true
+              addAutomaticKeepAlives: true,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TestSliverListPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _TestSliverListPageState();
+}
+
+class _TestSliverListPageState extends State<TestSliverListPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('SliverListView')),
+      body: Center(
+        child: ThemeSliverListView(
+          itemCount: 20,
+          itemBuilder: (BuildContext context, int index) {
+            return Text('index = $index', key: ValueKey(index));
+          },
         ),
       ),
     );
+  }
+}
+
+class ThemeSliverListView extends StatelessWidget {
+  final IndexedWidgetBuilder itemBuilder;
+  final int itemCount;
+
+  const ThemeSliverListView({
+    Key? key,
+    required this.itemBuilder,
+    required this.itemCount,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: ThemeListChildrenDelegate(
+        (context, index) => itemBuilder(context, index),
+        childCount: itemCount,
+        viewport: (int start, int end) {
+          print('viewport');
+        },
+      ),
+    );
+  }
+}
+
+class ThemeListChildrenDelegate extends SliverChildBuilderDelegate {
+  final Function(int start, int end)? viewport;
+
+  ThemeListChildrenDelegate(
+    IndexedWidgetBuilder builder, {
+    int? childCount,
+    this.viewport,
+  }) : super(builder, childCount: childCount);
+
+  @override
+  void didFinishLayout(int firstIndex, int lastIndex) {
+    if (viewport != null) {
+      viewport?.call(firstIndex, lastIndex);
+    }
+    super.didFinishLayout(firstIndex, lastIndex);
   }
 }
