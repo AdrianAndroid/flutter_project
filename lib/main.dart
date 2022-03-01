@@ -1,78 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_project/widget/sample_list_item.dart';
-import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
 main() {
   runApp(MaterialApp(
     title: 'EasyRefresh',
     theme: ThemeData(primarySwatch: Colors.orange),
-    home: SwiperPage(),
+    home: FirstRefreshPage(),
   ));
 }
 
-/// Swiper示例
-class SwiperPage extends StatefulWidget {
+/// 首次刷新示例
+class FirstRefreshPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => SwiperPageState();
+  State<StatefulWidget> createState() => FirstRefreshPageState();
 }
 
-class SwiperPageState extends State<SwiperPage> {
-  // 条目总数
-  int _count = 20;
+class FirstRefreshPageState extends State<FirstRefreshPage> {
+  // 总数
+  int _count = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: EasyRefresh.builder(
-        builder: (context, physics, header, footer) {
-          return CustomScrollView(
-            physics: physics,
-            slivers: [
-              SliverAppBar(
-                expandedHeight: 100.0,
-                pinned: true,
-                backgroundColor: Colors.white,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: false,
-                  title: Text('Swiper'),
-                ),
-              ),
-              header!,
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
+      appBar: AppBar(
+        title: Text('firstRefresh'),
+        backgroundColor: Colors.white,
+      ),
+      body: EasyRefresh.custom(
+        firstRefresh: true,
+        firstRefreshWidget: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Center(
+            child: SizedBox(
+              height: 200,
+              width: 300,
+              child: Card(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
                     Container(
-                      height: 210.0,
-                      child: ScrollNotificationInterceptor(
-                        child: Swiper(
-                          itemBuilder: (context, index) {
-                            return SampleListItem(direction: Axis.horizontal);
-                          },
-                          itemCount: 5,
-                          viewportFraction: 0.8,
-                          scale: 0.9,
-                          autoplay: true,
-                        ),
+                      width: 50.0,
+                      height: 50.0,
+                      child: SpinKitHourGlass(
+                        color: Theme.of(context).primaryColor,
+                        size: 25.0,
                       ),
+                    ),
+                    Container(
+                      child: Text('loading'),
                     ),
                   ],
                 ),
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => SampleListItem(),
-                  childCount: _count,
-                ),
-              ),
-              footer!,
-            ],
-          );
-        },
+            ),
+          ),
+        ),
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => SampleListItem(),
+              childCount: _count,
+            ),
+          )
+        ],
         onRefresh: () async {
           await Future.delayed(Duration(seconds: 2), () {
             if (mounted) {
-              _count = 20;
+              setState(() {
+                _count = 20;
+              });
             }
           });
         },
