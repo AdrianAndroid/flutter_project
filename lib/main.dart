@@ -1,13 +1,11 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_project/dotted_border.dart';
 
 // 看这个资料
-// https://www.jianshu.com/p/fb3bf633ee12
-// flutter gridview 自适应_Flutter相册优化指北
-// https://blog.csdn.net/weixin_39982537/article/details/111220902
-
-double _childAspectRatio = 169 / 238;
+// Flutter各种虚线实战和虚线边框原理
+// https://blog.csdn.net/ZZB_Bin/article/details/112907929
 
 void main() => runApp(MyApp());
 
@@ -16,42 +14,10 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-_buildRoundContainer(String item) => Column(
-      children: [
-        Container(
-          width: 169,
-          height: 169,
-          //padding: EdgeInsets.all(10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(169),
-          ),
-          child: Column(
-            children: [
-              Image(image: AssetImage('assets/shop2.png')),
-            ],
-          ),
-        ),
-        SizedBox(height: 12),
-        Center(
-          child: Text(
-            'Tops$item',
-            style: TextStyle(
-              fontSize: 30,
-              color: Colors.red,
-            ),
-          ),
-        ),
-      ],
-    );
-
 class _MyAppState extends State<MyApp> {
-  Widget? _mywidget;
-
   void initState() {
     super.initState();
-    _mywidget = _GridItem2();
+    // _mywidget = _GridItem2();
   }
 
   SelectView(String text, String id) {
@@ -92,22 +58,22 @@ class _MyAppState extends State<MyApp> {
                 switch (action) {
                   case '_GridItem2':
                     setState(() {
-                      _mywidget = _GridItem2();
+                      //_mywidget = _GridItem2();
                     });
                     break;
                   case '_GridItem3':
                     setState(() {
-                      _mywidget = _GridItem3();
+                      //_mywidget = _GridItem3();
                     });
                     break;
                   case '_GridItem4':
                     setState(() {
-                      _mywidget = _GridItem4();
+                      //_mywidget = _GridItem4();
                     });
                     break;
                   case '_GridItem5':
                     setState(() {
-                      _mywidget = _GridItem5();
+                      //_mywidget = _GridItem5();
                     });
                     break;
                 }
@@ -115,216 +81,125 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
-        body: Container(
-          child: _mywidget ?? Container(),
-        ),
+        body: _renderBody(),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
-}
 
-class _GridItem2 extends StatelessWidget {
-  _getItem(String title) {
-    double width = 169;
-    return Column(
-      children: [
-        SizedBox(height: 12),
-        Container(
-          width: width,
-          height: width,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(width),
-          ),
-          child: Image(image: AssetImage('assets/shop2.png')),
-        ),
-        SizedBox(height: 8),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 12,
+  _renderBody() => SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              children: [
+                rectBorerWidget,
+                roundedRectBorderWidget,
+                customBorder,
+                roundStrokeCap,
+                solidBorder,
+                fullWidthPath,
+              ],
+            ),
           ),
         ),
-      ],
+      );
+
+  /// Draw a border with rectangular border
+  Widget get rectBorerWidget {
+    return DottedBorder(
+      dashPattern: [8, 4],
+      strokeWidth: 2,
+      child: Container(
+        height: 200,
+        width: 120,
+        color: Colors.red,
+      ),
     );
   }
 
-  _getOneLine() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _getOneLine(),
-        _getOneLine(),
-      ],
-    );
-  }
-}
-
-class _GridItem3 extends StatelessWidget {
-  _getItem(String title) {
-    return Column(
-      children: [
-        SizedBox(height: 12),
-        Container(
-          width: 109,
-          height: 109,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(109),
-          ),
-          child: Image(image: AssetImage('assets/shop2.png')),
+  /// Draw a border with a rounded rectangular border
+  Widget get roundedRectBorderWidget {
+    return DottedBorder(
+      borderType: BorderType.RRect,
+      radius: Radius.circular(12),
+      padding: EdgeInsets.all(6),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        child: Container(
+          height: 200,
+          width: 120,
+          color: Colors.amber,
         ),
-        SizedBox(height: 8),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 12,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  _getOneLine() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-      ],
+  /// Draw a border with custom path border
+  Widget get customBorder {
+    Path customPath = Path()
+      ..moveTo(20, 20)
+      ..lineTo(50, 100)
+      ..lineTo(20, 200)
+      ..lineTo(100, 100)
+      ..lineTo(20, 20);
+
+    return DottedBorder(
+      customPath: (_) => customPath,
+      color: Colors.indigo,
+      dashPattern: [8, 4],
+      strokeWidth: 4,
+      child: Container(
+        height: 220,
+        width: 120,
+        color: Colors.green.withAlpha(20),
+      ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _getOneLine(),
-        _getOneLine(),
-      ],
-    );
-  }
-}
-
-class _GridItem4 extends StatelessWidget {
-  _getItem(String title) {
-    double width = 79;
-    return Column(
-      children: [
-        SizedBox(height: 12),
-        Container(
-          width: width,
-          height: width,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(width),
-          ),
-          child: Image(image: AssetImage('assets/shop2.png')),
-        ),
-        SizedBox(height: 8),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 12,
-          ),
-        ),
-      ],
+  /// Set border stroke cap
+  Widget get roundStrokeCap {
+    return DottedBorder(
+      dashPattern: [8, 4],
+      strokeWidth: 2,
+      strokeCap: StrokeCap.round,
+      borderType: BorderType.RRect,
+      radius: Radius.circular(5),
+      child: Container(
+        height: 200,
+        width: 120,
+        color: Colors.red,
+      ),
     );
   }
 
-  _getOneLine() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-      ],
+  Widget get solidBorder {
+    return DottedBorder(
+      dashPattern: [4, 3],
+      strokeWidth: 2,
+      strokeCap: StrokeCap.round,
+      child: Container(
+        color: Colors.green,
+        height: 200,
+        width: 120,
+      ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _getOneLine(),
-        _getOneLine(),
-      ],
-    );
-  }
-}
-
-class _GridItem5 extends StatelessWidget {
-  _getItem(String title) {
-    double width = 61;
-    return Column(
-      children: [
-        SizedBox(height: 12),
-        Container(
-          width: width,
-          height: width,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(width),
-          ),
-          child: Image(image: AssetImage('assets/shop2.png')),
-        ),
-        SizedBox(height: 8),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
-  }
-
-  _getOneLine() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-        _getItem('Tops1'),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _getOneLine(),
-        _getOneLine(),
-      ],
+  Widget get fullWidthPath {
+    return DottedBorder(
+      customPath: (size) {
+        return Path()
+          ..moveTo(0, 20)
+          ..lineTo(size.width, 20);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(),
+      ),
     );
   }
 }
