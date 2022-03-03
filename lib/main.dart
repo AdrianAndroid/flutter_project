@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 // flutter gridview 自适应_Flutter相册优化指北
 // https://blog.csdn.net/weixin_39982537/article/details/111220902
 
+// staggered_grid_view
+// https://github.com/letsar/flutter_staggered_grid_view
+
 double _childAspectRatio = 169 / 238;
 
 void main() => runApp(MyApp());
