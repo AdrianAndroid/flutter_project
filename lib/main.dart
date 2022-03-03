@@ -1,16 +1,27 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_project/staggered.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-// 看这个资料
-// https://www.jianshu.com/p/fb3bf633ee12
-// flutter gridview 自适应_Flutter相册优化指北
-// https://blog.csdn.net/weixin_39982537/article/details/111220902
+// Flutter之瀑布流效果——Flutter基础系列
+// https://www.jianshu.com/p/35c1aa49c32b
 
-// staggered_grid_view
-// https://github.com/letsar/flutter_staggered_grid_view
+// StaggeredGridView.count()
+// StaggeredGridView.countBuilder()
+// StaggeredGridView.builder()
+// StaggeredGridView.custom()
+// StaggeredGridView.extent()
+// StaggeredGridView.extentBuilder()
 
-double _childAspectRatio = 169 / 238;
+// ===================================
+// ===================================
+// StaggeredGridView.count():创建了一个纵轴方向固定Tile个数的布局，适合子Widget个数比较少的情况，使用List<Widget>来设置。
+// StaggeredGridView.countBuilder()：和StaggeredGridView.count()差不多，区别在于适合子Widget数量比较多，需要动态创建的情况。
+// StaggeredGridView.extent()：创建了一个在纵轴方法指定Tile个数的最大值的布局，适合子Widget个数比较少的情况，使用List<Widget>来设置。
+// StaggeredGridView.extentBuilder()：和StaggeredGridView.extent()差不多，区别在于适合子Widget数量比较多，需要动态创建的情况。
+// StaggeredGridView.builder()和StaggeredGridView.custom()更高级也更灵活。
 
 void main() => runApp(MyApp());
 
@@ -19,79 +30,12 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-List<String> _getDataList() {
-  List<String> list = [];
-  for (int i = 0; i < 100; i++) {
-    list.add(i.toString());
-  }
-  return list;
-}
-
-Widget _getItemContainer(String item) {
-  //return _buildCircleAvatar(item);
-  return _buildRoundContainer(item);
-}
-
-_buildRoundContainer(String item) => Column(
-      children: [
-        Container(
-          width: 169,
-          height: 169,
-          //padding: EdgeInsets.all(10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(169),
-          ),
-          child: Column(
-            children: [
-              Image(image: AssetImage('assets/shop2.png')),
-            ],
-          ),
-        ),
-        SizedBox(height: 12),
-        Center(
-          child: Text(
-            'Tops$item',
-            style: TextStyle(
-              fontSize: 30,
-              color: Colors.red,
-            ),
-          ),
-        ),
-      ],
-    );
-
-_buildRoundContainer2(String item) => Container(
-      // width: 100,
-      padding: EdgeInsets.all(10.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Column(
-        children: [
-          Image(image: AssetImage('assets/shop2.png')),
-          Center(
-            child: Text(
-              item,
-              style: TextStyle(
-                fontSize: 30,
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
 class _MyAppState extends State<MyApp> {
   Widget? _mywidget;
 
   void initState() {
     super.initState();
-    _mywidget = _GridView1();
+    _mywidget = StaggeredPage();
   }
 
   SelectView(String text, String id) {
@@ -132,22 +76,22 @@ class _MyAppState extends State<MyApp> {
                 switch (action) {
                   case '_gridView1':
                     setState(() {
-                      _mywidget = _GridView1();
+                      //_mywidget = _GridView1();
                     });
                     break;
                   case '_GridView2':
                     setState(() {
-                      _mywidget = _GridView2();
+                      //_mywidget = _GridView2();
                     });
                     break;
                   case '_GridView3':
                     setState(() {
-                      _mywidget = _GridView3();
+                      //_mywidget = _GridView3();
                     });
                     break;
                   case '_GridView4':
                     setState(() {
-                      _mywidget = _GridView4();
+                      //_mywidget = _GridView4();
                     });
                     break;
                 }
@@ -162,100 +106,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
     );
   }
-}
 
-class _GridView4 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.custom(
-      //shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 20.0,
-        childAspectRatio: _childAspectRatio,
-      ),
-      childrenDelegate: SliverChildBuilderDelegate(
-        (context, index) => _getItemContainer(datas[index]),
-        childCount: datas.length,
-      ),
-    );
-  }
-}
-
-class _GridView3 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.builder(
-      itemCount: datas.length,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        // 单个子Widget的水平最大宽度
-        maxCrossAxisExtent: 100,
-        // 水平单个子Widget之间间距
-        mainAxisSpacing: 20.0,
-        // 垂直单个子Widget之间间距
-        crossAxisSpacing: 10.0,
-        childAspectRatio: _childAspectRatio,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return _getItemContainer(datas[index]);
-      },
-    );
-  }
-}
-
-class _GridView2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.builder(
-      itemCount: datas.length,
-      // SliverGridDelegateWithFixedCrossAxisCount构建一个横轴数量Widget
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        // 横轴元素个数
-        crossAxisCount: 3,
-        // 纵轴间距
-        mainAxisSpacing: 20.0,
-        // 横轴间距
-        crossAxisSpacing: 10.0,
-        // 子组件宽高长度比例
-        childAspectRatio: _childAspectRatio,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return _getItemContainer(datas[index]);
-      },
-    );
-  }
-}
-
-class _GridView1 extends StatelessWidget {
-  List<Widget> _getWidgetList() {
-    return _getDataList().map((e) => _getItemContainer(e)).toList();
-  }
-
-  Widget _gridView1() {
-    return GridView.count(
-      // Container跟随GridView内容变化高度，
-      //shrinkWrap: true,
-      // 水平子Widget之间间距
-      crossAxisSpacing: 10.0,
-      // 垂直子Widget之间间距
-      mainAxisSpacing: 10.0,
-      // GridView内边距
-      padding: EdgeInsets.all(10.0),
-      // 一行的Widget数量
-      crossAxisCount: 2,
-      // 子Widget宽高比例
-      childAspectRatio: _childAspectRatio,
-      // 子Widget列表
-      children: _getWidgetList(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _gridView1();
-  }
+// Widget _renderCountBuilder() {
+//   return StaggeredGridView.
+// }
 }
