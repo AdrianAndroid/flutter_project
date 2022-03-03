@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_project/masonry.dart';
 import 'package:flutter_project/staggered.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -67,21 +68,21 @@ class _MyAppState extends State<MyApp> {
             // 隐藏的菜单
             PopupMenuButton(
               itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                SelectView('_gridView1', '_gridView1'),
-                SelectView('_GridView2', '_GridView2'),
+                SelectView('StaggeredPage', 'StaggeredPage'),
+                SelectView('MasonryPage', 'MasonryPage'),
                 SelectView('_GridView3', '_GridView3'),
                 SelectView('_GridView4', '_GridView4'),
               ],
               onSelected: (String action) {
                 switch (action) {
-                  case '_gridView1':
+                  case 'StaggeredPage':
                     setState(() {
-                      //_mywidget = _GridView1();
+                      _mywidget = StaggeredPage();
                     });
                     break;
-                  case '_GridView2':
+                  case 'MasonryPage':
                     setState(() {
-                      //_mywidget = _GridView2();
+                      _mywidget = MasonryPage();
                     });
                     break;
                   case '_GridView3':
