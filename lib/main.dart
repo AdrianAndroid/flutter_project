@@ -37,15 +37,15 @@ _buildRoundContainer(String item) => Container(
       child: Column(
         children: [
           Image(image: AssetImage('assets/shop2.png')),
-          Center(
-            child: Text(
-              item,
-              style: TextStyle(
-                fontSize: 30,
-                color: Colors.red,
-              ),
-            ),
-          ),
+          // Center(
+          //   child: Text(
+          //     item,
+          //     style: TextStyle(
+          //       fontSize: 30,
+          //       color: Colors.red,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -158,12 +158,13 @@ class _GridView4 extends StatelessWidget {
     List<String> datas = _getDataList();
     return GridView.custom(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 5,
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 20.0,
       ),
       childrenDelegate: SliverChildBuilderDelegate(
         (context, index) => _getItemContainer(datas[index]),
+        childCount: datas.length,
       ),
     );
   }
@@ -177,7 +178,7 @@ class _GridView3 extends StatelessWidget {
       itemCount: datas.length,
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         // 单个子Widget的水平最大宽度
-        maxCrossAxisExtent: 200,
+        maxCrossAxisExtent: 100,
         // 水平单个子Widget之间间距
         mainAxisSpacing: 20.0,
         // 垂直单个子Widget之间间距
@@ -228,7 +229,7 @@ class _GridView1 extends StatelessWidget {
       // GridView内边距
       padding: EdgeInsets.all(10.0),
       // 一行的Widget数量
-      crossAxisCount: 3,
+      crossAxisCount: 2,
       // 子Widget宽高比例
       // childAspectRatio: 1.0,
       // 子Widget列表
