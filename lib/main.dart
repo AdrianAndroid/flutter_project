@@ -1,7 +1,5 @@
 import 'dart:core';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_project/dotted_border.dart';
 
 // 看这个资料
 // Flutter各种虚线实战和虚线边框原理
@@ -91,115 +89,44 @@ class _MyAppState extends State<MyApp> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 8,
+            child: Column(
               children: [
-                rectBorerWidget,
-                roundedRectBorderWidget,
-                customBorder,
-                roundStrokeCap,
-                solidBorder,
-                fullWidthPath,
+                TextButton(
+                  onPressed: () {},
+                  child: Text('复制粘贴'),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(2),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 4,
+                        style: BorderStyle.solid,
+                      )),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'CODE:  UJGFKLM',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 14),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Icon(
+                          Icons.copy,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
         ),
       );
-
-  /// Draw a border with rectangular border
-  Widget get rectBorerWidget {
-    return DottedBorder(
-      dashPattern: [8, 4],
-      strokeWidth: 2,
-      child: Container(
-        height: 200,
-        width: 120,
-        color: Colors.red,
-      ),
-    );
-  }
-
-  /// Draw a border with a rounded rectangular border
-  Widget get roundedRectBorderWidget {
-    return DottedBorder(
-      borderType: BorderType.RRect,
-      radius: Radius.circular(12),
-      padding: EdgeInsets.all(6),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        child: Container(
-          height: 200,
-          width: 120,
-          color: Colors.amber,
-        ),
-      ),
-    );
-  }
-
-  /// Draw a border with custom path border
-  Widget get customBorder {
-    Path customPath = Path()
-      ..moveTo(20, 20)
-      ..lineTo(50, 100)
-      ..lineTo(20, 200)
-      ..lineTo(100, 100)
-      ..lineTo(20, 20);
-
-    return DottedBorder(
-      customPath: (_) => customPath,
-      color: Colors.indigo,
-      dashPattern: [8, 4],
-      strokeWidth: 4,
-      child: Container(
-        height: 220,
-        width: 120,
-        color: Colors.green.withAlpha(20),
-      ),
-    );
-  }
-
-  /// Set border stroke cap
-  Widget get roundStrokeCap {
-    return DottedBorder(
-      dashPattern: [8, 4],
-      strokeWidth: 2,
-      strokeCap: StrokeCap.round,
-      borderType: BorderType.RRect,
-      radius: Radius.circular(5),
-      child: Container(
-        height: 200,
-        width: 120,
-        color: Colors.red,
-      ),
-    );
-  }
-
-  Widget get solidBorder {
-    return DottedBorder(
-      dashPattern: [4, 3],
-      strokeWidth: 2,
-      strokeCap: StrokeCap.round,
-      child: Container(
-        color: Colors.green,
-        height: 200,
-        width: 120,
-      ),
-    );
-  }
-
-  Widget get fullWidthPath {
-    return DottedBorder(
-      customPath: (size) {
-        return Path()
-          ..moveTo(0, 20)
-          ..lineTo(size.width, 20);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(),
-      ),
-    );
-  }
 }
