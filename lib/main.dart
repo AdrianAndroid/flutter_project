@@ -16,19 +16,6 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-List<String> _getDataList() {
-  List<String> list = [];
-  for (int i = 0; i < 100; i++) {
-    list.add(i.toString());
-  }
-  return list;
-}
-
-Widget _getItemContainer(String item) {
-  //return _buildCircleAvatar(item);
-  return _buildRoundContainer(item);
-}
-
 _buildRoundContainer(String item) => Column(
       children: [
         Container(
@@ -59,36 +46,12 @@ _buildRoundContainer(String item) => Column(
       ],
     );
 
-_buildRoundContainer2(String item) => Container(
-      // width: 100,
-      padding: EdgeInsets.all(10.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Column(
-        children: [
-          Image(image: AssetImage('assets/shop2.png')),
-          Center(
-            child: Text(
-              item,
-              style: TextStyle(
-                fontSize: 30,
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
 class _MyAppState extends State<MyApp> {
   Widget? _mywidget;
 
   void initState() {
     super.initState();
-    _mywidget = _GridView1();
+    _mywidget = _GridItem2();
   }
 
   SelectView(String text, String id) {
@@ -120,31 +83,31 @@ class _MyAppState extends State<MyApp> {
             // 隐藏的菜单
             PopupMenuButton(
               itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                SelectView('_gridView1', '_gridView1'),
-                SelectView('_GridView2', '_GridView2'),
-                SelectView('_GridView3', '_GridView3'),
-                SelectView('_GridView4', '_GridView4'),
+                SelectView('_GridItem2', '_GridItem2'),
+                SelectView('_GridItem3', '_GridItem3'),
+                SelectView('_GridItem4', '_GridItem4'),
+                SelectView('_GridItem5', '_GridItem5'),
               ],
               onSelected: (String action) {
                 switch (action) {
-                  case '_gridView1':
+                  case '_GridItem2':
                     setState(() {
-                      _mywidget = _GridView1();
+                      _mywidget = _GridItem2();
                     });
                     break;
-                  case '_GridView2':
+                  case '_GridItem3':
                     setState(() {
-                      _mywidget = _GridView2();
+                      _mywidget = _GridItem3();
                     });
                     break;
-                  case '_GridView3':
+                  case '_GridItem4':
                     setState(() {
-                      _mywidget = _GridView3();
+                      _mywidget = _GridItem4();
                     });
                     break;
-                  case '_GridView4':
+                  case '_GridItem5':
                     setState(() {
-                      _mywidget = _GridView4();
+                      _mywidget = _GridItem5();
                     });
                     break;
                 }
@@ -161,98 +124,207 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class _GridView4 extends StatelessWidget {
+class _GridItem2 extends StatelessWidget {
+  _getItem(String title) {
+    double width = 169;
+    return Column(
+      children: [
+        SizedBox(height: 12),
+        Container(
+          width: width,
+          height: width,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(width),
+          ),
+          child: Image(image: AssetImage('assets/shop2.png')),
+        ),
+        SizedBox(height: 8),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _getOneLine() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.custom(
-      //shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 20.0,
-        childAspectRatio: _childAspectRatio,
-      ),
-      childrenDelegate: SliverChildBuilderDelegate(
-        (context, index) => _getItemContainer(datas[index]),
-        childCount: datas.length,
-      ),
+    return Column(
+      children: [
+        _getOneLine(),
+        _getOneLine(),
+      ],
     );
   }
 }
 
-class _GridView3 extends StatelessWidget {
+class _GridItem3 extends StatelessWidget {
+  _getItem(String title) {
+    return Column(
+      children: [
+        SizedBox(height: 12),
+        Container(
+          width: 109,
+          height: 109,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(109),
+          ),
+          child: Image(image: AssetImage('assets/shop2.png')),
+        ),
+        SizedBox(height: 8),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _getOneLine() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.builder(
-      itemCount: datas.length,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        // 单个子Widget的水平最大宽度
-        maxCrossAxisExtent: 100,
-        // 水平单个子Widget之间间距
-        mainAxisSpacing: 20.0,
-        // 垂直单个子Widget之间间距
-        crossAxisSpacing: 10.0,
-        childAspectRatio: _childAspectRatio,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return _getItemContainer(datas[index]);
-      },
+    return Column(
+      children: [
+        _getOneLine(),
+        _getOneLine(),
+      ],
     );
   }
 }
 
-class _GridView2 extends StatelessWidget {
+class _GridItem4 extends StatelessWidget {
+  _getItem(String title) {
+    double width = 79;
+    return Column(
+      children: [
+        SizedBox(height: 12),
+        Container(
+          width: width,
+          height: width,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(width),
+          ),
+          child: Image(image: AssetImage('assets/shop2.png')),
+        ),
+        SizedBox(height: 8),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _getOneLine() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.builder(
-      itemCount: datas.length,
-      // SliverGridDelegateWithFixedCrossAxisCount构建一个横轴数量Widget
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        // 横轴元素个数
-        crossAxisCount: 3,
-        // 纵轴间距
-        mainAxisSpacing: 20.0,
-        // 横轴间距
-        crossAxisSpacing: 10.0,
-        // 子组件宽高长度比例
-        childAspectRatio: _childAspectRatio,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return _getItemContainer(datas[index]);
-      },
+    return Column(
+      children: [
+        _getOneLine(),
+        _getOneLine(),
+      ],
     );
   }
 }
 
-class _GridView1 extends StatelessWidget {
-  List<Widget> _getWidgetList() {
-    return _getDataList().map((e) => _getItemContainer(e)).toList();
+class _GridItem5 extends StatelessWidget {
+  _getItem(String title) {
+    double width = 61;
+    return Column(
+      children: [
+        SizedBox(height: 12),
+        Container(
+          width: width,
+          height: width,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(width),
+          ),
+          child: Image(image: AssetImage('assets/shop2.png')),
+        ),
+        SizedBox(height: 8),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
   }
 
-  Widget _gridView1() {
-    return GridView.count(
-      // Container跟随GridView内容变化高度，
-      //shrinkWrap: true,
-      // 水平子Widget之间间距
-      crossAxisSpacing: 10.0,
-      // 垂直子Widget之间间距
-      mainAxisSpacing: 10.0,
-      // GridView内边距
-      padding: EdgeInsets.all(10.0),
-      // 一行的Widget数量
-      crossAxisCount: 2,
-      // 子Widget宽高比例
-      childAspectRatio: _childAspectRatio,
-      // 子Widget列表
-      children: _getWidgetList(),
+  _getOneLine() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+        _getItem('Tops1'),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _gridView1();
+    return Column(
+      children: [
+        _getOneLine(),
+        _getOneLine(),
+      ],
+    );
   }
 }
