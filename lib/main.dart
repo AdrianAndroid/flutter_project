@@ -2,8 +2,12 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 
-// 在Flutter中创建有意思的滚动效果 - Sliver系列
-// https://www.jianshu.com/p/5aeeb7ea776b
+// 看这个资料
+// https://www.jianshu.com/p/fb3bf633ee12
+// flutter gridview 自适应_Flutter相册优化指北
+// https://blog.csdn.net/weixin_39982537/article/details/111220902
+
+double _childAspectRatio = 169 / 238;
 
 void main() => runApp(MyApp());
 
@@ -25,29 +29,34 @@ Widget _getItemContainer(String item) {
   return _buildRoundContainer(item);
 }
 
-_buildRoundContainer(String item) => Container(
-      // width: 100,
-      height: 200,
-      padding: EdgeInsets.all(10.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Column(
-        children: [
-          Image(image: AssetImage('assets/shop2.png')),
-          // Center(
-          //   child: Text(
-          //     item,
-          //     style: TextStyle(
-          //       fontSize: 30,
-          //       color: Colors.red,
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
+_buildRoundContainer(String item) => Column(
+      children: [
+        Container(
+          width: 169,
+          height: 169,
+          //padding: EdgeInsets.all(10.0),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(169),
+          ),
+          child: Column(
+            children: [
+              Image(image: AssetImage('assets/shop2.png')),
+            ],
+          ),
+        ),
+        SizedBox(height: 12),
+        Center(
+          child: Text(
+            'Tops$item',
+            style: TextStyle(
+              fontSize: 30,
+              color: Colors.red,
+            ),
+          ),
+        ),
+      ],
     );
 
 _buildRoundContainer2(String item) => Container(
@@ -157,10 +166,12 @@ class _GridView4 extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> datas = _getDataList();
     return GridView.custom(
+      //shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 5,
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 20.0,
+        childAspectRatio: _childAspectRatio,
       ),
       childrenDelegate: SliverChildBuilderDelegate(
         (context, index) => _getItemContainer(datas[index]),
@@ -183,6 +194,7 @@ class _GridView3 extends StatelessWidget {
         mainAxisSpacing: 20.0,
         // 垂直单个子Widget之间间距
         crossAxisSpacing: 10.0,
+        childAspectRatio: _childAspectRatio,
       ),
       itemBuilder: (BuildContext context, int index) {
         return _getItemContainer(datas[index]);
@@ -206,7 +218,7 @@ class _GridView2 extends StatelessWidget {
         // 横轴间距
         crossAxisSpacing: 10.0,
         // 子组件宽高长度比例
-        // childAspectRatio: 1.0,
+        childAspectRatio: _childAspectRatio,
       ),
       itemBuilder: (BuildContext context, int index) {
         return _getItemContainer(datas[index]);
@@ -222,6 +234,8 @@ class _GridView1 extends StatelessWidget {
 
   Widget _gridView1() {
     return GridView.count(
+      // Container跟随GridView内容变化高度，
+      //shrinkWrap: true,
       // 水平子Widget之间间距
       crossAxisSpacing: 10.0,
       // 垂直子Widget之间间距
@@ -231,7 +245,7 @@ class _GridView1 extends StatelessWidget {
       // 一行的Widget数量
       crossAxisCount: 2,
       // 子Widget宽高比例
-      // childAspectRatio: 1.0,
+      childAspectRatio: _childAspectRatio,
       // 子Widget列表
       children: _getWidgetList(),
     );
