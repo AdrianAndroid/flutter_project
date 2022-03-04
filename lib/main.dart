@@ -38,20 +38,33 @@ class _MainState extends State<MainRoute> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    return Listener(
-      behavior: HitTestBehavior.translucent,
-      child: Container(
-        color: Colors.grey,
-        alignment: Alignment.center,
-        width: width - 10,
-        height: height - 100,
-        child: Text('点击'),
-      ),
-      onPointerDown: (PointerDownEvent event) => setState(() {
-        debugPrint('响应');
-      }),
+    // double width = MediaQuery.of(context).size.width;
+    // double height = MediaQuery.of(context).size.height;
+    return Stack(
+      children: [
+        Listener(
+          child: Container(
+            width: 300.0,
+            height: 300.0,
+            color: Colors.blue,
+            child: Center(child: Text('底部')),
+          ),
+          onPointerDown: (event) => print('down0'),
+        ),
+        Listener(
+          child: Container(
+            color: Colors.grey,
+            width: 100.0,
+            height: 100.0,
+            child: Center(child: Text('外部')),
+          ),
+          onPointerDown: (event) => print('down1'),
+          behavior: HitTestBehavior.translucent,
+        ),
+      ],
     );
   }
 }
+
+// 创造机会，了解你的过程，传递你的信息。分享自己
+//
