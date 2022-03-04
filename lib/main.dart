@@ -132,7 +132,7 @@ class _MyAppState extends State<MyApp> {
                   color: Colors.grey,
                   width: 100,
                   height: 50,
-                  child: DashRect(
+                  child: DashedRect(
                     color: Colors.red,
                     strokeWidth: 2.0,
                     gap: 3.0,
@@ -147,30 +147,44 @@ class _MyAppState extends State<MyApp> {
       );
 }
 
-class DashRect extends StatelessWidget {
+class DashedRect extends StatelessWidget {
   final Color color;
   final double strokeWidth;
   final double gap;
 
-  const DashRect({
-    Key? key,
-    required this.color,
-    required this.strokeWidth,
-    required this.gap,
-  }) : super(key: key);
+  DashedRect({
+    this.color = Colors.black,
+    this.strokeWidth = 1.0,
+    this.gap = 5.0,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.all(strokeWidth / 2),
+        child: CustomPaint(
+          painter: DashRectPainter(
+            color: color,
+            strokeWidth: strokeWidth,
+            gap: gap,
+          ),
+        ),
+      ),
+    );
   }
 }
 
 class DashRectPainter extends CustomPainter {
-  final double strokeWidth;
-  final Color color;
-  final double gap;
+  double strokeWidth;
+  Color color;
+  double gap;
 
-  DashRectPainter(this.strokeWidth, this.color, this.gap);
+  DashRectPainter({
+    this.strokeWidth = 5.0,
+    this.color = Colors.red,
+    this.gap = 5.0,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -189,14 +203,14 @@ class DashRectPainter extends CustomPainter {
     );
 
     Path _rightPath = getDashedPath(
-      a: math.Point(0, y),
+      a: math.Point(x, 0),
       b: math.Point(x, y),
       gap: gap,
     );
 
     Path _bottomPath = getDashedPath(
       a: math.Point(0, y),
-      b: math.Point(0.001, y),
+      b: math.Point(x, y),
       gap: gap,
     );
 
@@ -226,12 +240,13 @@ class DashRectPainter extends CustomPainter {
     num radians = math.atan(size.height / size.width);
 
     num dx = math.cos(radians) * gap < 0
-        ? math.cos(radians) * gap - 1
+        ? math.cos(radians) * gap * -1
         : math.cos(radians) * gap;
 
     num dy = math.sin(radians) * gap < 0
         ? math.sin(radians) * gap * -1
         : math.sin(radians) * gap;
+
     while (currentPoint.x <= b.x && currentPoint.y <= b.y) {
       shouldDraw
           ? path.lineTo(currentPoint.x.toDouble(), currentPoint.y.toDouble())
@@ -246,5 +261,7 @@ class DashRectPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant DashRectPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
 }
