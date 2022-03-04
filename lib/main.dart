@@ -41,21 +41,16 @@ class _MainState extends State<MainRoute> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Listener(
+      behavior: HitTestBehavior.translucent,
       child: Container(
         color: Colors.grey,
         alignment: Alignment.center,
         width: width - 10,
         height: height - 100,
-        child: Text(_event?.toString() ?? ""),
+        child: Text('点击'),
       ),
       onPointerDown: (PointerDownEvent event) => setState(() {
-        _event = event;
-      }),
-      onPointerMove: (PointerMoveEvent event) => setState(() {
-        _event = event;
-      }),
-      onPointerUp: (PointerUpEvent event) => setState(() {
-        _event = event;
+        debugPrint('响应');
       }),
     );
   }
