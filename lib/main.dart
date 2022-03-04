@@ -2,9 +2,14 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_project/masonry.dart';
+import 'package:flutter_project/quilited.dart';
 import 'package:flutter_project/staggered.dart';
+import 'package:flutter_project/staired.dart';
+import 'package:flutter_project/woven.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
+import 'aligned.dart';
 
 // Flutter之瀑布流效果——Flutter基础系列
 // https://www.jianshu.com/p/35c1aa49c32b
@@ -70,10 +75,13 @@ class _MyAppState extends State<MyApp> {
               itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
                 SelectView('StaggeredPage', 'StaggeredPage'),
                 SelectView('MasonryPage', 'MasonryPage'),
-                SelectView('_GridView3', '_GridView3'),
-                SelectView('_GridView4', '_GridView4'),
+                SelectView('QuiltedPage', 'QuiltedPage'),
+                SelectView('WovenPage', 'WovenPage'),
+                SelectView('StairedPage', 'StairedPage'),
+                SelectView('AlignedPage', 'AlignedPage'),
               ],
               onSelected: (String action) {
+                print('action ---> $action');
                 switch (action) {
                   case 'StaggeredPage':
                     setState(() {
@@ -85,14 +93,24 @@ class _MyAppState extends State<MyApp> {
                       _mywidget = MasonryPage();
                     });
                     break;
-                  case '_GridView3':
+                  case 'QuiltedPage':
                     setState(() {
-                      //_mywidget = _GridView3();
+                      _mywidget = QuiltedPage();
                     });
                     break;
-                  case '_GridView4':
+                  case 'WovenPage':
                     setState(() {
-                      //_mywidget = _GridView4();
+                      _mywidget = WovenPage();
+                    });
+                    break;
+                  case 'StairedPage':
+                    setState(() {
+                      _mywidget = StairedPage();
+                    });
+                    break;
+                  case 'AlignedPage':
+                    setState(() {
+                      _mywidget = AlignedPage();
                     });
                     break;
                 }
