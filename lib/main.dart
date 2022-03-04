@@ -20,38 +20,44 @@ class MyApp extends StatelessWidget {
       title: 'Banner',
       home: Scaffold(
         appBar: AppBar(title: Text('Banner')),
-        body: Container(child: _Drag()),
+        body: Container(child: Test()),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class _Drag extends StatefulWidget {
+class Test extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _DragState();
+  State<StatefulWidget> createState() => TestState();
 }
 
-class _DragState extends State<_Drag> with SingleTickerProviderStateMixin {
-  double _top = 0.0; // 距顶部的偏移
-  double _left = 0.0; // 距左边的偏移
+class TestState extends State<Test> {
+  double _top = 0.0;
+  double _left = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('构建Stack');
     return Stack(
       children: [
         Positioned(
           top: _top,
           left: _left,
           child: GestureDetector(
-            child: CircleAvatar(child: Text("A")),
-            // 手指滑动时会触发此回调
-            onPanUpdate: (DragUpdateDetails e) {
-              // 用户手指滑动时候，更新偏移，重新构建
+            child: CircleAvatar(child: Text('A')),
+            // 垂直方向拖动事件
+            onVerticalDragUpdate: (DragUpdateDetails details) {
+              debugPrint('onVerticalDragUpdate dx=${details.delta.dx} '
+                  'dy=${details.delta.dy}');
               setState(() {
-                _left += e.delta.dx;
-                _top += e.delta.dy;
+                _top += details.delta.dy;
+              });
+            },
+            onHorizontalDragUpdate: (DragUpdateDetails details) {
+              debugPrint('onHorizontalDragUpdate dx=${details.delta.dx} '
+                  'dy=${details.delta.dy}');
+              setState(() {
+                _left += details.delta.dx;
               });
             },
           ),
