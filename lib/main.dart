@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 // staggered_grid_view
 // https://github.com/letsar/flutter_staggered_grid_view
 
+// Flutter之瀑布流效果——Flutter基础系列 --> 这个版本比较低
+// https://www.jianshu.com/p/35c1aa49c32b
+
 double _childAspectRatio = 169 / 238;
 
 void main() => runApp(MyApp());
