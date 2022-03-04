@@ -20,51 +20,43 @@ class MyApp extends StatelessWidget {
       title: 'Banner',
       home: Scaffold(
         appBar: AppBar(title: Text('Banner')),
-        body: Container(child: MainRoute()),
+        body: Container(child: _Drag()),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MainRoute extends StatefulWidget {
+class _Drag extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _MainState();
+  State<StatefulWidget> createState() => _DragState();
 }
 
-class _MainState extends State<MainRoute> {
-  // 定义一个状态， 保存当前指针位置
-  PointerEvent? _event;
+class _DragState extends State<_Drag> with SingleTickerProviderStateMixin {
+  double _top = 0.0; // 距顶部的偏移
+  double _left = 0.0; // 距左边的偏移
 
   @override
   Widget build(BuildContext context) {
-    // double width = MediaQuery.of(context).size.width;
-    // double height = MediaQuery.of(context).size.height;
+    debugPrint('构建Stack');
     return Stack(
       children: [
-        Listener(
-          child: Container(
-            width: 300.0,
-            height: 300.0,
-            color: Colors.blue,
-            child: Center(child: Text('底部')),
+        Positioned(
+          top: _top,
+          left: _left,
+          child: GestureDetector(
+            child: CircleAvatar(child: Text("A")),
+            // 手指滑动时会触发此回调
+            onPanUpdate: (DragUpdateDetails e) {
+              // 用户手指滑动时候，更新偏移，重新构建
+              setState(() {
+                _left += e.delta.dx;
+                _top += e.delta.dy;
+              });
+            },
           ),
-          onPointerDown: (event) => print('down0'),
-        ),
-        Listener(
-          child: Container(
-            color: Colors.grey,
-            width: 100.0,
-            height: 100.0,
-            child: Center(child: Text('外部')),
-          ),
-          onPointerDown: (event) => print('down1'),
-          behavior: HitTestBehavior.translucent,
         ),
       ],
     );
   }
 }
-
-// 创造机会，了解你的过程，传递你的信息。分享自己
-//
