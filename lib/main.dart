@@ -6,6 +6,8 @@ import 'package:flutter_project/banner.dart';
 
 //https://www.wanandroid.com/banner/json
 
+//https://www.jianshu.com/p/cc59c14de9bd
+
 //https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png
 //https://www.wanandroid.com/blogimgs/90c6cc12-742e-4c9f-b318-b912f163b8d0.png
 //https://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png
