@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/banner.dart';
@@ -11,6 +13,19 @@ import 'package:flutter_project/banner.dart';
 //https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png
 //https://www.wanandroid.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg
 
+const String url1 = 'https://www.wanandroid'
+    '.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png';
+const String url2 = 'https://www.wanandroid'
+    '.com/blogimgs/90c6cc12-742e-4c9f-b318-b912f163b8d0.png';
+const String url3 = 'https://www.wanandroid'
+    '.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png';
+const String url4 = 'https://www.wanandroid'
+    '.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png';
+const String url5 = 'https://www.wanandroid'
+    '.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png';
+const String url6 = 'https://www.wanandroid'
+    '.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -20,52 +35,181 @@ class MyApp extends StatelessWidget {
       title: 'Banner',
       home: Scaffold(
         appBar: AppBar(title: Text('Banner')),
-        body: Container(child: GradienCircularProgressRoute()),
+        body: Container(child: BannerTest()),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class GradienCircularProgressRoute extends StatefulWidget {
+class BannerTest extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => GradienCircularProgressRouteState();
+  State<StatefulWidget> createState() => _BannerTestState();
 }
 
-class GradienCircularProgressRouteState
-    extends State<GradienCircularProgressRoute> {
+class _BannerTestState extends State<BannerTest> {
   @override
-  Widget build(BuildContext context) => CustomPaint(painter: MyPainter(50.0));
-}
-
-class MyPainter extends CustomPainter {
-  final double radius;
-
-  MyPainter(this.radius);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // 根据半径计算大小
-    size = Size.fromRadius(radius);
-    var paint = Paint() //创建一个画笔并配置其属性
-      ..isAntiAlias = true //是否抗锯齿
-      ..style = PaintingStyle.fill //画笔样式：填充
-      ..color = Colors.blue //画笔颜色
-      ..strokeWidth = 3.0; // 画笔的宽度
-
-    // 画一个实心圆
-    Rect rect = Rect.fromCircle(
-      center: size.center(Offset.zero),
-      radius: radius,
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: 10,
+      itemBuilder: (context, i) {
+        if (i == 0) {
+          return Container(
+            height: 180.0,
+            child: BannerView(
+              children: [
+                Image.network(url1),
+                Image.network(url2),
+                Image.network(url3),
+                Image.network(url4),
+                Image.network(url5),
+                Image.network(url6),
+              ],
+            ),
+          );
+        } else {
+          return Text("111");
+        }
+      },
     );
-    canvas.drawCircle(rect.center, radius, paint);
+  }
+}
+
+class BannerView extends StatefulWidget {
+  final List<Widget> children;
+  final Duration switchDuration;
+
+  const BannerView({
+    Key? key,
+    this.switchDuration = const Duration(seconds: 3),
+    required this.children,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _BannerViewState();
+}
+
+class _BannerViewState extends State<BannerView>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late PageController _pageController;
+  int _curPageIndex = 0;
+  static const Duration animateDuration = const Duration(milliseconds: 500);
+  late Timer _timer;
+  List<Widget> children = []; // 内部加两个页面 +B(A,B)+A
+
+  @override
+  void initState() {
+    super.initState();
+
+    _curPageIndex = 0;
+    _tabController = TabController(length: widget.children.length, vsync: this);
+
+    children.addAll(widget.children);
+
+    /// 定时器完成自动翻页
+    if (widget.children.length > 1) {
+      children.insert(0, widget.children.last);
+      children.add(widget.children.first);
+
+      /// 如果大于一页，则会在前后都加一页， 初始页面 指定
+      _curPageIndex = 1;
+      _timer = Timer.periodic(widget.switchDuration, _nextBanner);
+    }
+
+    /// 初史页面
+    _pageController = PageController(initialPage: _curPageIndex);
+  }
+
+  void _nextBanner(Timer timer) {
+    _curPageIndex++;
+    _curPageIndex = _curPageIndex == children.length ? 0 : _curPageIndex;
+    _pageController.animateToPage(
+      _curPageIndex,
+      duration: animateDuration,
+      curve: Curves.linear,
+    );
   }
 
   @override
-  bool shouldRepaint(covariant MyPainter oldDelegate) {
-    if (oldDelegate.radius != radius) {
-      return true;
-    }
-    return false;
+  void dispose() {
+    _pageController.dispose();
+    _tabController.dispose();
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Listener(
+          onPointerDown: (_) {
+            _timer.cancel();
+          },
+          onPointerUp: (_) {
+            if (widget.children.length > 1) {
+              _timer = Timer.periodic(widget.switchDuration, _nextBanner);
+            }
+            debugPrint('重启');
+          },
+          child: NotificationListener(
+            onNotification: (notification) {
+              //debugPrint(notification.runtimeType.toString());
+              if (notification is ScrollUpdateNotification) {
+                // 是一个完整页面的偏移
+                if (notification.metrics.atEdge) {
+                  if (_curPageIndex == children.length - 1) {
+                    // 如果是最后一页， 让pageview jump到第一页
+                    _pageController.jumpToPage(1);
+                  } else if (_curPageIndex == 0) {
+                    _pageController.jumpToPage(children.length - 2);
+                  }
+                }
+              }
+              return true;
+            },
+            child: PageView.builder(
+              itemCount: children.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  child: children[index],
+                  onTap: () {
+                    print("$index");
+                  },
+                );
+              },
+              controller: _pageController,
+              // 要到新页面的时候， 把新页面的index给我们
+              onPageChanged: (index) {
+                // 需要更新下下标
+                _curPageIndex = index;
+                if (index == children.length - 1) {
+                  // 如果是最后一页，让PageView jump到第一页
+                  // _pageController.jumptToPage(1);
+                  _tabController.animateTo(0);
+                } else if (index == 0) {
+                  // 第一页回滑，画到第0页面，第0页的内容是倒数第二页，是所有真是页面的最后一页的内容
+                  // 指示器 到 tab的最后一个
+                  // _pageController.jumpToPage(children.length-2);
+                  _tabController.animateTo(_tabController.length - 1);
+                } else {
+                  _tabController.animateTo(index - 1);
+                }
+              },
+            ),
+          ),
+        ),
+        Positioned(
+          child: TabPageSelector(
+            controller: _tabController,
+            color: Colors.white,
+            selectedColor: Colors.grey,
+          ),
+          bottom: 8.0,
+          right: 8.0,
+        ),
+      ],
+    );
   }
 }
