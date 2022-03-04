@@ -20,49 +20,52 @@ class MyApp extends StatelessWidget {
       title: 'Banner',
       home: Scaffold(
         appBar: AppBar(title: Text('Banner')),
-        body: Container(child: Test()),
+        body: Container(child: GradienCircularProgressRoute()),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class Test extends StatefulWidget {
+class GradienCircularProgressRoute extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => TestState();
+  State<StatefulWidget> createState() => GradienCircularProgressRouteState();
 }
 
-class TestState extends State<Test> {
-  double _top = 0.0;
-  double _left = 0.0;
+class GradienCircularProgressRouteState
+    extends State<GradienCircularProgressRoute> {
+  @override
+  Widget build(BuildContext context) => CustomPaint(painter: MyPainter(50.0));
+}
+
+class MyPainter extends CustomPainter {
+  final double radius;
+
+  MyPainter(this.radius);
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: _top,
-          left: _left,
-          child: GestureDetector(
-            child: CircleAvatar(child: Text('A')),
-            // 垂直方向拖动事件
-            onVerticalDragUpdate: (DragUpdateDetails details) {
-              debugPrint('onVerticalDragUpdate dx=${details.delta.dx} '
-                  'dy=${details.delta.dy}');
-              setState(() {
-                _top += details.delta.dy;
-              });
-            },
-            onHorizontalDragUpdate: (DragUpdateDetails details) {
-              debugPrint('onHorizontalDragUpdate dx=${details.delta.dx} '
-                  'dy=${details.delta.dy}');
-              setState(() {
-                _left += details.delta.dx;
-              });
-            },
-          ),
-        ),
-      ],
+  void paint(Canvas canvas, Size size) {
+    // 根据半径计算大小
+    size = Size.fromRadius(radius);
+    var paint = Paint() //创建一个画笔并配置其属性
+      ..isAntiAlias = true //是否抗锯齿
+      ..style = PaintingStyle.fill //画笔样式：填充
+      ..color = Colors.blue //画笔颜色
+      ..strokeWidth = 3.0; // 画笔的宽度
+
+    // 画一个实心圆
+    Rect rect = Rect.fromCircle(
+      center: size.center(Offset.zero),
+      radius: radius,
     );
+    canvas.drawCircle(rect.center, radius, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant MyPainter oldDelegate) {
+    if (oldDelegate.radius != radius) {
+      return true;
+    }
+    return false;
   }
 }
