@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 // 看这个资料
 // Flutter各种虚线实战和虚线边框原理
 // https://blog.csdn.net/ZZB_Bin/article/details/112907929
+//
+// flutter - 如何在颤动的盒子周围创建虚线边框？
+// https://mlog.club/article/120376
 
 void main() => runApp(MyApp());
 
