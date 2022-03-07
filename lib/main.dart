@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 // 8.6 通知 Notification
@@ -19,7 +21,8 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('AppBar')),
-        body: NotificationRoute(),
+        //body: NotificationRoute(),
+        body: ParentWidget(),
       ),
     );
   }
@@ -75,7 +78,6 @@ class MyNotification extends Notification {
   MyNotification(this.msg);
 }
 
-
 // // 遍历回调，回对每一个父级Element执行此回调
 // bool visitAncestor(Element element) {
 //   // 判断当前element对应的widget是否是NotificationListener
@@ -106,3 +108,51 @@ class MyNotification extends Notification {
 //   }
 //   return false;
 // }
+
+// 创建子Widget发送通知
+class ChildWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: RaisedButton(
+        onPressed: () {
+          MyNotification("我是随机下面发送的数据:${Random().nextInt(1000)}")
+              .dispatch(context);
+        },
+        child: Text("提交"),
+      ),
+    );
+  }
+}
+
+// parentWidget使用NotificationListener接收通知并显示
+class ParentWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ParentWidgetState();
+}
+
+class _ParentWidgetState extends State<ParentWidget> {
+  String msg = "";
+
+  onReceiveMessage(String message) {
+    setState(() {
+      msg = message;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return NotificationListener<MyNotification>(
+      child: Column(
+        children: [
+          Text(msg),
+          ChildWidget(),
+        ],
+      ),
+      onNotification: (notification) {
+        onReceiveMessage(notification.msg);
+        return true;
+      },
+    );
+  }
+}
