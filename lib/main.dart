@@ -8,12 +8,17 @@ import 'package:flutter_project/config.dart';
 
 //https://www.jianshu.com/p/cc59c14de9bd
 
-//https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png
-//https://www.wanandroid.com/blogimgs/90c6cc12-742e-4c9f-b318-b912f163b8d0.png
-//https://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png
-//https://www.wanandroid.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png
-//https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png
-//https://www.wanandroid.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg
+// 推荐几款Github上带动画效果的PageView
+// Travel Cards
+// https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/parallax_travel_cards_list
+// Mindfullness Gooey Transition
+// https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/gooey_edge
+// page-transformer
+// https://github.com/roughike/page-transformer
+// transformer_page_view
+// https://github.com/best-flutter/transformer_page_view
+// smooth_page_indicator
+// https://github.com/Milad-Akarie/smooth_page_indicator
 
 const String url1 = 'https://www.wanandroid'
     '.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png';
@@ -67,6 +72,18 @@ class PageViewDemoState extends State<PageViewDemo> {
             color: Colors.grey,
             child: _buildPageViewTwo(),
           ),
+          Text('实现指示器'),
+          Container(
+            height: 200,
+            color: Colors.grey,
+            child: _buildPageViewThree(),
+          ),
+          Text('切换动画'),
+          Container(
+            height: 200,
+            color: Colors.grey,
+            child: _buildPageViewTwo(),
+          ),
         ],
       ),
     );
@@ -94,6 +111,69 @@ class PageViewDemoState extends State<PageViewDemo> {
       itemBuilder: (context, index) {
         return pageList[index % (pageList.length)];
       },
+    );
+  }
+
+  List<String> pageList = ['PageView1', 'PageView2', 'PageView3'];
+  int _currentPageIndex = 0;
+
+  _buildPageViewThree() {
+    return Center(
+      child: Container(
+        height: 230,
+        child: Stack(
+          children: [
+            PageView.builder(
+              onPageChanged: (int index) {
+                setState(() {
+                  _currentPageIndex = index % (pageList.length);
+                });
+              },
+              itemCount: 10000,
+              itemBuilder: (context, index) {
+                return _buildPageViewItem(pageList[index % (pageList.length)]);
+              },
+            ),
+            Positioned(
+              bottom: 10,
+              left: 0,
+              right: 0,
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    pageList.length,
+                    (index) {
+                      print('_buildPageViewThree List.generate.');
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _currentPageIndex == index
+                                ? Colors.blue
+                                : Colors.grey),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildPageViewItem(String txt, {Color color = Colors.red}) {
+    return Container(
+      color: color,
+      alignment: Alignment.center,
+      child: Text(
+        txt,
+        style: TextStyle(color: Colors.white, fontSize: 28),
+      ),
     );
   }
 }
