@@ -16,8 +16,58 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('AppBar')),
-        body: Center(child: Text('Hello World!')),
+        body: NotificationRoute(),
       ),
     );
   }
+}
+
+class NotificationRoute extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => NotificationRoutestate();
+}
+
+class NotificationRoutestate extends State<NotificationRoute> {
+  String _msg = "";
+
+  @override
+  Widget build(BuildContext context) {
+    // 监听通知
+    return NotificationListener<MyNotification>(
+      onNotification: (notification) {
+        setState(() {
+          _msg += notification.msg + "";
+        });
+        return true;
+      },
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                MyNotification("Hi").dispatch(context);
+              },
+              child: Text("Send Notification"),
+            ),
+            Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () => MyNotification("Hi").dispatch(context),
+                  child: Text("Send Notification"),
+                );
+              },
+            ),
+            Text(_msg),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyNotification extends Notification {
+  final String msg;
+
+  MyNotification(this.msg);
 }
