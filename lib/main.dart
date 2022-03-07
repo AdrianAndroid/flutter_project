@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// 8.6 通知 Notification
+// https://book.flutterchina.club/chapter8/notification.html
+
 void main() {
   runApp(MyApp());
 }
