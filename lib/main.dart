@@ -230,6 +230,8 @@ class _ViewPageState extends State<ViewPage> {
   _buildPageItem(int index) {
     Matrix4 matrix4 = Matrix4.identity();
 
+    print('_currPageValue.floor() ---> ${_currPageValue.floor()}');
+
     if (index == _currPageValue.floor()) {
       // 当前
       var currScale = 1 - (_currPageValue - index) * (1 - _scaleFactor);
