@@ -71,3 +71,35 @@ class MyNotification extends Notification {
 
   MyNotification(this.msg);
 }
+
+
+// // 遍历回调，回对每一个父级Element执行此回调
+// bool visitAncestor(Element element) {
+//   // 判断当前element对应的widget是否是NotificationListener
+//
+//   // 由于NotificationListener是继承自StatelessWidget.
+//   // 故先判断是否是StateElement
+//   if (element is StatelessElement) {
+//     // 是StatelessElement,则获取element对应的Widget，判断
+//     // 是否是NotificationListener.
+//     final StatelessElement widget = element.widget as StatelessElement;
+//     if (widget is NotificationListener<Notification>) {
+//       //  是NotificationListener,则调用NotificationListener的_dispatch方法
+//       if (widget._dispatch(this, element)) {
+//         return false;
+//       }
+//     }
+//     return true;
+//   }
+// }
+//
+// bool _dispatch(Notification notification, Element element) {
+//   // 如果通知监听器不为空，并且当前通知类型是该NotificationListener
+//   // 监听的通知类型， 则调用当前NotificationListener的onNotification
+//   if (onNotification != null && notification is T) {
+//     final bool result = onNotification(notification);
+//     // 返回值决定是否继续向上遍历
+//     return result == true;
+//   }
+//   return false;
+// }
