@@ -17,7 +17,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyPage(),
+      home: Scaffold(
+        appBar: AppBar(title: Text('LayoutBuilder')),
+        body: MyPage(),
+      ),
     );
   }
 }
@@ -30,60 +33,70 @@ class MyPage extends StatefulWidget {
 }
 
 class MyPageState extends State<MyPage> {
-  double _height = 50;
-
   @override
   Widget build(BuildContext context) {
-    print('页面重绘了.........');
-    // 整个页面使用ChangeNotifier来包裹
-    return Scaffold(
-      appBar: AppBar(title: Text('Overlay')),
-      body: Column(
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                _height = 50;
-                setState(() {});
-              },
-              child: Text('50')),
-          ElevatedButton(
-              onPressed: () {
-                _height = 200;
-                setState(() {});
-              },
-              child: Text('200')),
-          Container(
-            height: _height,
-            child: _layoutbuilderWidget,
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 25,
+            right: 25,
+            bottom: 20,
           ),
-        ],
-      ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _getItem(),
+              _getItem(),
+              _getItem(),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 25,
+            right: 25,
+            bottom: 20,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _getItem(),
+              _getItem(),
+              _getItem(),
+            ],
+          ),
+        ),
+      ],
     );
   }
+
+  Widget _getItem() => Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(100),
+        ),
+      );
 
   Widget get _layoutbuilderWidget {
     print('_layoutbuilderWidget');
     return LayoutBuilder(
-        builder: (context, constraints) {
-
-          print('constraints height => ${constraints.maxHeight}');
-          var color = Colors.red;
-          if (constraints.maxHeight > 100) {
-            color = Colors.blue;
-          } else {
-            color = Colors.red;
-          }
-          return Container(
-            height: 50,
-            width: 50,
-            color: color,
-          );
-        },
-      );
-  }
-
-  @override
-  void initState() {
-    super.initState();
+      builder: (context, constraints) {
+        print('constraints height => ${constraints.maxHeight}');
+        var color = Colors.red;
+        if (constraints.maxHeight > 100) {
+          color = Colors.blue;
+        } else {
+          color = Colors.red;
+        }
+        return Container(
+          height: 50,
+          width: 50,
+          color: color,
+        );
+      },
+    );
   }
 }
