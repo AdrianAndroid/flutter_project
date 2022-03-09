@@ -47,6 +47,11 @@ class _MyHomePageState extends State<MyHomePage> {
       'assets/product.svg',
       color: Colors.greenAccent,
     );
+    SvgPicture p1 = SvgPicture.asset('assets/prodcut1.svg');
+    SvgPicture p2 = SvgPicture.asset('assets/prodcut2.svg');
+    SvgPicture p3 = SvgPicture.asset('assets/prodcut3.svg');
+    SvgPicture p4 = SvgPicture.asset('assets/prodcut4.svg');
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: Column(
@@ -55,6 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
           SizedBox(width: 50, height: 50, child: picture1),
           SizedBox(width: 50, height: 50, child: picture2),
           SizedBox(width: 50, height: 50, child: picture3),
+          Divider(height: 10),
+          SizedBox(width: 50, height: 50, child: p1),
+          SizedBox(width: 50, height: 50, child: p2),
+          SizedBox(width: 50, height: 50, child: p3),
+          SizedBox(width: 50, height: 50, child: p4),
         ],
       ),
     );
