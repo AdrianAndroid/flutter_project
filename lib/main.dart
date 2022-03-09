@@ -35,6 +35,28 @@ class MyPage extends StatefulWidget {
 class MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.blueAccent,
+      child: _buildBottom(),
+    );
+  }
+  //
+  // _buildTop() {
+  //   List<Widget> list = List.generate(
+  //     20,
+  //     (index) => TextButton(
+  //       onPressed: () {},
+  //       child: TextButton(onPressed: () {}, child: Text('$index')),
+  //     ),
+  //   );
+  //   return SingleChildScrollView(
+  //     child: Row(children: list),
+  //   );
+  // }
+
+  _buildBottom() {
     return ListView(
       children: [
         Padding(
@@ -71,9 +93,13 @@ class MyPageState extends State<MyPage> {
     );
   }
 
-  Widget _getItem() => Container(
-        width: 100,
-        height: 100,
+  Widget _getItem({
+    double width = 100,
+    double height = 100,
+  }) =>
+      Container(
+        width: width,
+        height: height,
         decoration: BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.circular(100),
