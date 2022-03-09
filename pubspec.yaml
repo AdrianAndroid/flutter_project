@@ -25,3 +25,6 @@ flutter:
   assets:
     - images/sea.jpg
     - images/banner.json
+    - images/banner01.png
+    - images/banner02.png
+    - images/banner03.png

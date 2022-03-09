@@ -60,6 +60,9 @@ class _BannerTestState extends State<BannerTest> {
             height: 180.0,
             child: BannerView(
               children: [
+                Image.asset('images/banner01.png'),
+                Image.asset('images/banner02.png'),
+                Image.asset('images/banner03.png'),
                 Image.network(url1),
                 Image.network(url2),
                 Image.network(url3),
