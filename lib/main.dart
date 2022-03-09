@@ -3,8 +3,8 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-// Flutter:使用GridView.count实现简单商品列表
-// https://juejin.cn/post/6862605879289675784
+// Flutter 中使用svg资源
+// https://www.cnblogs.com/Im-Victor/p/12626969.html
 
 void main() => runApp(MyApp());
 
