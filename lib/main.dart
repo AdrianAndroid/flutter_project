@@ -2,257 +2,200 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 
-// 看这个资料
-// https://www.jianshu.com/p/fb3bf633ee12
-// flutter gridview 自适应_Flutter相册优化指北
-// https://blog.csdn.net/weixin_39982537/article/details/111220902
+// Flutter:使用GridView.count实现简单商品列表
+// https://juejin.cn/post/6862605879289675784
 
-double _childAspectRatio = 169 / 238;
+void main() => runApp(MaterialApp(home: ListPages()));
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatefulWidget {
+class ListPages extends StatefulWidget {
   @override
-  State<MyApp> createState() => _MyAppState();
+  _ListPagesState createState() => _ListPagesState();
 }
 
-List<String> _getDataList() {
-  List<String> list = [];
-  for (int i = 0; i < 100; i++) {
-    list.add(i.toString());
-  }
-  return list;
-}
+class _ListPagesState extends State<ListPages> {
+  ScrollController _leftScrollController = ScrollController(); // 滚动左边监听
+  ScrollController _rightScrollController = ScrollController(); // 滚动右边监听
+  ScrollController _fatherScrollController = ScrollController(); // 滚动右边监听
 
-Widget _getItemContainer(String item) {
-  //return _buildCircleAvatar(item);
-  return _buildRoundContainer(item);
-}
-
-_buildRoundContainer(String item) => Column(
-      children: [
-        Container(
-          width: 169,
-          height: 169,
-          //padding: EdgeInsets.all(10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(169),
-          ),
-          child: Column(
-            children: [
-              Image(image: AssetImage('assets/shop2.png')),
-            ],
-          ),
-        ),
-        SizedBox(height: 12),
-        Center(
-          child: Text(
-            'Tops$item',
-            style: TextStyle(
-              fontSize: 30,
-              color: Colors.red,
-            ),
-          ),
-        ),
-      ],
-    );
-
-_buildRoundContainer2(String item) => Container(
-      // width: 100,
-      padding: EdgeInsets.all(10.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Column(
-        children: [
-          Image(image: AssetImage('assets/shop2.png')),
-          Center(
-            child: Text(
-              item,
-              style: TextStyle(
-                fontSize: 30,
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-class _MyAppState extends State<MyApp> {
-  Widget? _mywidget;
-
+  @override
   void initState() {
+    _leftScrollController.addListener(() {
+      print(_leftScrollController.offset); //打印滚动位置
+
+      if (_leftScrollController.offset == 0.0) {
+        // 拉到顶部
+        // _fatherScrollController.jumpTo(0.0);
+        _fatherScrollController.animateTo(.0,
+            duration: Duration(milliseconds: 200), curve: Curves.ease);
+      }
+
+      if (_leftScrollController.position.pixels ==
+          _leftScrollController.position.maxScrollExtent) {
+        // 拉到底部
+        print('----left----');
+        // _fatherScrollController.jumpTo(_leftScrollController.position.maxScrollExtent);
+        _fatherScrollController.animateTo(
+            _leftScrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.ease);
+        // physics: new NeverScrollableScrollPhysics(), //禁用滑动事件
+      }
+    });
+
+    _rightScrollController.addListener(() {
+      print(_rightScrollController.offset); //打印滚动位置
+
+      if (_rightScrollController.offset == 0.0) {
+        // 拉到顶部
+        // _fatherScrollController.jumpTo(0.0);
+        _fatherScrollController.animateTo(.0,
+            duration: Duration(milliseconds: 200), curve: Curves.ease);
+      }
+
+      if (_rightScrollController.position.pixels ==
+          _rightScrollController.position.maxScrollExtent) {
+        // 拉到底部
+        print('----right----');
+        // _fatherScrollController.jumpTo(_rightScrollController.position.maxScrollExtent);
+        _fatherScrollController.animateTo(
+            _leftScrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.ease);
+      }
+    });
+
     super.initState();
-    _mywidget = _GridView1();
   }
 
-  SelectView(String text, String id) {
-    return PopupMenuItem(
-      value: id,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Icon(Icons.message, color: Colors.blue),
-          Text(text),
-        ],
-      ),
-    );
+  @override
+  void deactivate() {
+    _leftScrollController.dispose(); // 为了避免内存泄露，需要调用_controller.dispose
+    _rightScrollController.dispose(); // 为了避免内存泄露，需要调用_controller.dispose
+    super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Woolha.com Flutter Tutorial',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('GridView'),
-          actions: [
-            // 非隐藏的菜单
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.add_alarm),
-            ),
-            // 隐藏的菜单
-            PopupMenuButton(
-              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                SelectView('_gridView1', '_gridView1'),
-                SelectView('_GridView2', '_GridView2'),
-                SelectView('_GridView3', '_GridView3'),
-                SelectView('_GridView4', '_GridView4'),
-              ],
-              onSelected: (String action) {
-                switch (action) {
-                  case '_gridView1':
-                    setState(() {
-                      _mywidget = _GridView1();
-                    });
-                    break;
-                  case '_GridView2':
-                    setState(() {
-                      _mywidget = _GridView2();
-                    });
-                    break;
-                  case '_GridView3':
-                    setState(() {
-                      _mywidget = _GridView3();
-                    });
-                    break;
-                  case '_GridView4':
-                    setState(() {
-                      _mywidget = _GridView4();
-                    });
-                    break;
-                }
-              },
-            ),
-          ],
-        ),
+    // print(MediaQuery.of(context));
+
+    final mediaQuerySize = MediaQuery.of(context).size; // 获取手机信息
+    final width = mediaQuerySize.width; // 获取宽度
+    final height = mediaQuerySize.height; // 获取高度
+
+    return Scaffold(
+        //  appBar: AppBar(
+        //     title: Text("商品列表"),
+        //   ),
         body: Container(
-          child: _mywidget ?? Container(),
+            child: SingleChildScrollView(
+      controller: _fatherScrollController,
+      child: Column(children: <Widget>[
+        // 头部
+        Container(
+            height: 150,
+            decoration: BoxDecoration(
+                // color: Colors.red
+                ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints.expand(),
+              child: Image.asset(
+                'assets/background.png',
+                fit: BoxFit.cover,
+              ),
+            )),
+
+        // 分割线
+        Container(
+          height: 10,
+          decoration: BoxDecoration(color: Colors.green),
         ),
+
+        // 中间
+        Container(
+            // height: 400,
+            decoration: BoxDecoration(color: Colors.red),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                      height: height - 160,
+                      decoration: BoxDecoration(color: Colors.black),
+                      child: ListView(
+                        controller: _leftScrollController,
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              _leftItem(),
+                              _leftItem(),
+                              _leftItem(),
+                              _leftItem(),
+                              _leftItem(),
+                              _leftItem()
+                            ],
+                          )
+                        ],
+                      )),
+                ),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        height: height - 160,
+                        decoration: BoxDecoration(color: Colors.blue),
+                        child: ListView(
+                          controller: _rightScrollController,
+                          shrinkWrap: true,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                _rightItem(),
+                                _rightItem(),
+                                _rightItem(),
+                                _rightItem(),
+                                _rightItem(),
+                                _rightItem()
+                              ],
+                            )
+                          ],
+                        )))
+              ],
+            )),
+
+        // 底部
+        Container(
+          height: 50,
+          decoration: BoxDecoration(color: Colors.red),
+          child: Row(
+            children: <Widget>[Text('---底部---')],
+          ),
+        )
+      ]),
+    )));
+  }
+
+  _rightItem() {
+    return (Container(
+      height: 100,
+      color: Colors.pink,
+      margin: EdgeInsets.only(top: 10),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Text("右边"),
       ),
-      debugShowCheckedModeBanner: false,
-    );
+    ));
   }
-}
 
-class _GridView4 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.custom(
-      //shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 20.0,
-        childAspectRatio: _childAspectRatio,
+  _leftItem() {
+    return (Container(
+      height: 100,
+      color: Colors.pink,
+      margin: EdgeInsets.only(top: 10),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Text("左边"),
       ),
-      childrenDelegate: SliverChildBuilderDelegate(
-        (context, index) => _getItemContainer(datas[index]),
-        childCount: datas.length,
-      ),
-    );
-  }
-}
-
-class _GridView3 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.builder(
-      itemCount: datas.length,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        // 单个子Widget的水平最大宽度
-        maxCrossAxisExtent: 100,
-        // 水平单个子Widget之间间距
-        mainAxisSpacing: 20.0,
-        // 垂直单个子Widget之间间距
-        crossAxisSpacing: 10.0,
-        childAspectRatio: _childAspectRatio,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return _getItemContainer(datas[index]);
-      },
-    );
-  }
-}
-
-class _GridView2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<String> datas = _getDataList();
-    return GridView.builder(
-      itemCount: datas.length,
-      // SliverGridDelegateWithFixedCrossAxisCount构建一个横轴数量Widget
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        // 横轴元素个数
-        crossAxisCount: 3,
-        // 纵轴间距
-        mainAxisSpacing: 20.0,
-        // 横轴间距
-        crossAxisSpacing: 10.0,
-        // 子组件宽高长度比例
-        childAspectRatio: _childAspectRatio,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return _getItemContainer(datas[index]);
-      },
-    );
-  }
-}
-
-class _GridView1 extends StatelessWidget {
-  List<Widget> _getWidgetList() {
-    return _getDataList().map((e) => _getItemContainer(e)).toList();
-  }
-
-  Widget _gridView1() {
-    return GridView.count(
-      // Container跟随GridView内容变化高度，
-      //shrinkWrap: true,
-      // 水平子Widget之间间距
-      crossAxisSpacing: 10.0,
-      // 垂直子Widget之间间距
-      mainAxisSpacing: 10.0,
-      // GridView内边距
-      padding: EdgeInsets.all(10.0),
-      // 一行的Widget数量
-      crossAxisCount: 2,
-      // 子Widget宽高比例
-      childAspectRatio: _childAspectRatio,
-      // 子Widget列表
-      children: _getWidgetList(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _gridView1();
+    ));
   }
 }
