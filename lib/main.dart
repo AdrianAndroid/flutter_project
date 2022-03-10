@@ -16,8 +16,30 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('AppBar')),
-        body: Center(child: Text('Hello World!')),
+        body: Column(
+          children: [
+            _getVisibility(),
+            SizedBox(height: 10),
+            _getVisibility(visibility: true),
+            SizedBox(height: 10),
+            _getVisibility(),
+          ],
+        ),
       ),
     );
   }
+
+  _getVisibility({bool visibility = false}) => Visibility(
+        visible: visibility,
+        replacement: Container(
+          height: 50,
+          width: 50,
+          color: Colors.red,
+        ),
+        child: Container(
+          height: 100,
+          width: 100,
+          color: Colors.blue,
+        ),
+      );
 }
