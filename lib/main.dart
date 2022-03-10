@@ -33,96 +33,120 @@ class MyPage extends StatefulWidget {
 }
 
 class MyPageState extends State<MyPage> {
+  int columns = 4;
+
+  List<String> list = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       height: double.infinity,
       color: Colors.blueAccent,
-      child: _buildBottom(),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      columns = 2;
+                    });
+                  },
+                  child: Text('2')),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      columns = 3;
+                    });
+                  },
+                  child: Text('3')),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      columns = 4;
+                    });
+                  },
+                  child: Text('4')),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      columns = 5;
+                    });
+                  },
+                  child: Text('5')),
+            ],
+          ),
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              int groupCount = (list.length / columns).ceil();
+              var w = _getImgWidth(columns);
+              // 生成几行
+              return Column(
+                children: List.generate(
+                  groupCount,
+                  (index) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(
+                        columns,
+                        (index) => _getItem(width: w, height: w),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
-  //
-  // _buildTop() {
-  //   List<Widget> list = List.generate(
-  //     20,
-  //     (index) => TextButton(
-  //       onPressed: () {},
-  //       child: TextButton(onPressed: () {}, child: Text('$index')),
-  //     ),
-  //   );
-  //   return SingleChildScrollView(
-  //     child: Row(children: list),
-  //   );
-  // }
 
-  _buildBottom() {
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 25,
-            right: 25,
-            bottom: 20,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _getItem(),
-              _getItem(),
-              _getItem(),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 25,
-            right: 25,
-            bottom: 20,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _getItem(),
-              _getItem(),
-              _getItem(),
-            ],
-          ),
-        ),
-      ],
-    );
+  _getImgWidth(int col) {
+    double w = 0;
+    switch (col) {
+      case 2:
+        w = 169;
+        break;
+      case 3:
+        w = 109;
+        break;
+      case 4:
+        w = 79;
+        break;
+      case 5:
+        w = 61;
+        break;
+      default:
+        w = 61;
+        break;
+    }
+    return w;
   }
 
   Widget _getItem({
+    String title = '',
     double width = 100,
     double height = 100,
   }) =>
       Container(
+        alignment: Alignment.center,
         width: width,
         height: height,
         decoration: BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.circular(100),
         ),
+        child: Text(title),
       );
-
-  Widget get _layoutbuilderWidget {
-    print('_layoutbuilderWidget');
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        print('constraints height => ${constraints.maxHeight}');
-        var color = Colors.red;
-        if (constraints.maxHeight > 100) {
-          color = Colors.blue;
-        } else {
-          color = Colors.red;
-        }
-        return Container(
-          height: 50,
-          width: 50,
-          color: color,
-        );
-      },
-    );
-  }
 }
