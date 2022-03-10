@@ -4,74 +4,69 @@ import 'package:flutter/material.dart';
 // https://www.jianshu.com/p/c87e147314a4
 
 void main() {
-  runApp(OpacityDemo());
+  runApp(MaterialApp(home: ControllerRoute()));
 }
-class OpacityDemo extends StatelessWidget {
+
+class ControllerRoute extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Opacity_Demo'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: 300.0,
-                        left: 16.0,
-                        right: 16.0,
-                        child: Container(
-                          child: Text('我是设置透明度下面的Widget。。。。',
-                              style: TextStyle(
-                                color: Colors.orange,
-                                fontSize: 36.0,
-                                decoration: TextDecoration.lineThrough,
-                                shadows: [
-                                  Shadow(color: Colors.red,offset: Offset(1, 1),blurRadius: 1.9),
-                                  Shadow(color: Colors.black,offset: Offset(0, 1),blurRadius: 1.9),
-                                  Shadow(color: Colors.blue,offset: Offset(0.5, 0.5),blurRadius: 1.9),
-                                ],
-                              )
-                          ),
-                        ),
-                      ),
+  State<StatefulWidget> createState() => ControllerRouteState();
+}
 
-                      Opacity(
-                        opacity: 0.6,//设置透明度
-                        child: Container(
+class ControllerRouteState extends State<ControllerRoute> {
+  ScrollController controller = ScrollController();
+  bool showfab = false; // 控制按钮是否显示
 
-                            color: Colors.black,
-                            padding: EdgeInsets.all(16.0),
-                            alignment:Alignment.bottomCenter,
-                            child: Column(
-                              children: <Widget>[
-                                Text('我是设置透明度上面的Widget。。。。',
-                                  style: TextStyle(
-                                      color: Colors.orange,
-                                      fontSize: 36.0,
-                                      decoration: TextDecoration.underline
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
-                      ),
-
-                    ],
-                  )
-              ),
-
-            ],
-          ),
-        ),
-      ),
-    );
+  @override
+  void initState() {
+    super.initState();
+    // 监听滚动位置
+    controller.addListener(() {
+      print(controller.offset); // 滚动位置
+      if (controller.offset < 1500 && showfab) {
+        setState(() {
+          showfab = false;
+        });
+      } else if (controller.offset >= 1500 && showfab == false) {
+        setState(() {
+          showfab = true;
+        });
+      }
+    });
   }
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('ScrollController')),
+      body: Scrollbar(
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            return ListTile(title: Text('item $index'));
+          },
+          itemCount: 200, //个数
+          itemExtent: 30, // 高度
+          controller: controller,
+        ),
+      ),
+      floatingActionButton: showfab
+          ? FloatingActionButton(
+              onPressed: () {
+                // 点击返回到顶部， 带动画
+                controller.animateTo(
+                  0,
+                  duration: Duration(milliseconds: 1000),
+                  curve: Curves.linear, // 匀速
+                );
+              },
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
+    );
+  }
 }
