@@ -9,6 +9,51 @@ void main() {
   runApp(MyApp());
 }
 
+class Utils {
+// 时间格式化，根据总秒数转换为对应的hh:mm:ss格式
+  static String constructTime(int seconds) {
+    int day = seconds ~/ 3600 ~/ 24;
+    int hour = seconds ~/ 3600;
+    int minute = seconds % 3600 ~/ 60;
+    int second = seconds % 60;
+
+    if (day != 0) {
+      return '$day天$hour小时$minute分$second秒后自动取消';
+    } else if (hour != 0) {
+      return '$hour小时$minute分$second秒后自动取消';
+    } else if (minute != 0) {
+      return '$minute分$second秒后自动取消';
+    } else if (second != 0) {
+      return '$second秒后自动取消';
+    } else {
+      return '';
+    }
+    //    return formatTime(day)+'天'+formatTime(hour) + "小时" + formatTime(minute) + "分" + formatTime(second)+'秒后自动取消';
+  }
+
+  static String constructVipTime(int seconds) {
+    int day = seconds ~/ 3600 ~/ 24;
+    int hour = seconds ~/ 3600;
+    int minute = seconds % 3600 ~/ 60;
+    int second = seconds % 60;
+    if (day != 0) {
+      return '剩$day天$hour小时$minute分';
+    } else if (hour != 0) {
+      return '剩$hour小时$minute分';
+    } else if (minute != 0) {
+      return '剩$minute分';
+    } else {
+      return '';
+    }
+//    return formatTime(day)+'天'+formatTime(hour) + "小时" + formatTime(minute) + "分" + formatTime(second)+'秒后自动取消';
+  }
+
+  //数字格式化，将 0~9 的时间转换为 00~09
+  static String formatTime(int timeNum) {
+    return timeNum < 10 ? "0" + timeNum.toString() : timeNum.toString();
+  }
+}
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -20,92 +65,57 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        appBar: AppBar(title: Text('AppBar')),
-        body: CountDownWidget(),
+        appBar: AppBar(title: Text('带时间格式的倒计时')),
+        body: OrderPage(),
       ),
     );
   }
 }
 
-class CountDownWidget extends StatefulWidget {
+class OrderPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _CountDowWidgetState();
+  State<StatefulWidget> createState() => OrderPageState();
 }
 
-// 懂得细心的观察，喜好
-// 提供情绪价值
-class _CountDowWidgetState extends State<CountDownWidget> {
-  bool refresh = true;
+class OrderPageState extends State<OrderPage> {
+  String countContent = ''; // 倒计时内容
+  Timer? _timer;
+  int seconds = 5000;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              refresh = !refresh;
-            });
-          },
-          child: Text('开始计时'),
-        ),
-        refresh
-            ? DownTimeText(time: 500, textStyle: TextStyle())
-            : DownTimeText(time: 500, textStyle: TextStyle())
-      ],
-    );
-  }
-}
-
-// 时间倒计时
-class DownTimeText extends StatefulWidget {
-  final int time;
-  final TextStyle textStyle;
-
-  const DownTimeText({
-    Key? key,
-    required this.time,
-    required this.textStyle,
-  }) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _DownTimeTextState();
-}
-
-class _DownTimeTextState extends State<DownTimeText> {
-  late int _time;
-  late Timer timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _time = widget.time;
-    startDownTimer();
+    return Text('$countContent');
   }
 
-  // 倒计时
-  void startDownTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_time == null || _time == 0) {
-        setState(() {});
-        timer.cancel();
-      }
-      _time--;
-      setState(() {});
+  void cancelTimer() {
+    if (_timer != null) {
+      _timer?.cancel();
+      _timer = null;
+    }
+  }
+
+  void startTimer() {
+    // 设置1秒回调一次
+    const period = const Duration(seconds: 1);
+    _timer = Timer.periodic(period, (timer) {
+      // 更新界面
+      setState(() {
+        // 秒数减一， 因为一秒回调一次
+        seconds--;
+        countContent = Utils.constructTime(seconds);
+      });
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Text(
-      '倒计时:$_time',
-      style: widget.textStyle,
-    );
+  void initState() {
+    super.initState();
+    startTimer();
   }
 
   @override
   void dispose() {
-    timer.cancel();
     super.dispose();
+    cancelTimer();
   }
 }
