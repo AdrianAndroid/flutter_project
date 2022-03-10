@@ -35,15 +35,7 @@ class MyPage extends StatefulWidget {
 class MyPageState extends State<MyPage> {
   int columns = 4;
 
-  List<String> list = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-  ];
+  List<String> list = ['1', '2', '3', '4', '5', '6', '7'];
 
   @override
   Widget build(BuildContext context) {
