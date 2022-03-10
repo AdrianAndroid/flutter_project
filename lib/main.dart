@@ -12,13 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'grammar文件夹',
       theme: ThemeData(
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        appBar: AppBar(title: Text('LayoutBuilder')),
+        appBar: AppBar(title: Text('dart 语法看 grammar文件夹')),
         body: MyPage(),
       ),
     );
@@ -39,90 +39,7 @@ class MyPageState extends State<MyPage> {
       width: double.infinity,
       height: double.infinity,
       color: Colors.blueAccent,
-      child: _buildBottom(),
-    );
-  }
-  //
-  // _buildTop() {
-  //   List<Widget> list = List.generate(
-  //     20,
-  //     (index) => TextButton(
-  //       onPressed: () {},
-  //       child: TextButton(onPressed: () {}, child: Text('$index')),
-  //     ),
-  //   );
-  //   return SingleChildScrollView(
-  //     child: Row(children: list),
-  //   );
-  // }
-
-  _buildBottom() {
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 25,
-            right: 25,
-            bottom: 20,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _getItem(),
-              _getItem(),
-              _getItem(),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 25,
-            right: 25,
-            bottom: 20,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _getItem(),
-              _getItem(),
-              _getItem(),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _getItem({
-    double width = 100,
-    double height = 100,
-  }) =>
-      Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(100),
-        ),
-      );
-
-  Widget get _layoutbuilderWidget {
-    print('_layoutbuilderWidget');
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        print('constraints height => ${constraints.maxHeight}');
-        var color = Colors.red;
-        if (constraints.maxHeight > 100) {
-          color = Colors.blue;
-        } else {
-          color = Colors.red;
-        }
-        return Container(
-          height: 50,
-          width: 50,
-          color: color,
-        );
-      },
+      child: Container(),
     );
   }
 }
