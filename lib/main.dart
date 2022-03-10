@@ -30,8 +30,6 @@ class MyPage extends StatefulWidget {
 }
 
 class MyPageState extends State<MyPage> {
-  double _height = 50;
-
   @override
   Widget build(BuildContext context) {
     print('页面重绘了.........');
@@ -40,50 +38,64 @@ class MyPageState extends State<MyPage> {
       appBar: AppBar(title: Text('Overlay')),
       body: Column(
         children: [
-          ElevatedButton(
-              onPressed: () {
-                _height = 50;
-                setState(() {});
-              },
-              child: Text('50')),
-          ElevatedButton(
-              onPressed: () {
-                _height = 200;
-                setState(() {});
-              },
-              child: Text('200')),
-          Container(
-            height: _height,
-            child: _layoutbuilderWidget,
-          ),
+          RoundLinearProgressIndicator(3/9),
         ],
       ),
     );
   }
+}
 
-  Widget get _layoutbuilderWidget {
-    print('_layoutbuilderWidget');
-    return LayoutBuilder(
-        builder: (context, constraints) {
+class RoundLinearProgressIndicator extends StatelessWidget {
+  final double percent;
+  final Color progressColor;
+  final Color backgroundColor;
+  final int height;
+  final int radius;
 
-          print('constraints height => ${constraints.maxHeight}');
-          var color = Colors.red;
-          if (constraints.maxHeight > 100) {
-            color = Colors.blue;
-          } else {
-            color = Colors.red;
-          }
-          return Container(
-            height: 50,
-            width: 50,
-            color: color,
-          );
-        },
-      );
-  }
+  RoundLinearProgressIndicator(
+    this.percent, {
+    this.progressColor = Colors.red,
+    this.backgroundColor = Colors.red,
+    this.height = 14,
+    this.radius = 7,
+  });
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    double temp = percent;
+    if (temp > 1) {
+      temp = 1;
+    } else if (percent < 0) {
+      temp = 0;
+    }
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Container(
+          child: Stack(
+            children: [
+              Container(
+                width: constraints.maxWidth,
+                height: height.toDouble(),
+                decoration: BoxDecoration(
+                  color: backgroundColor.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(radius.toDouble()), //圆角度
+                ),
+              ),
+              Positioned(
+                left: 0,
+                child: Container(
+                  width: constraints.maxWidth * temp,
+                  height: height.toDouble(),
+                  decoration: BoxDecoration(
+                    color: progressColor,
+                    borderRadius: BorderRadius.circular(radius.toDouble()), //圆角度
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
