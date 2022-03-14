@@ -1,3 +1,5 @@
+import 'dart:math';
+
 main() {
   r('创建Map', () {
     var map1 = {"first": "Dart", 1: true, true: "2"};
@@ -260,7 +262,7 @@ main() {
       print(map18); //{a: 1, b: 2, c: 3, d: 2} map改变
     });
     r('cast() 泛型类型提升为其父祖类', () {
-      Map<String, int> map21 = {'a':1, 'b':2, 'c':3};
+      Map<String, int> map21 = {'a': 1, 'b': 2, 'c': 3};
       Map<Object, Object> map22 = map21.cast();
       map22['d'] = 33;
       print(map22);
@@ -273,10 +275,33 @@ main() {
       //print(testList.any((num) => num > 2)); // true
     });
   });
+
+  testPic();
 }
 
 void r(String title, Function f) {
   print(title);
   f.call();
   //print('----分割线----');
+}
+
+class Pic {
+  final Map<String, String> multiLangText;
+
+  Pic(this.multiLangText);
+}
+
+void testPic() {
+  List<Pic> pics = [
+    Pic({'default': '分类one'}),
+    Pic({'default': '分类two'}),
+    Pic({'default': '分类three'}),
+    Pic({'default': '分类four'})
+  ];
+
+  for (int i = 0; i < pics.length; i++) {
+    Pic pic = pics.elementAt(i);
+    print(pic.multiLangText);
+    print(pic.multiLangText['default']);
+  }
 }
