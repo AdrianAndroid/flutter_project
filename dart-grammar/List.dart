@@ -308,6 +308,25 @@ main() {
     List a = List.from([1, "2", 3, 4]);
     print(a.whereType<String>()); // (2)
   });
+
+  r(f: () {
+    int column = 4;
+    List<int> list = [0, 1, 2, 3, 4, 5, 6];
+    print(list);
+    int groups = (list.length / column).ceil();
+    print(groups);
+    print(
+      List.generate(
+        groups,
+        (cols) => List.generate(
+          column,
+          (rows) {
+            return cols * 4 + rows;
+          },
+        ),
+      ),
+    );
+  });
 }
 
 void r({String t = '', Function? f}) {
