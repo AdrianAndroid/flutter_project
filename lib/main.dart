@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
               // hardEdge：裁剪但不应用抗锯齿，速度比none慢一点，但比其他方式快。
               // antiAlias：裁剪而且抗锯齿，此方式看起来更平滑，比antiAliasWithSaveLayer快，比hardEdge慢，通常用于处理圆形和弧形裁剪。
               // antiAliasWithSaveLayer：裁剪、抗锯齿而且有一个缓冲区，此方式很慢，用到的情况比较少。
+              Text('方形裁剪'),
               ClipRect(
                 child: Align(
                   alignment: Alignment.topCenter,
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ),
+              Text('圆角裁剪'),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -52,6 +54,7 @@ class MyApp extends StatelessWidget {
                   child: Image.asset('assets/lady.png', fit: BoxFit.cover),
                 ),
               ),
+              Text('椭圆裁剪'),
               ClipOval(
                 child: Container(
                   child: Image.asset('assets/lady.png', fit: BoxFit.cover),
@@ -62,6 +65,7 @@ class MyApp extends StatelessWidget {
               // ContinuousRectangleBorder：直线和圆角平滑连续的过渡，和RoundedRectangleBorder相比，圆角效果会小一些。
               // StadiumBorder：类似于足球场的形状，两端半圆。
               // BeveledRectangleBorder：斜角矩形。效果如图：
+              Text('圆形裁剪'),
               ClipPath.shape(
                 shape: StadiumBorder(),
                 child: Container(
@@ -70,6 +74,7 @@ class MyApp extends StatelessWidget {
                   child: Image.asset('assets/lady.png', fit: BoxFit.cover),
                 ),
               ),
+              Text('三角裁剪'),
               ClipPath(
                 clipper: TrianglePath(),
                 child: Container(
@@ -78,6 +83,7 @@ class MyApp extends StatelessWidget {
                   child: Image.asset('assets/lady.png', fit: BoxFit.cover),
                 ),
               ),
+              Text('五角星裁剪'),
               ClipPath(
                 clipper: StarPath(),
                 child: Container(
@@ -86,6 +92,7 @@ class MyApp extends StatelessWidget {
                   child: Image.asset('assets/lady.png', fit: BoxFit.cover),
                 ),
               ),
+              Text('变换的五角星裁剪'),
               StarClip(),
             ],
           ),
