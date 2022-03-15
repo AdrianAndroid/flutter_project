@@ -24,10 +24,26 @@ class MyApp extends StatelessWidget {
   }
 
   _buildWidgets() => Container(
-        color: Colors.red,
         child: SingleChildScrollView(
           child: Column(
             children: [
+              Text('圆角裁剪，图片内边距裁剪'),
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Color(0xFFEBEBEB),
+                  borderRadius: BorderRadius.circular(150),
+                  border: Border.all(width: 1, color: Colors.black12),
+                ),
+                width: 150,
+                height: 150,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Container(
+                    child: Image.asset('assets/pic.png'),
+                  ),
+                ),
+              ),
               // clipBehavior 参数
               // none：不裁剪，系统默认值，如果子组件不超出边界，此值没有任何性能消耗。
               // hardEdge：裁剪但不应用抗锯齿，速度比none慢一点，但比其他方式快。
