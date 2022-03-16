@@ -21,10 +21,16 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
+#  baseflow_plugin_template:
+#    git:
+#      url: https://github.com/Baseflow/baseflow_plugin_template.git
+#      ref: v2.0.0-nullsafety
   flutter:
     sdk: flutter
 
   cupertino_icons: ^1.0.0
+  permission_handler: ^8.1.6
+  url_launcher: ^6.0.12
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +38,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - res/images/baseflow_logo_def_light-02.png
+    - res/images/poweredByBaseflowLogoLight@3x.png
+    - res/images/logo.png
+    - res/images/poweredByBaseflow.png
