@@ -7,6 +7,11 @@ import 'package:flutter/services.dart';
 // MethodChannel : Flutter与原生方法相互调用，用于方法掉用。
 // EventChannel : 原生发送消息，Flutter接收，用于数据流通信
 // BasicMessageChannel : Flutter与原生相互发送消息，用于数据传递
+//             | 编码类型               | 消息格式
+//             | BinaryCodec           | 发送二进制消息时
+//             | JSONMessageCodec      | 发送Json格式消息时
+//             | StandardMessageCodec  | 发送基本型数据时
+//             | StringCodec           | 发送String类型消息时
 
 // 几个链接资料
 // https://blog.csdn.net/m0_37973043/article/details/108507194
