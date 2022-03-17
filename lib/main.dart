@@ -26,7 +26,7 @@ class CarouselDemo extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
-          home: ManuallyControlledSlider(),
+          home: NoonLoopingDemo(),
         );
       },
     );
@@ -76,57 +76,21 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 
-class ManuallyControlledSlider extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _ManuallyControlledSliderState();
-}
-
-class _ManuallyControlledSliderState extends State<ManuallyControlledSlider> {
-  final CarouselController _controller = CarouselController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class NoonLoopingDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Manually controlled slider')),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CarouselSlider(
-              items: imageSliders,
-              options: CarouselOptions(enlargeCenterPage: true, height: 200),
-              carouselController: _controller,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: ElevatedButton(
-                    onPressed: () => _controller.previousPage(),
-                    child: Text('←'),
-                  ),
-                ),
-                Flexible(
-                  child: ElevatedButton(
-                    onPressed: () => _controller.nextPage(),
-                    child: Text('->'),
-                  ),
-                ),
-                ...Iterable.generate(imgList.length).map(
-                  (pageIndex) => Flexible(
-                    child: ElevatedButton(
-                      onPressed: () => _controller.animateToPage(pageIndex),
-                      child: Text('$pageIndex'),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+      appBar: AppBar(title: Text('Noon-looping carousel demo')),
+      body: Container(
+        child: CarouselSlider(
+          items: imageSliders,
+          options: CarouselOptions(
+            aspectRatio: 2.0,
+            enlargeCenterPage: true,
+            enableInfiniteScroll: false,
+            initialPage: 2,
+            autoPlay: true,
+          ),
         ),
       ),
     );
