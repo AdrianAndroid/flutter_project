@@ -33,27 +33,63 @@ class CarouselDemo extends StatelessWidget {
   }
 }
 
+final List<Widget> imageSliders = imgList
+    .map((item) => Container(
+          child: Container(
+            margin: EdgeInsets.all(5.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              child: Stack(
+                children: [
+                  Image.network(item, fit: BoxFit.cover, width: 1000.0),
+                  Positioned(
+                    bottom: 0.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromARGB(200, 0, 0, 0),
+                            Color.fromARGB(0, 0, 0, 0),
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
+                      child: Text(
+                        'No. ${imgList.indexOf(item)} image',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ))
+    .toList();
+
 class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //List<int> list = [1, 2, 3, 4, 5];
     return Scaffold(
-      appBar: AppBar(title: Text('ImageSliderDemo')),
+      appBar: AppBar(title: Text('ComplicatedImageDemo')),
       body: Container(
         child: CarouselSlider(
-          items: imgList
-              .map((item) => Container(
-                    child: Center(
-                      child: Image.network(
-                        item,
-                        fit: BoxFit.cover,
-                        width: 1000,
-                      ),
-                    ),
-                    color: Colors.green,
-                  ))
-              .toList(),
-          options: CarouselOptions(disableCenter: true),
+          items: imageSliders,
+          options: CarouselOptions(
+            autoPlay: true,
+            aspectRatio: 2.0,
+            enlargeCenterPage: true,
+          ),
         ),
       ),
     );
