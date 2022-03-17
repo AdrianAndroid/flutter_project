@@ -8,6 +8,12 @@ import 'package:flutter/services.dart';
 // EventChannel : 原生发送消息，Flutter接收，用于数据流通信
 // BasicMessageChannel : Flutter与原生相互发送消息，用于数据传递
 
+// 几个链接资料
+// https://blog.csdn.net/m0_37973043/article/details/108507194
+// https://blog.csdn.net/vitaviva/article/details/104260820
+// https://blog.csdn.net/unicorn97/article/details/102463153
+// https://blog.csdn.net/sa3221sa/article/details/122434607
+
 void main() {
   runApp(MyApp());
 }
