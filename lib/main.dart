@@ -27,7 +27,7 @@ class CarouselDemo extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
-          home: SafeArea(child: KeepPageviewPositionDemo()),
+          home: SafeArea(child: MultipleItemDemo()),
         );
       },
     );
@@ -77,32 +77,36 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 
-class KeepPageviewPositionDemo extends StatelessWidget {
+class MultipleItemDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Keep pageview position demo')),
-      body: ListView.builder(itemBuilder: (ctx, index) {
-        if (index == 3) {
-          return Container(
-            child: CarouselSlider(
-              items: imageSliders,
-              options: CarouselOptions(
-                aspectRatio: 2.0,
-                enlargeCenterPage: true,
-                pageViewKey: PageStorageKey<String>('carousel_slider'),
-              ),
-            ),
-          );
-        } else {
-          return Container(
-            margin: EdgeInsets.symmetric(vertical: 20),
-            color: Colors.blue,
-            height: 200,
-            child: Center(child: Text('other content')),
-          );
-        }
-      }),
+      appBar: AppBar(title: Text('Multiple item in one slide demo')),
+      body: Container(
+        child: CarouselSlider.builder(
+          options: CarouselOptions(
+            aspectRatio: 2.0,
+            enlargeCenterPage: false,
+            viewportFraction: 1,
+          ),
+          itemCount: (imgList.length / 2).round(),
+          itemBuilder: (context, index, realIdx) {
+            final int first = index * 2;
+            final int second = first + 1;
+            return Row(
+              children: [first, second].map((idx) {
+                return Expanded(
+                  flex: 1,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    child: Image.network(imgList[idx], fit: BoxFit.cover),
+                  ),
+                );
+              }).toList(),
+            );
+          },
+        ),
+      ),
     );
   }
 }
