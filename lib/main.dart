@@ -26,7 +26,7 @@ class CarouselDemo extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
-          home: NoonLoopingDemo(),
+          home: VerticalSliderDemo(),
         );
       },
     );
@@ -76,19 +76,18 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 
-class NoonLoopingDemo extends StatelessWidget {
+class VerticalSliderDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Noon-looping carousel demo')),
+      appBar: AppBar(title: Text('Vertical sliding carousel demo')),
       body: Container(
         child: CarouselSlider(
           items: imageSliders,
           options: CarouselOptions(
             aspectRatio: 2.0,
             enlargeCenterPage: true,
-            enableInfiniteScroll: false,
-            initialPage: 2,
+            scrollDirection: Axis.vertical,
             autoPlay: true,
           ),
         ),
