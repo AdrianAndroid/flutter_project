@@ -26,7 +26,7 @@ class CarouselDemo extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
-          home: FullscreenSliderDemo(),
+          home: OnDemandCarouseDemo(),
         );
       },
     );
@@ -76,32 +76,25 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 
-class FullscreenSliderDemo extends StatelessWidget {
+
+class OnDemandCarouseDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Fullscreen sliding carousel demo')),
-      body: Builder(builder: (context) {
-        final double height = MediaQuery.of(context).size.height;
-        return CarouselSlider(
-          items: imgList
-              .map((item) => Container(
-                      child: Center(
-                    child: Image.network(
-                      item,
-                      fit: BoxFit.cover,
-                      height: height,
-                    ),
-                  )))
-              .toList(),
+      appBar: AppBar(title: Text('On-demand carousel demo')),
+      body: Container(
+        child: CarouselSlider.builder(
+          itemCount: 100,
+          itemBuilder: (ctx, index, realIdx) => Container(
+            child: Text(index.toString()),
+          ),
           options: CarouselOptions(
-            height: height,
-            viewportFraction: 1.0,
-            enlargeCenterPage: false,
+            aspectRatio: 2.0,
+            enlargeCenterPage: true,
             autoPlay: true,
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 }
