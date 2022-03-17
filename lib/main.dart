@@ -81,7 +81,7 @@ class MyHome extends StatelessWidget {
   Widget build(BuildContext context) {
     //List<int> list = [1, 2, 3, 4, 5];
     return Scaffold(
-      appBar: AppBar(title: Text('ComplicatedImageDemo')),
+      appBar: AppBar(title: Text('EnlargeStrategyDemo')),
       body: Container(
         child: CarouselSlider(
           items: imageSliders,
@@ -89,6 +89,7 @@ class MyHome extends StatelessWidget {
             autoPlay: true,
             aspectRatio: 2.0,
             enlargeCenterPage: true,
+            enlargeStrategy: CenterPageEnlargeStrategy.height,
           ),
         ),
       ),
