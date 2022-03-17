@@ -3,6 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+//简单介绍Platfrom Channel的三个API
+// MethodChannel : Flutter与原生方法相互调用，用于方法掉用。
+// EventChannel : 原生发送消息，Flutter接收，用于数据流通信
+// BasicMessageChannel : Flutter与原生相互发送消息，用于数据传递
+
 void main() {
   runApp(MyApp());
 }
