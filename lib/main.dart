@@ -26,7 +26,7 @@ class CarouselDemo extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
-          home: MyHome(),
+          home: ManuallyControlledSlider(),
         );
       },
     );
@@ -76,21 +76,57 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 
-class MyHome extends StatelessWidget {
+class ManuallyControlledSlider extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ManuallyControlledSliderState();
+}
+
+class _ManuallyControlledSliderState extends State<ManuallyControlledSlider> {
+  final CarouselController _controller = CarouselController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    //List<int> list = [1, 2, 3, 4, 5];
     return Scaffold(
-      appBar: AppBar(title: Text('EnlargeStrategyDemo')),
-      body: Container(
-        child: CarouselSlider(
-          items: imageSliders,
-          options: CarouselOptions(
-            autoPlay: true,
-            aspectRatio: 2.0,
-            enlargeCenterPage: true,
-            enlargeStrategy: CenterPageEnlargeStrategy.height,
-          ),
+      appBar: AppBar(title: Text('Manually controlled slider')),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            CarouselSlider(
+              items: imageSliders,
+              options: CarouselOptions(enlargeCenterPage: true, height: 200),
+              carouselController: _controller,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: ElevatedButton(
+                    onPressed: () => _controller.previousPage(),
+                    child: Text('←'),
+                  ),
+                ),
+                Flexible(
+                  child: ElevatedButton(
+                    onPressed: () => _controller.nextPage(),
+                    child: Text('->'),
+                  ),
+                ),
+                ...Iterable.generate(imgList.length).map(
+                  (pageIndex) => Flexible(
+                    child: ElevatedButton(
+                      onPressed: () => _controller.animateToPage(pageIndex),
+                      child: Text('$pageIndex'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
