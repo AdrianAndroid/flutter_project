@@ -1,38 +1,10 @@
-# Flutterame
+# BasicMessageChannel
 
-**Flutterame = Flutter + Frame**
+## 编码类型
 
-![cover](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/191ffa30b678419799a20ea1f9b3e782~tplv-k3u1fbpfcp-watermark.image)
-
-## Getting Started
-
-添加组件：
-
-```
-bin/add_module.sh module1
-```
-
-中国大陆的优化网速：
-```
-bin/optimize_cn_network.py android/
-bin/optimize_cn_network.py module1/.android/
-```
-
-运行组件:
-
-```
-bin/run_module.sh module1
-```
-运行整个app:
-```
-还是 flutter run
-```
-
-组件中运行|app中运行
-:----:|:----:
-![组件中运行](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/35b40ebeee444c54b8854a03035d0cc6~tplv-k3u1fbpfcp-watermark.image)|![app中运行](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ba9e299253d4979ab846fcba185733b~tplv-k3u1fbpfcp-watermark.image)
-
-博客：[Flutter组件化框架](https://juejin.cn/post/6913460020529070087)
-[玩转flutter create命令，做10倍程序员](https://juejin.cn/post/6844904106310500366)
-
-[添加utils组件](modules/utils/README.md)
+| 编码类型                 | 消息格式          |
+| -------------------- | ------------- |
+| BinaryCodec          | 发送二进制消息时      |
+| JSONMessageCodec     | 发送JSON消息格式时   |
+| StandardMessageCodec | 发送基本型数据时      |
+| StringCodec          | 发送String类型消息时 |
