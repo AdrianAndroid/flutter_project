@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class CarouselDemo extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
-          home: SafeArea(child: CarouselChangeReasonDemo()),
+          home: SafeArea(child: KeepPageviewPositionDemo()),
         );
       },
     );
@@ -76,74 +77,32 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 
-class CarouselChangeReasonDemo extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _CarouselChangeReasonDemoState();
-}
-
-class _CarouselChangeReasonDemoState extends State<CarouselChangeReasonDemo> {
-  String reason = '';
-  final CarouselController _controller = CarouselController();
-
-  void onPageChange(int index, CarouselPageChangedReason changedReason) {
-    setState(() {
-      reason = changedReason.toString();
-    });
-  }
-
+class KeepPageviewPositionDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Change reason demo')),
-      body: Column(
-        children: [
-          Expanded(
+      appBar: AppBar(title: Text('Keep pageview position demo')),
+      body: ListView.builder(itemBuilder: (ctx, index) {
+        if (index == 3) {
+          return Container(
             child: CarouselSlider(
               items: imageSliders,
               options: CarouselOptions(
+                aspectRatio: 2.0,
                 enlargeCenterPage: true,
-                aspectRatio: 16 / 9,
-                onPageChanged: onPageChange,
-                autoPlay: true,
+                pageViewKey: PageStorageKey<String>('carousel_slider'),
               ),
-              carouselController: _controller,
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: ElevatedButton(
-                  onPressed: () => _controller.previousPage(),
-                  child: Text('<-'),
-                ),
-              ),
-              Flexible(
-                child: ElevatedButton(
-                  onPressed: () => _controller.nextPage(),
-                  child: Text('->'),
-                ),
-              ),
-              ...Iterable<int>.generate(imgList.length).map(
-                (int pageIndex) => Flexible(
-                  child: ElevatedButton(
-                    onPressed: () => _controller.animateToPage(pageIndex),
-                    child: Text("$pageIndex"),
-                  ),
-                ),
-              ),
-              Center(
-                child: Column(
-                  children: [
-                    Text('page change reason:'),
-                    Text(reason),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+          );
+        } else {
+          return Container(
+            margin: EdgeInsets.symmetric(vertical: 20),
+            color: Colors.blue,
+            height: 200,
+            child: Center(child: Text('other content')),
+          );
+        }
+      }),
     );
   }
 }
