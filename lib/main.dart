@@ -26,7 +26,7 @@ class CarouselDemo extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
-          home: PrefetchImageDemo(),
+          home: SafeArea(child: CarouselChangeReasonDemo()),
         );
       },
     );
@@ -76,56 +76,73 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 
-class PrefetchImageDemo extends StatefulWidget {
+class CarouselChangeReasonDemo extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _PrefetchImageDemoState();
+  State<StatefulWidget> createState() => _CarouselChangeReasonDemoState();
 }
 
-class _PrefetchImageDemoState extends State<PrefetchImageDemo> {
-  final List<String> images = [
-    'https://images.unsplash.com/photo-1586882829491-b81178aa622e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80',
-    'https://images.unsplash.com/photo-1586871608370-4adee64d1794?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2862&q=80',
-    'https://images.unsplash.com/photo-1586901533048-0e856dff2c0d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
-    'https://images.unsplash.com/photo-1586902279476-3244d8d18285?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80',
-    'https://images.unsplash.com/photo-1586943101559-4cdcf86a6f87?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1556&q=80',
-    'https://images.unsplash.com/photo-1586951144438-26d4e072b891?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
-    'https://images.unsplash.com/photo-1586953983027-d7508a64f4bb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
-  ];
+class _CarouselChangeReasonDemoState extends State<CarouselChangeReasonDemo> {
+  String reason = '';
+  final CarouselController _controller = CarouselController();
 
-  @override
-  void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      images.forEach((imageUrl) {
-        precacheImage(NetworkImage(imageUrl), context);
-      });
+  void onPageChange(int index, CarouselPageChangedReason changedReason) {
+    setState(() {
+      reason = changedReason.toString();
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Prefetch image slider demo')),
-      body: Container(
-        child: CarouselSlider.builder(
-          itemCount: images.length,
-          itemBuilder: (context, index, realIdx) {
-            return Container(
-              child: Center(
-                child: Image.network(
-                  images[index],
-                  fit: BoxFit.cover,
-                  width: 1000,
+      appBar: AppBar(title: Text('Change reason demo')),
+      body: Column(
+        children: [
+          Expanded(
+            child: CarouselSlider(
+              items: imageSliders,
+              options: CarouselOptions(
+                enlargeCenterPage: true,
+                aspectRatio: 16 / 9,
+                onPageChanged: onPageChange,
+                autoPlay: true,
+              ),
+              carouselController: _controller,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ElevatedButton(
+                  onPressed: () => _controller.previousPage(),
+                  child: Text('<-'),
                 ),
               ),
-            );
-          },
-          options: CarouselOptions(
-            autoPlay: true,
-            aspectRatio: 2.0,
-            enlargeCenterPage: true,
+              Flexible(
+                child: ElevatedButton(
+                  onPressed: () => _controller.nextPage(),
+                  child: Text('->'),
+                ),
+              ),
+              ...Iterable<int>.generate(imgList.length).map(
+                (int pageIndex) => Flexible(
+                  child: ElevatedButton(
+                    onPressed: () => _controller.animateToPage(pageIndex),
+                    child: Text("$pageIndex"),
+                  ),
+                ),
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    Text('page change reason:'),
+                    Text(reason),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ),
+        ],
       ),
     );
   }
