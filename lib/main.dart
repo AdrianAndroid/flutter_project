@@ -26,7 +26,7 @@ class CarouselDemo extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.values.toList()[value as int],
           debugShowCheckedModeBanner: false,
-          home: CarouselWithIndicatorDemo(),
+          home: PrefetchImageDemo(),
         );
       },
     );
@@ -76,66 +76,57 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 
-class CarouselWithIndicatorDemo extends StatefulWidget {
+class PrefetchImageDemo extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _CarouselWithIndicatorDemoState();
+  State<StatefulWidget> createState() => _PrefetchImageDemoState();
 }
 
-class _CarouselWithIndicatorDemoState extends State<CarouselWithIndicatorDemo> {
-  int _current = 0;
-  final CarouselController _controller = CarouselController();
+class _PrefetchImageDemoState extends State<PrefetchImageDemo> {
+  final List<String> images = [
+    'https://images.unsplash.com/photo-1586882829491-b81178aa622e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80',
+    'https://images.unsplash.com/photo-1586871608370-4adee64d1794?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2862&q=80',
+    'https://images.unsplash.com/photo-1586901533048-0e856dff2c0d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
+    'https://images.unsplash.com/photo-1586902279476-3244d8d18285?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80',
+    'https://images.unsplash.com/photo-1586943101559-4cdcf86a6f87?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1556&q=80',
+    'https://images.unsplash.com/photo-1586951144438-26d4e072b891?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
+    'https://images.unsplash.com/photo-1586953983027-d7508a64f4bb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
+  ];
+
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      images.forEach((imageUrl) {
+        precacheImage(NetworkImage(imageUrl), context);
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Carousel with indicator controller demo')),
-      body: SafeArea(child: _buildBody()),
+      appBar: AppBar(title: Text('Prefetch image slider demo')),
+      body: Container(
+        child: CarouselSlider.builder(
+          itemCount: images.length,
+          itemBuilder: (context, index, realIdx) {
+            return Container(
+              child: Center(
+                child: Image.network(
+                  images[index],
+                  fit: BoxFit.cover,
+                  width: 1000,
+                ),
+              ),
+            );
+          },
+          options: CarouselOptions(
+            autoPlay: true,
+            aspectRatio: 2.0,
+            enlargeCenterPage: true,
+          ),
+        ),
+      ),
     );
   }
-
-  Widget _buildBody() => Column(
-        children: [
-          Expanded(
-            child: CarouselSlider(
-              items: imageSliders,
-              carouselController: _controller,
-              options: CarouselOptions(
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  aspectRatio: 2.0,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _current = index;
-                    });
-                  }),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: imgList
-                .asMap()
-                .entries
-                .map((entry) => GestureDetector(
-                      onTap: () => _controller.animateToPage(entry.key),
-                      child: Container(
-                        width: 12.0,
-                        height: 12.0,
-                        margin: EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 4.0,
-                        ),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: (Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black)
-                              .withOpacity(_current == entry.key ? 0.9 : 0.4),
-                        ),
-                      ),
-                    ))
-                .toList(),
-          ),
-        ],
-      );
 }
