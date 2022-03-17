@@ -1,38 +1,116 @@
-# Flutterame
+# Platform channel data types types support and codecs
 
-**Flutterame = Flutter + Frame**
+## Java
 
-![cover](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/191ffa30b678419799a20ea1f9b3e782~tplv-k3u1fbpfcp-watermark.image)
+| Dart                       | Java                |
+| -------------------------- | ------------------- |
+| null                       | null                |
+| bool                       | java.lang.Boolean   |
+| int                        | java.lang.Integer   |
+| int, if 32 bits not enough | java.lang.Long      |
+| double                     | java.lang.Double    |
+| String                     | java.lang.String    |
+| Uint8List                  | byte[]              |
+| Int32List                  | int[]               |
+| Int64List                  | long[]              |
+| Float32List                | float[]             |
+| Float64List                | double[]            |
+| List                       | java.util.ArrayList |
+| Map                        | java.util.HashMap   |
 
-## Getting Started
+## Kotlin
 
-添加组件：
+| Dart                       | Kotlin      |
+| -------------------------- | ----------- |
+| null                       | null        |
+| bool                       | Boolean     |
+| int                        | Int         |
+| int, if 32 bits not enough | Long        |
+| double                     | Double      |
+| String                     | String      |
+| Uint8List                  | ByteArray   |
+| Int32List                  | IntArray    |
+| Int64List                  | LongArray   |
+| Float32List                | FloatArray  |
+| Float64List                | DoubleArray |
+| List                       | List        |
+| Map                        | HashMap     |
 
-```
-bin/add_module.sh module1
-```
+## Obj-C
 
-中国大陆的优化网速：
-```
-bin/optimize_cn_network.py android/
-bin/optimize_cn_network.py module1/.android/
-```
+| Dart                       | Objective-C                                    |
+| -------------------------- | ---------------------------------------------- |
+| null                       | nil (NSNull when nested)                       |
+| bool                       | NSNumber numberWithBool:                       |
+| int                        | NSNumber numberWithInt:                        |
+| int, if 32 bits not enough | NSNumber numberWithLong:                       |
+| double                     | NSNumber numberWithDouble:                     |
+| String                     | NSString                                       |
+| Uint8List                  | FlutterStandardTypedData typedDataWithBytes:   |
+| Int32List                  | FlutterStandardTypedData typedDataWithInt32:   |
+| Int64List                  | FlutterStandardTypedData typedDataWithInt64:   |
+| Float32List                | FlutterStandardTypedData typedDataWithFloat32: |
+| Float64List                | FlutterStandardTypedData typedDataWithFloat64: |
+| List                       | NSArray                                        |
+| Map                        | NSDictionary                                   |
 
-运行组件:
 
-```
-bin/run_module.sh module1
-```
-运行整个app:
-```
-还是 flutter run
-```
 
-组件中运行|app中运行
-:----:|:----:
-![组件中运行](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/35b40ebeee444c54b8854a03035d0cc6~tplv-k3u1fbpfcp-watermark.image)|![app中运行](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ba9e299253d4979ab846fcba185733b~tplv-k3u1fbpfcp-watermark.image)
+## Swift
 
-博客：[Flutter组件化框架](https://juejin.cn/post/6913460020529070087)
-[玩转flutter create命令，做10倍程序员](https://juejin.cn/post/6844904106310500366)
+| Dart                       | Swift                                   |
+| -------------------------- | --------------------------------------- |
+| null                       | nil                                     |
+| bool                       | NSNumber(value: Bool)                   |
+| int                        | NSNumber(value: Int32)                  |
+| int, if 32 bits not enough | NSNumber(value: Int)                    |
+| double                     | NSNumber(value: Double)                 |
+| String                     | String                                  |
+| Uint8List                  | FlutterStandardTypedData(bytes: Data)   |
+| Int32List                  | FlutterStandardTypedData(int32: Data)   |
+| Int64List                  | FlutterStandardTypedData(int64: Data)   |
+| Float32List                | FlutterStandardTypedData(float32: Data) |
+| Float64List                | FlutterStandardTypedData(float64: Data) |
+| List                       | Array                                   |
+| Map                        | Dictionary                              |
 
-[添加utils组件](modules/utils/README.md)
+## 
+
+## C++
+
+| Dart                       | C++                                                      |
+| -------------------------- | -------------------------------------------------------- |
+| null                       | EncodableValue()                                         |
+| bool                       | EncodableValue(bool)                                     |
+| int                        | EncodableValue(int32_t)                                  |
+| int, if 32 bits not enough | EncodableValue(int64_t)                                  |
+| double                     | EncodableValue(double)                                   |
+| String                     | EncodableValue(std::string)                              |
+| Uint8List                  | EncodableValue(std::vector)                              |
+| Int32List                  | EncodableValue(std::vector)                              |
+| Int64List                  | EncodableValue(std::vector)                              |
+| Float32List                | EncodableValue(std::vector)                              |
+| Float64List                | EncodableValue(std::vector)                              |
+| List                       | EncodableValue(std::vector)                              |
+| Map                        | EncodableValue(std::map<EncodableValue, EncodableValue>) |
+
+## 
+
+
+
+## C
+
+| Dart        | C (GObject)               |
+| ----------- | ------------------------- |
+| null        | FlValue()                 |
+| bool        | FlValue(bool)             |
+| int         | FlValue(int62_t)          |
+| double      | FlValue(double)           |
+| String      | FlValue(gchar*)           |
+| Uint8List   | FlValue(uint8_t*)         |
+| Int32List   | FlValue(int32_t*)         |
+| Int64List   | FlValue(int64_t*)         |
+| Float32List | FlValue(float*)           |
+| Float64List | FlValue(double*)          |
+| List        | FlValue(FlValue)          |
+| Map         | FlValue(FlValue, FlValue) |
