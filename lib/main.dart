@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 // https://www.jianshu.com/p/a50c0bf5de81
 // Flutter ValueNotifier 异步通信、ValueListenableBuilder
 // https://zhuanlan.zhihu.com/p/266663396
+// // Provider
+// // ValueNotifier （就是本文了）
+// // StreamController
+// // EventBus
+// // Bloc
 
 void main() {
   runApp(MyApp());
