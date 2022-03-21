@@ -240,6 +240,38 @@ class PersistentHeaderRoute extends StatelessWidget {
             child: buildHeader(2),
           ),
         ),
+        buildSliverList(),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SliverHeaderDelegate.fixedHeight( //固定高度
+            height: 50,
+            child: buildHeader(3),
+          ),
+        ),
+        buildSliverList(),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SliverHeaderDelegate.fixedHeight( //固定高度
+            height: 50,
+            child: buildHeader(4),
+          ),
+        ),
+        buildSliverList(),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SliverHeaderDelegate.fixedHeight( //固定高度
+            height: 50,
+            child: buildHeader(5),
+          ),
+        ),
+        buildSliverList(),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SliverHeaderDelegate.fixedHeight( //固定高度
+            height: 50,
+            child: buildHeader(6),
+          ),
+        ),
         buildSliverList(20),
       ],
     );
