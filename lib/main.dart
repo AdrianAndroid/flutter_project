@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// 数据传递/状态管理 一ValueNotifier
+// https://www.jianshu.com/p/a50c0bf5de81
+
 void main() {
   runApp(MyApp());
 }
