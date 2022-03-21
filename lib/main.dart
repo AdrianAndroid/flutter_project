@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 // 数据传递/状态管理 一ValueNotifier
 // https://www.jianshu.com/p/a50c0bf5de81
+// Flutter ValueNotifier 异步通信、ValueListenableBuilder
+// https://zhuanlan.zhihu.com/p/266663396
 
 void main() {
   runApp(MyApp());
