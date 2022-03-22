@@ -67,6 +67,22 @@ class _ListTileDemoState extends State<ListTileDemo> {
                 context: context,
               ).toList(),
             ),
+            Container(
+              color: Colors.lightBlue,
+              child: ListTile(
+                title: Container(
+                  child: Text('北京'),
+                  color: Colors.red,
+                  margin: EdgeInsets.zero,
+                ),
+                contentPadding: EdgeInsets.all(0),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              child: SafeArea(child: Text('Hello World!')),
+              color: Colors.deepPurpleAccent,
+            ),
           ],
         ),
       ),
