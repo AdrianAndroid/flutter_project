@@ -78,87 +78,52 @@ class MyApp extends StatelessWidget {
       title: 'Woolha.com Flutter Tutorial',
       home: Scaffold(
         appBar: AppBar(title: Text("SliverList学习")),
-        body: SliverFlexibleHeaderDemo(),
+        body: null,
       ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class SliverFlexibleHeaderDemo extends StatefulWidget {
+class ExtraInfoBoxConstraints<T> extends BoxConstraints {
+  ExtraInfoBoxConstraints(this.extra, BoxConstraints constraints)
+      : super(
+          minWidth: constraints.minWidth,
+          minHeight: constraints.minHeight,
+          maxWidth: constraints.maxWidth,
+          maxHeight: constraints.maxHeight,
+        );
+
+  // 额外的信息
+  final T extra;
+
   @override
-  State<StatefulWidget> createState() => SliverFlexibleHeaderDemoState();
-}
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ExtraInfoBoxConstraints &&
+        super == other &&
+        other.extra == extra;
+  }
 
-class SliverFlexibleHeaderDemoState extends State<SliverFlexibleHeaderDemo> {
   @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      // 为了能使CustomScrollView拉到顶部时还能继续往下拉，必须让physics支持弹性效果
-      physics: const BouncingScrollPhysics(
-        parent: AlwaysScrollableScrollPhysics(),
-      ),
-      slivers: [
-        // 我们需要实现的SliverFlexibleHeader组件
-        SliverFlexibleHeader(
-          visibleExtent: 200, //初始状态在列表中占用的布局高度
-          // 为了能根据下啦状态变化来定制显示的布局，我们通过一个builder来动态构建布局
-          builder: (context, availableHeight /*, direction*/) {
-            return GestureDetector(
-              onTap: () => print('tap'),
-              child: Image(
-                image: AssetImage("assets/sea.jpeg"),
-                width: 50.0,
-                height: availableHeight,
-                alignment: Alignment.bottomCenter,
-                fit: BoxFit.cover,
-              ),
-            );
-          },
-        ),
-        buildSliverList(30),
-      ],
-    );
-  }
-
-  // 构建固定高度的SliverList，count为列表项属相
-  Widget buildSliverList([int count = 5]) {
-    return SliverFixedExtentList(
-      itemExtent: 50,
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return ListTile(title: Text('$index'));
-        },
-        childCount: count,
-      ),
-    );
-  }
-
-  // 构建 header
-  Widget buildHeader(int i) {
-    return Container(
-      color: Colors.lightBlue.shade200,
-      alignment: Alignment.centerLeft,
-      child: Text("PersistentHeader $i"),
-    );
-  }
+  int get hashCode => hashValues(super.hashCode, extra);
 }
 
 typedef SliverFlexibleHeaderBuilder = Widget Function(
   BuildContext context,
   double maxExtent,
-  //ScrollDirection direction,
+  ScrollDirection direction,
 );
 
 class SliverFlexibleHeader extends StatelessWidget {
-  const SliverFlexibleHeader({
-    Key? key,
-    this.visibleExtent = 0,
-    required this.builder,
-  }) : super(key: key);
-
   final SliverFlexibleHeaderBuilder builder;
   final double visibleExtent;
+
+  const SliverFlexibleHeader({
+    Key? key,
+    required this.builder,
+    this.visibleExtent = 0,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +131,12 @@ class SliverFlexibleHeader extends StatelessWidget {
       visibleExtent: visibleExtent,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return builder(context, constraints.maxHeight);
+          return builder(
+            context,
+            constraints.maxHeight,
+            // 获取滑动方向
+            (constraints as ExtraInfoBoxConstraints<ScrollDirection>).extra,
+          );
         },
       ),
     );
