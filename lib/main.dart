@@ -16,7 +16,37 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('AppBar')),
-        body: Center(child: Text('Hello World!')),
+        body: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton(onPressed: () {}, child: Text('normal')),
+              TextButton(onPressed: () {}, child: Text('normal')),
+              OutlinedButton(onPressed: () {}, child: Text('normal')),
+              IconButton(onPressed: () {}, icon: Icon(Icons.thumb_up)),
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.send),
+                label: Text('发送'),
+              ),
+              OutlineButton.icon(
+                icon: Icon(Icons.add),
+                label: Text("添加"),
+                onPressed: () {},
+              ),
+              OutlinedButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.add),
+                label: Text('添加'),
+              ),
+              TextButton.icon(
+                icon: Icon(Icons.info),
+                label: Text("详情"),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
