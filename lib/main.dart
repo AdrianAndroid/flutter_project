@@ -1,63 +1,110 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-const CITY_NAMES = {
-  '北京': ['东城区', '西城区', '海淀区', '朝阳区', '石景山区', '顺义区'],
-  '上海': ['黄浦区', '徐汇区', '长宁区', '静安区', '普陀区', '闸北区'],
-  '广州': ['越秀', '海珠', '荔湾', '天河', '白云', '黄埔', '南沙'],
-  '深圳': ['南山', '福田', '罗湖', '盐田', '龙岗', '宝安', '龙华'],
-  '杭州': ['上城区', '下城区', '江干区', '拱墅区', '西湖区', '滨江区'],
-  '苏州': ['姑苏区', '吴中区', '相城区', '高新区', '虎丘区', '工业园区', '吴江区'],
-};
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+void main() => runApp(MaterialApp(
       title: 'Listener',
       home: Scaffold(
         appBar: AppBar(title: Text('列表展开与收起')),
-        body: Container(
-          child: ListView(children: _buildList()),
-        ),
+        body: MyApp(),
       ),
       debugShowCheckedModeBanner: false,
-    );
+    ));
+
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int _panelIndex = -1;
+
+  List dt = [
+    {
+      "name": "生鲜",
+      "id": 0,
+      "list": [
+        {"name": "水果", "id": 11},
+        {"name": "蔬菜", "id": 12},
+        {"name": "禽肉蛋", "id": 13},
+        {"name": "猪牛羊肉", "id": 14},
+        {"name": "海鲜水产", "id": 15},
+        {"name": "冷冻食品", "id": 16},
+        {"name": "冷冻食品", "id": 17},
+      ]
+    },
+    {
+      "name": "食品饮料",
+      "id": 1,
+      "list": [
+        {"name": "食品饮料1", "id": 21},
+        {"name": "食品饮料2", "id": 22}
+      ]
+    },
+    {
+      "name": "母婴",
+      "id": 2,
+      "list": [
+        {"name": "母婴1", "id": 31},
+        {"name": "母婴2", "id": 32}
+      ]
+    },
+    {
+      "name": "生活日用",
+      "id": 3,
+      "list": [
+        {"name": "生活日用1", "id": 41},
+        {"name": "生活日用2", "id": 42}
+      ]
+    },
+    {
+      "name": "酒类",
+      "id": 4,
+      "list": [
+        {"name": "酒类1", "id": 51},
+        {"name": "酒类2", "id": 52}
+      ]
+    }
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
   }
 
-  List<Widget> _buildList() {
-    List<Widget> widgets = [];
-    CITY_NAMES.keys.forEach((key) {
-      widgets.add(_item(key, CITY_NAMES[key]));
-    });
-    return widgets;
-  }
-
-  Widget _item(String city, List<String>? subCities) {
-    List<Widget> list =
-        subCities?.map((subCity) => _buildSub(subCity))?.toList() ?? [];
-    return ExpansionTile(
-      title: Text(
-        city,
-        style: TextStyle(color: Colors.black54, fontSize: 20),
-      ),
-      children: list,
-    );
-  }
-
-  Widget _buildSub(String subCity) {
-    // 可以设置撑满宽度的盒子 称之为百分百布局
-    return FractionallySizedBox(
-      // 宽度因子 1为百分百撑满
-      widthFactor: 1,
-      child: Container(
-        height: 50,
-        margin: EdgeInsets.only(bottom: 5),
-        decoration: BoxDecoration(color: Colors.lightBlueAccent),
-        child: Text(subCity),
-      ),
-    );
-  }
+  Widget _buildBody() => Column(
+        children: [
+          ExpansionPanelList(
+            expansionCallback: (panelIndex, isExpand) {
+              print(panelIndex);
+              setState(() {
+                _panelIndex = _panelIndex == panelIndex ? -1 : panelIndex;
+              });
+            },
+            // 一个集合， 上部分标题， 下部分是list
+            children: dt
+                .map(
+                  (item) => ExpansionPanel(
+                    headerBuilder: (BuildContext context, bool isExpanded) {
+                      return ListTile(title: Text(item['name']));
+                    },
+                    body: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 315,
+                      color: Colors.white,
+                      child: ListView.builder(
+                        itemCount: item['list'].length,
+                        itemBuilder: (BuildContext context, int position) {
+                          return Text(item['list'][position]['name']);
+                        },
+                      ),
+                    ),
+                    canTapOnHeader: true,
+                    isExpanded: _panelIndex == item['id'],
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      );
 }
