@@ -17,86 +17,86 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyPage(),
-    );
-  }
-}
-
-class MyPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return MyPageState();
-  }
-}
-
-class MyPageState extends State<MyPage> {
-  String _url = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg'
-      '.jj20.com%2Fup%2Fallimg%2Ftp09%2F210611094Q512b-0-lp.jpg';
-  bool _normal = true;
-
-  @override
-  Widget build(BuildContext context) {
-    print('页面重绘了.........');
-    // 整个页面使用ChangeNotifier来包裹
-    return Scaffold(
-      appBar: AppBar(title: Text('Overlay')),
-      body: Column(
-        children: [
-          Row(
-            children: [
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _normal = true;
-                    });
-                  },
-                  child: Text('Normal')),
-              SizedBox(width: 20),
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _normal = false;
-                    });
-                  },
-                  child: Text('LayoutBuilder')),
-            ],
-          ),
-          _normal ? _normalWidget : _layoutbuilderWidget
-        ],
+      home: Scaffold(
+        appBar: AppBar(title: Text('LayoutBuilder')),
+        body: LayoutBuilderRoute(),
       ),
     );
   }
+}
 
-  Widget get _normalWidget => Center(
-        child: Container(
-          child: Column(
-            children: [
-              Image.network(_url, fit: BoxFit.fill, height: 100),
-              Text("图片"),
-            ],
-          ),
-        ),
-      );
+class ResponsiveColumn extends StatelessWidget {
+  final List<Widget> children;
 
-  Widget get _layoutbuilderWidget =>
-      LayoutBuilder(builder: (context, constraints) {
-        return Container(
-          child: Column(
-            children: [
-              Image.network(
-                _url,
-                fit: BoxFit.fill,
-                height: 100,
-                width: constraints.maxWidth,
-              ),
-              Text('图片'),
-            ],
-          ),
-        );
-      });
+  const ResponsiveColumn({Key? key, required this.children}) : super(key: key);
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    // 通过LayoutBuilder拿到父组件传递的约束，然后判断maxWidth是否小于200
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxWidth < 200) {
+          // 最大宽度小于200， 显示单列
+          return Column(children: children, mainAxisSize: MainAxisSize.min);
+        } else {
+          // 大于200， 显示双列
+          var _children = <Widget>[];
+          for (var i = 0; i < children.length; i += 2) {
+            if (i + 1 < children.length) {
+              _children.add(
+                Row(
+                  children: [children[i], children[i + 1]],
+                  mainAxisSize: MainAxisSize.min,
+                ),
+              );
+            } else {
+              _children.add(children[i]);
+            }
+          }
+          return Column(
+            children: _children,
+            mainAxisSize: MainAxisSize.min,
+          );
+        }
+      },
+    );
   }
+}
+
+class LayoutBuilderRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var _children = List.filled(6, Text('A'));
+    // Column在本示例中在水平方向的最大宽度为屏幕的宽度
+    return Column(
+      children: [
+        // 限制宽度为190，小于200
+        SizedBox(width: 190, child: ResponsiveColumn(children: _children)),
+        ResponsiveColumn(children: _children),
+        LayoutLogPrint(child: Text('xx'))
+      ],
+    );
+  }
+}
+
+class LayoutLogPrint<T> extends StatelessWidget {
+  const LayoutLogPrint({Key? key, this.tag, required this.child})
+      : super(key: key); //指定日志tag
+
+  final Widget child;
+  final T? tag;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (_, constraints) {
+      // assert在编译release版本时会被去除
+      assert((){
+        print('${tag ?? key ?? child} : $constraints');
+        return true;
+      }());
+      return child;
+    });
+  }
+
+
 }
