@@ -1,4 +1,187 @@
 main() {
+  demo1();
+  demo2();
+}
+
+void demo2() {
+  // [Dart学习] Dart数组List的相关方法总结
+  // https://www.cnblogs.com/yiweiyihang/p/11805204.html
+  print('===》一、初始化List');
+  r(
+    t: '非固定长度List',
+    f: () {
+      var testList = List.empty(); //List.filled(0, '');
+      print(testList.length);
+    },
+  );
+  r(
+      t: '固定长度List',
+      f: () {
+        var testList2 = List.filled(2, null, growable: false);
+        print(testList2.length);
+      });
+  r(
+      t: '元素类型固定',
+      f: () {
+        var testList3 = <String>[];
+        testList3.add("哈哈哈哈");
+        //testList3.add(1);
+      });
+  r(
+      t: '直接赋值',
+      f: () {
+        var testList = [123, 2312];
+        print(testList.length);
+        var testList5 = [true, '嘎嘎嘎', 1];
+        testList5.add(1.6); //可以添加
+      });
+  print('===》二、常用字段');
+  r(
+      t: 'length属性，返回队列长度',
+      f: () {
+        var testList6 = [1, "2", 3, 34532, 555];
+        //length属性，返回队列长度
+        print(testList6.length);
+      });
+  r(
+      t: 'isEmpty属性，返回列表是否为空',
+      f: () {
+        var testList6 = [1, "2", 3, 34532, 555];
+        //isEmpty属性，返回列表是否为空
+        print(testList6.isEmpty);
+      });
+  r(
+      t: 'isNotEmpty属性，返回列表是否有元素',
+      f: () {
+        var testList6 = [1, "2", 3, 34532, 555];
+        //isNotEmpty属性，返回列表是否有元素
+        print(testList6.isNotEmpty);
+      });
+  r(
+      t: 'first获取List中的第一个元素',
+      f: () {
+        var testList6 = [1, "2", 3, 34532, 555];
+        //获取List中的第一个元素
+        print("获取list中的第一个元素${testList6.first}");
+      });
+  r(
+      t: 'last获取List中的最后一个元素',
+      f: () {
+        //获取List中最后一个元素
+        var testList = []
+          ..add(1)
+          ..add(2)
+          ..add(3)
+          ..add(4); //[1,2,3,4];
+        testList.add(14);
+        testList.add('111');
+        print(testList.last);
+      });
+  r(
+      t: '[index] 获取List中某个位置上的元素（index为位置索引）',
+      f: () {
+        //获取List中某个位置上的元素
+        var testList = <Object>[1, 2, 3, 4];
+        testList.add(14);
+        testList.add('111');
+        print(testList[2]);
+      });
+
+  var testList6 = [1,"2",3,34532,555];
+  print('===》三、数组List 增、删、改、查');
+  print('===》四、其它操作方法');
+  r(t: '排序', f: () {
+    testList6.sort((a,b)=>a.toString().length.compareTo(b.toString().length));
+    print('根据字符的长度排序：$testList6');
+  });
+  r(t: '将List倒序排列之后赋给一个新的list，', f: () {
+    // 将List倒序排列之后赋值给一个新的list
+    var testList8 = testList6.reversed;
+    print('倒序排列List--->$testList8');
+  });
+  r(t: '根据position将list转换为对应的map Map<int,Element>', f: () {
+    //根据position将list转换为对应的map Map<int,Element>
+    //也就是[0:element ......]
+    var testMap = testList6.asMap();
+    print("testMap ====> $testMap");
+  });
+  r(t: '将List列表中的顺序打乱', f: () {
+    //将List列表中的顺序打乱
+    //可以传入一个Random对象作为可选参数
+    print(testList6);
+    testList6.shuffle();
+    print("shuffle ===> $testList6");
+  });
+  r(t: '对列表中的数据做指定的操作', f: () {
+    //对列表中的数据做指定的操作
+    //下面的操作是在列表开始的时候加上“哈哈哈”这个字符串然后将后面的元素都拼接起来
+    print(testList6);
+    String str = testList6.fold("哈哈哈",(pre,item) => pre + item.toString() );
+    print("test fold ====> $str");
+  });
+  r(t: 'List循环输出数据', f: () {
+    //List循环输出数据
+    testList6.forEach((item) => print(item));
+  });
+  r(t: '将List作为Iterator进行使用', f: () {
+    //将List作为Iterator进行使用
+    print(testList6);
+    var testIterator = testList6.iterator;
+    while(testIterator.moveNext()){
+      print("testIterator: ${testIterator.current}");//输出当前值
+    }
+  });
+  r(t: '使用join中的指定的字符串分隔List中的每个元素，并将其作为字符串返回', f: () {
+    //使用join中的指定的字符串分隔List中的每个元素，并将其作为字符串返回
+    //通过源码可以看出，首先会将List作为Iterator来使用
+    //如果Iterator中没有元素，就直接返回一个空的字符串，注意不是null，而是 ""
+    //接着判断join()中的参数如果为空或者为 ""，直接将Iterator中的元素拼接然后返回
+    //如果join()中有参数，就是用join中的参数作为分隔符拼接Iterator中的元素然后返回
+    String testJoin1 = testList6.join();
+    String testJoin2 = testList6.join(",");
+    String testJoin3 = testList6.join("哒哒哒");
+    print("join中无参数：${testJoin1}");
+    print("使用,作为分隔符${testJoin2}");
+    print("想要在最后一个元素之前的元素后面都添加一个字符串然后返回${testJoin3}");
+  });
+  r(t: '下面的map方法和Map没有任何关系,执行结果和match更像', f: () {
+    //下面的map方法和Map没有任何关系,执行结果和match更像
+    //这个方法的执行逻辑是将List中的每个元素拿出来和map(f)中传入的f函数条件进行比较
+    //如果符合条件就会返回true，否则就会返回false
+    //同时返回的数据也是实现了Iterable的接口,注意是Iterable而不一定是List
+    var testMap1 = testList6.map((item) => item.toString().length == 2);
+    print("\ntestMap1:${testMap1}");
+    print("testMap1: ${testMap1.runtimeType} \n");
+  });
+  r(t: '这个方法可以用，但是不知道具体的应用实例', f: () {
+    //这个方法可以用，但是不知道具体的应用实例
+    //这个方法首先会传入列表的第一个和第二个数据，对这两个数据进行传入的函数操作，然后会将函数的返回值作为下一次操作的第一个参数
+    // print("${testList6}");
+    // var testReduce = testList6.reduce((value,element) => checkReduce(value.toString(), element.toString()));
+    // print("\ntestReduce ${testReduce} type is ${testReduce.runtimeType}\n");
+  });
+  r(t: '跳过前面多少个元素，返回一个SubListIterable，和subList的操作相似', f: () {
+    //跳过前面多少个元素，返回一个SubListIterable，和subList的操作相似
+    print(testList6);
+    var testSkip = testList6.skip(2);
+    print("\ntestSkip: ${testSkip}, and type is ${testSkip.runtimeType}\n");
+  });
+  r(t: '跳过列表中满足条件的前面的元素，从第一个元素开始查找，一直查找到不满足条件的元素为止', f: () {
+    //跳过列表中满足条件的前面的元素，从第一个元素开始查找，一直查找到不满足条件的元素为止
+    //条件由传入的函数参数决定
+    testList6.insert(0, "呸呸呸");
+    var testSkipWhile = testList6.skipWhile((item) => item.toString().length == 3);
+    print("\ntestSkipWhile:${testSkipWhile},and type is ${testSkipWhile.runtimeType}\n");
+  });
+  r(t: '注意Set为没有顺序且不可重复的列表，数据转换到set之后圆List中的重复的数据会被删掉', f: () {
+    //注意Set为没有顺序且不可重复的列表，数据转换到set之后圆List中的重复的数据会被删掉
+    print(testList6);
+    Set testSet1 = testList6.toSet();
+    print("\ntestSet1:${testSet1} and type is ${testSet1.runtimeType}\n");
+  });
+}
+
+void demo1() {
   print('List([int length]) 创建一个空数组或者 length 长度的数组');
   print(
       'List.filled(int length,E fill,{bool growable:false}) 创建一个list，每个元素共享相同的值，growable 表示是 list 长度是否可变，默认 false 固定长度');
@@ -336,5 +519,6 @@ void r({String t = '', Function? f}) {
   } catch (e) {
     print(e);
   }
-  print('---------分割线---------\n');
+  print('');
+  // print('---------分割线---------\n');
 }
