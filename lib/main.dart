@@ -16,7 +16,26 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('AppBar')),
-        body: Center(child: Text('Hello World!')),
+        body: Center(child: MyStatelessWidget()),
+      ),
+    );
+  }
+}
+
+class MyStatelessWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: FractionallySizedBox(
+        widthFactor: 0.5,
+        heightFactor: 0.5,
+        alignment: FractionalOffset.center,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blue, width: 4),
+          ),
+          child: Center(child: Text('Hello Wrold!')),
+        ),
       ),
     );
   }
