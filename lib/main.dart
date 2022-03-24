@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:staggered_grid_view_flutter/staggered_grid_view_flutter.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,4 +22,15 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+void test() {
+  StaggeredGridView.count(
+    crossAxisCount: 4,
+    staggeredTiles: [],
+    mainAxisSpacing: 4,
+    crossAxisSpacing: 4,
+    padding: const EdgeInsets.all(4),
+    children: [],
+  );
 }
