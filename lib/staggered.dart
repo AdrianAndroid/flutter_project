@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 
 class StaggeredPage extends StatelessWidget {
   static List<GridTile> tiles = [
-    GridTile(2, 2),
+    GridTile(4, 1),
     GridTile(2, 1),
     GridTile(1, 2),
     GridTile(1, 1),
