@@ -10,22 +10,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     title: 'Flutter Demo',
-  //     theme: ThemeData(
-  //       primarySwatch: Colors.orange,
-  //       visualDensity: VisualDensity.adaptivePlatformDensity,
-  //     ),
-  //     home: Scaffold(
-  //       appBar: AppBar(title: Text('AppBar')),
-  //       body: Center(child: Text('Hello World!')),
-  //     ),
-  //   );
-  // }
-
   _mySlierAppBar() {
     return SliverAppBar(
       title: Text('SliverToBoxAdapter'),
@@ -48,7 +32,16 @@ class MyApp extends StatelessWidget {
           color: Colors.primaries[index % 11],
         );
       },
-      childCount: 30,
+      childCount: 4,
+    );
+  }
+
+  _mySliverGridDelegateWithFixedCrossAxisCount() {
+    return SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      childAspectRatio: 1.5,
     );
   }
 
@@ -59,13 +52,17 @@ class MyApp extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           _mySlierAppBar(),
-          SliverToBoxAdapter(
-            child: Container(
-              height: 200,
-              color: Colors.blue,
+          SliverGrid(
+            delegate: _mySliverChildBuilderDelegate(),
+            gridDelegate: _mySliverGridDelegateWithFixedCrossAxisCount(),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.all(10),
+            sliver: SliverGrid(
+              delegate: _mySliverChildBuilderDelegate(),
+              gridDelegate: _mySliverGridDelegateWithFixedCrossAxisCount(),
             ),
           ),
-          SliverList(delegate: _mySliverChildBuilderDelegate()),
         ],
       ),
     );
