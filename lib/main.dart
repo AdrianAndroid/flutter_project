@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_project/sample/custom_scrollview_demo.dart';
 import 'package:flutter_project/sample/random_sized_demo.dart';
 import 'package:flutter_project/sample/variable_sized_demo.dart';
+import 'package:flutter_project/src/rendering/sliver_waterfall_flow.dart';
+import 'package:flutter_project/src/widgets/sliver.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,52 +21,94 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHome(),
+      home: CustomScrollviewDemo(),
     );
   }
 }
 
-class MyHome extends StatelessWidget {
+class CustomScrollviewDemo extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _CustomScrollviewDemoState();
+}
+
+class _CustomScrollviewDemoState extends State<CustomScrollviewDemo> {
+  List<Color> colors = <Color>[];
+  int crossAxisCount = 2;
+  double crossAxisSpacing = 5.0;
+  double mainAxisSpacing = 5.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('AppBar')),
-      body: Center(
-        child: Column(
-          children: [
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return RandomSizeDemo();
-                }));
+      body: CustomScrollView(
+        slivers: [
+          // SliverToBoxAdapter(
+          //   child: Container(
+          //     height: 200,
+          //     color: Colors.red,
+          //     alignment: Alignment.center,
+          //     child: const Text(
+          //       'I\'m other slivers',
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //         fontSize: 20,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          SliverWaterfallFlow(
+            gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: crossAxisSpacing,
+              mainAxisSpacing: mainAxisSpacing,
+              collectGarbage: (List<int> garbages) {
+                print('collect garbage : $garbages');
               },
-              icon: Icon(Icons.message),
-              label: Text('RandomSizeDemo'),
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return CustomScrollViewDemo();
-                }));
+              viewportBuilder: (int firstIndex, int lastIndex) {
+                print('viewport : [$firstIndex, $lastIndex]');
               },
-              icon: Icon(Icons.message),
-              label: Text('CustomScrollViewDemo'),
             ),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return KnownSizedDemo();
-                }));
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final Color color = getRandomColor(index);
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    color: getRandomColor(index),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    '$index',
+                    style: TextStyle(
+                      color: color.computeLuminance() < 0.5
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
+                  height: ((index % 3) + 1) * 100.0,
+                );
               },
-              icon: Icon(Icons.message),
-              label: Text('KnownSizedDemo'),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            crossAxisCount++;
+          });
+        },
+        child: Icon(Icons.add),
       ),
     );
+  }
+
+  Color getRandomColor(int index) {
+    if (index >= colors.length) {
+      colors.add(Color.fromARGB(255, Random.secure().nextInt(255),
+          Random.secure().nextInt(255), Random.secure().nextInt(255)));
+    }
+
+    return colors[index];
   }
 }
