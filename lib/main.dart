@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/expand_tile.dart';
 
 class City {
   final name;
@@ -326,7 +327,7 @@ class _MyAppState extends State<MyApp> {
               //padding: EdgeInsets.only(left: 12, right: 12, top: 12),
               margin: EdgeInsets.only(left: 12, right: 12, bottom: 12),
               color: Colors.grey,
-              child: ExpansionTile(
+              child: ExpandTile(
                 title: Text(
                   city.name,
                   style: TextStyle(
@@ -335,7 +336,6 @@ class _MyAppState extends State<MyApp> {
                     fontSize: 16,
                   ),
                 ),
-                tilePadding: EdgeInsets.all(0),
                 // childrenPadding: EdgeInsets.only(top: 100, bottom: 10),
                 children: city.regions
                     .map((region) => _buildRegions(region))
@@ -349,8 +349,7 @@ class _MyAppState extends State<MyApp> {
     return Container(
       margin: EdgeInsets.only(left: 12, right: 12, bottom: 12),
       color: Colors.green,
-      child: ExpansionTile(
-        tilePadding: EdgeInsets.all(0),
+      child: ExpandTile(
         title: Text(
           region.name,
           style: TextStyle(
